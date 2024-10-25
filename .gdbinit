@@ -2,12 +2,14 @@ set architecture i386
 set auto-load safe-path .
 set disassembly-flavor intel
 
-add-symbol-file ./Build/Bootloader/BootloaderObject.o 0x000085D0
+add-symbol-file ./Build/Bootloader/BootloaderObject.o 0x00008600
 add-symbol-file ./Build/Kernel/KernelObject.o 0x00100000
-break Bootloader/BLMain.cpp:BLMain
-break Kernel/Kernel.asm:_kernelstart
-break Kernel/Kernel.cpp:KMain
-target remote | qemu-system-i386 -hda ./Build/Bootloader.bin -hdb ./Build/Kernel.bin -S -gdb stdio
+#break Bootloader/BLMain.cpp:BLMain
+#break Kernel/Kernel.asm:_kernelstart
+#break Kernel/Kernel.cpp:KMain
+break Bootloader/ELF/ELF.cpp:25
+target remote | qemu-system-i386 -hda ./Build/Bootloader.bin -hdb ./Build/Kernel.elf -S -gdb stdio
+c
 
 define hook-stop
 print/x $eax
