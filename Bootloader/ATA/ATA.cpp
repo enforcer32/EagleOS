@@ -5,7 +5,6 @@ namespace Bootloader
 {
 	namespace ATA
 	{
-		// offset = 52, size = 32
 		void* ATAReadLBAOffset(ATADrive drive, uint32_t offset, uint32_t size)
 		{
 			uint32_t lba = (offset / ATA_SECTOR_SIZE);

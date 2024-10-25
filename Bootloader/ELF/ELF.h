@@ -13,6 +13,8 @@ namespace Bootloader
 		{
 		public:
 			bool Parse(ATA::ATADrive drive);
+			bool LoadProgramHeaders();
+			uint32_t GetEntryPointAddress();
 
 		private:
 			bool IsValidELF();

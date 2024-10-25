@@ -25,6 +25,22 @@ namespace Bootloader
 			return true;
 		}
 
+		bool ELF::LoadProgramHeaders()
+		{
+			for(uint32_t i = 0; i < m_Header->ProgramHeaderCount; i++)
+			{
+				const auto& programHeader = m_ProgramHeaders[i];
+				void* segment = ATA::ATAReadLBAOffset(m_Drive, programHeader->Offset, programHeader->MemorySize);
+				Memcpy((void*)programHeader->VirtualAddress, segment, programHeader->MemorySize);
+			}
+			return true;
+		}
+
+		uint32_t ELF::GetEntryPointAddress()
+		{
+			return m_Header->EntryPointAddress;
+		}
+
 		bool ELF::IsValidELF()
 		{
 			return m_Header->Ident.Magic == ELF_MAGIC_NUMBER;
