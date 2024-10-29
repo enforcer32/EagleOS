@@ -3,6 +3,7 @@
 
 CODE_SEG equ gdt_code - gdt_start ; Selector 0x08 will be our code segment offset
 DATA_SEG equ gdt_data - gdt_start ; Selector 0x10 will be our data segment offset
+BOOTLOADER_LOAD_ADDRESS equ 0x0000A000 ; 2nd Stage Bootloader Load Address
 
 ; BIOS PARAMETER BLOCK
 _bpb:
@@ -72,9 +73,9 @@ gdt_descriptor:
 Bootloader:
 	mov eax, 1 ; Load from Sector 1. (Sector 0 = Bootsector. LBA0 = Sector 0) (Sector 1 = 2nd Stage Bootloader. LBA0 = Sector 0) LBA1 = Bootloader, LBA3 = Kernel
 	mov ecx, 10 ; Load 10 sector
-	mov edi, 0x00008600 ; Load Bootloader Stage 2 At Address
+	mov edi, BOOTLOADER_LOAD_ADDRESS ; Load Bootloader Stage 2 At Address
 	call ATALBARead
-	jmp CODE_SEG:0x00008600
+	jmp CODE_SEG:BOOTLOADER_LOAD_ADDRESS
 
 ATALBARead:
 	mov ebx, eax ; save lba

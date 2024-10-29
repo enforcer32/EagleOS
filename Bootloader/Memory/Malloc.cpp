@@ -1,5 +1,5 @@
 #include <Bootloader/Memory/Malloc.h>
-#include <Bootloader/Memory/MemoryInfo.h>
+#include <Bootloader/MemoryInfo.h>
 
 namespace Bootloader
 {
