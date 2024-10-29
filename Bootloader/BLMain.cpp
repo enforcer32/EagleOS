@@ -1,6 +1,7 @@
 #include <Bootloader/BootInfo.h>
 #include <Bootloader/ATA/ATA.h>
 #include <Bootloader/ELF/ELF.h>
+#include <Bootloader/x86/Boot86.h>
 
 typedef void (*KernelEntry)(const BootInfo* bootInfo);
 
@@ -23,5 +24,6 @@ namespace Bootloader
 
 extern "C" void BLMain()
 {
+	x86::BIOSPrintChar('H');
 	Bootloader::Init();
 }
