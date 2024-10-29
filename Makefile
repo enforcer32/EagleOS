@@ -50,16 +50,18 @@ $(BOOTLOADER_BIN): $(BL_OBJS) $(BOOTLOADER_DIR)/linker.ld
 
 	rm -rf $(BUILD_DIR)/$(BOOTLOADER_BIN)
 	dd if=$(BUILD_DIR)/$(BOOTLOADER_DIR)/Bootsector.bin >> $(BUILD_DIR)/$(BOOTLOADER_BIN)
-	dd if=$(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinked.bin >> $(BUILD_DIR)/$(BOOTLOADER_BIN)
-	dd if=/dev/zero bs=512 count=100 >> $(BUILD_DIR)/$(BOOTLOADER_BIN)
+	dd if=/dev/zero bs=512 count=100 >> $(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinkedAligned.bin
+	dd if=$(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinked.bin of=$(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinkedAligned.bin conv=notrunc
+	dd if=$(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinkedAligned.bin >> $(BUILD_DIR)/$(BOOTLOADER_BIN)
 
 $(KERNEL_BIN): $(KRNL_OBJS) $(KERNEL_DIR)/linker.ld
 	$(LD) $(LDFLAGS) $(KRNL_OBJS_OUT) -o $(BUILD_DIR)/$(KERNEL_DIR)/KernelObject.o -Map=$(BUILD_DIR)/$(KERNEL_DIR)/KernelObject.map
 	$(CC) -T $(KERNEL_DIR)/linker.ld -o $(BUILD_DIR)/$(KERNEL_DIR)/KernelLinked.elf $(CPPFLAGS) $(BUILD_DIR)/$(KERNEL_DIR)/KernelObject.o $(LIBS)
 
 	rm -rf $(BUILD_DIR)/$(KERNEL_BIN)
-	dd if=$(BUILD_DIR)/$(KERNEL_DIR)/KernelLinked.elf >> $(BUILD_DIR)/$(KERNEL_BIN)
-	dd if=/dev/zero bs=512 count=100 >> $(BUILD_DIR)/$(KERNEL_BIN)
+	dd if=/dev/zero bs=512 count=100 >> $(BUILD_DIR)/$(KERNEL_DIR)/KernelLinkedAligned.elf
+	dd if=$(BUILD_DIR)/$(KERNEL_DIR)/KernelLinked.elf of=$(BUILD_DIR)/$(KERNEL_DIR)/KernelLinkedAligned.elf conv=notrunc
+	dd if=$(BUILD_DIR)/$(KERNEL_DIR)/KernelLinkedAligned.elf >> $(BUILD_DIR)/$(KERNEL_BIN)
 
 .cpp.o:
 	@mkdir -p $(BUILD_DIR)/$(@D)
@@ -80,8 +82,11 @@ clean:
 	rm -f $(KRNL_OBJS:.o=.bin) *.bin */*.bin */*/*.bin
 	rm -rf $(BUILD_DIR)
 
-run:
+runqemu:
 	qemu-system-i386 -d int,cpu_reset -no-reboot -no-shutdown -hda $(BUILD_DIR)/$(BOOTLOADER_BIN) -hdb $(BUILD_DIR)/$(KERNEL_BIN)
+
+runbochs:
+	bochs -f .bochsrc
 
 -include $(BL_OBJS:.o=.d)
 -include $(KRNL_OBJS:.o=.d)

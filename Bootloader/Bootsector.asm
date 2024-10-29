@@ -71,7 +71,7 @@ gdt_descriptor:
 [BITS 32]
 Bootloader:
 	mov eax, 1 ; Load from Sector 1. (Sector 0 = Bootsector. LBA0 = Sector 0) (Sector 1 = 2nd Stage Bootloader. LBA0 = Sector 0) LBA1 = Bootloader, LBA3 = Kernel
-	mov ecx, 100 ; Load 100 sector
+	mov ecx, 10 ; Load 10 sector
 	mov edi, 0x00008600 ; Load Bootloader Stage 2 At Address
 	call ATALBARead
 	jmp CODE_SEG:0x00008600

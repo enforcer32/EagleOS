@@ -1,1 +1,1 @@
-bochs -f .bochsrc
+make runbochs
