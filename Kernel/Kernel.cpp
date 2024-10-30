@@ -14,9 +14,9 @@ namespace Kernel
 		if(x86::Processor::Init() != 0)
 			KPanic("Failed to Initialize x86 Processor!\n");
 
-		int x = 0;
-		int y = 10 / x;
-		(void)y;
+		//int x = 0;
+		//int y = 10 / x;
+		//(void)y;
 
 		KPrintf("Eagle Operating System\n");
 	}
@@ -25,5 +25,15 @@ namespace Kernel
 extern "C" void KMain(const BootInfo* bootInfo)
 {
 	Kernel::InitKernel();
+
+	for(uint32_t i = 0; i < bootInfo->SystemMemoryInfo->RegionCount; i++)
+	{
+		const auto& regionInfo = bootInfo->SystemMemoryInfo->Regions[i];
+		Kernel::KPrintf("Region: {Base= 0x%x, ", regionInfo.BaseAddress);
+		Kernel::KPrintf("Length= 0x%x, ", regionInfo.Length);
+		Kernel::KPrintf("Type= 0x%x, ", regionInfo.Type);
+		Kernel::KPrintf("ExtendedAttributes= 0x%x}\n", regionInfo.ExtendedAttributes);
+	}
+
 	for(;;);
 }

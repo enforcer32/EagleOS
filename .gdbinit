@@ -8,6 +8,7 @@ add-symbol-file ./Build/Kernel/KernelObject.o 0x00100000
 #break Kernel/Kernel.asm:_kernelstart
 #break Kernel/Kernel.cpp:KMain
 #break Bootloader/ELF/ELF.cpp:25
+break Kernel/Kernel.cpp:KMain:32
 target remote | qemu-system-i386 -hda ./Build/Bootloader.bin -hdb ./Build/Kernel.elf -S -gdb stdio
 c
 
