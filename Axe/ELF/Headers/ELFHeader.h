@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Bootloader/ELF/Headers/ELFIdent.h>
+#include <Axe/ELF/Headers/ELFIdent.h>
 
 #define ELF_MAGIC_NUMBER 0x464C457F
 
-namespace Bootloader
+namespace Axe
 {
 	namespace ELF
 	{

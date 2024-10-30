@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-namespace Bootloader
+namespace Axe
 {
 	enum class SystemMemoryRegionType : uint32_t
 	{

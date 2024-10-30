@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-namespace Bootloader
+namespace Axe
 {
 	void* Malloc(uint32_t size);
 	void* Memset(void* dst, int32_t ch, uint32_t num);

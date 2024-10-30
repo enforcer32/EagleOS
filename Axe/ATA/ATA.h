@@ -4,7 +4,7 @@
 
 #define ATA_SECTOR_SIZE 512
 
-namespace Bootloader
+namespace Axe
 {
 	namespace ATA
 	{

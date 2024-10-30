@@ -1,7 +1,7 @@
-#include <Bootloader/Memory/Malloc.h>
-#include <Bootloader/MemoryInfo.h>
+#include <Axe/Memory/Malloc.h>
+#include <Axe/Boot/MemoryInfo.h>
 
-namespace Bootloader
+namespace Axe
 {
 	uint8_t* s_AllocAddress = (uint8_t*)BOOTLOADER_MEMORY_FREE_ADDRESS;
 

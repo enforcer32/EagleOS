@@ -1,7 +1,7 @@
-#include <Bootloader/ELF/ELF.h>
-#include <Bootloader/Memory/Malloc.h>
+#include <Axe/ELF/ELF.h>
+#include <Axe/Memory/Malloc.h>
 
-namespace Bootloader
+namespace Axe
 {
 	namespace ELF
 	{

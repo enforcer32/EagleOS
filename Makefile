@@ -12,7 +12,7 @@ INCLUDES = -I.
 LIBDIR	= 
 
 BUILD_DIR		= Build
-BOOTLOADER_DIR	= Bootloader
+BOOTLOADER_DIR	= Axe
 KERNEL_DIR 		= Kernel
 ARCH_DIR 		= Kernel/Arch
 NXN_DIR 		= Kernel/NXN
@@ -44,7 +44,7 @@ KRNL_OBJS_OUT := $(foreach item,$(KRNL_OBJS),$(BUILD_DIR)/$(item))
 all: $(BOOTLOADER_BIN) $(KERNEL_BIN)
 
 $(BOOTLOADER_BIN): $(BL_OBJS) $(BOOTLOADER_DIR)/linker.ld
-	$(ASM) -f bin $(BOOTLOADER_DIR)/Bootsector.asm -o $(BUILD_DIR)/$(BOOTLOADER_DIR)/Bootsector.bin
+	$(ASM) -f bin $(BOOTLOADER_DIR)/Boot/Bootsector.asm -o $(BUILD_DIR)/$(BOOTLOADER_DIR)/Bootsector.bin
 	$(LD) $(LDFLAGS) $(BL_OBJS_OUT) -o $(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderObject.o -Map=$(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderObject.map
 	$(CC) -T $(BOOTLOADER_DIR)/linker.ld -o $(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinked.bin $(CPPFLAGS) $(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderObject.o $(LIBS)
 

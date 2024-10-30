@@ -1,8 +1,8 @@
-#include <Bootloader/System/SystemMemory.h>
-#include <Bootloader/Memory/Malloc.h>
-#include <Bootloader/x86/Memory.h>
+#include <Axe/System/SystemMemory.h>
+#include <Axe/Memory/Malloc.h>
+#include <Axe/x86/Memory.h>
 
-namespace Bootloader
+namespace Axe
 {
 	SystemMemoryInfo* DetectSystemMemory()
 	{

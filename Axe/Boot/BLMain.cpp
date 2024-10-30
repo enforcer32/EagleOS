@@ -1,12 +1,12 @@
-#include <Bootloader/BootInfo.h>
-#include <Bootloader/ATA/ATA.h>
-#include <Bootloader/ELF/ELF.h>
-#include <Bootloader/x86/Video.h>
-#include <Bootloader/System/SystemMemory.h>
+#include <Axe/BootInfo.h>
+#include <Axe/ATA/ATA.h>
+#include <Axe/ELF/ELF.h>
+#include <Axe/x86/Video.h>
+#include <Axe/System/SystemMemory.h>
 
-typedef void (*KernelEntry)(const BootInfo* bootInfo);
+typedef void (*KernelEntry)(const Axe::BootInfo* bootInfo);
 
-namespace Bootloader
+namespace Axe
 {
 	void Init()
 	{
@@ -17,7 +17,7 @@ namespace Bootloader
 		BootInfo* info = (BootInfo*)(0x00020C70);
 		info->Signature = 0xDEADD432;
 		info->KernelAddress = (uint32_t*)elf.GetEntryPointAddress();
-		info->SystemMemoryInfo = DetectSystemMemory();
+		info->MemoryInfo = DetectSystemMemory();
 		
 		KernelEntry _kernelstart = (KernelEntry)elf.GetEntryPointAddress();
 		_kernelstart(info);
@@ -26,6 +26,6 @@ namespace Bootloader
 
 extern "C" void BLMain()
 {
-	//x86::BIOS::PrintChar('H');
-	Bootloader::Init();
+	//Axe::x86::BIOS::PrintChar('H');
+	Axe::Init();
 }

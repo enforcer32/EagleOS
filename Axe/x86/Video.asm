@@ -2,7 +2,7 @@ section .text
 
 global PrintChar
 
-%include "Bootloader/x86/Boot86Top.asm"
+%include "Axe/x86/Boot86Top.asm"
 
 PrintChar:
 	push ebp
@@ -21,4 +21,4 @@ PrintChar:
 	pop ebp
 	ret
 
-%include "Bootloader/x86/Boot86Bot.asm"
+%include "Axe/x86/Boot86Bot.asm"

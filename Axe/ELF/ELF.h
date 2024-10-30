@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Bootloader/ELF/Headers/ELFHeader.h>
-#include <Bootloader/ELF/Headers/ELFProgramHeader.h>
-#include <Bootloader/ELF/Headers/ELFSectionHeader.h>
-#include <Bootloader/ATA/ATA.h>
+#include <Axe/ELF/Headers/ELFHeader.h>
+#include <Axe/ELF/Headers/ELFProgramHeader.h>
+#include <Axe/ELF/Headers/ELFSectionHeader.h>
+#include <Axe/ATA/ATA.h>
 
-namespace Bootloader
+namespace Axe
 {
 	namespace ELF
 	{

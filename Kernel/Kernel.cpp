@@ -1,4 +1,4 @@
-#include <Bootloader/BootInfo.h>
+#include <Axe/BootInfo.h>
 #include <Kernel/Drivers/Graphics/VGA.h>
 #include <Kernel/NXN/KPrintf.h>
 #include <Kernel/NXN/KPanic.h>
@@ -22,13 +22,13 @@ namespace Kernel
 	}
 }
 
-extern "C" void KMain(const BootInfo* bootInfo)
+extern "C" void KMain(const Axe::BootInfo* bootInfo)
 {
 	Kernel::InitKernel();
 
-	for(uint32_t i = 0; i < bootInfo->SystemMemoryInfo->RegionCount; i++)
+	for(uint32_t i = 0; i < bootInfo->MemoryInfo->RegionCount; i++)
 	{
-		const auto& regionInfo = bootInfo->SystemMemoryInfo->Regions[i];
+		const auto& regionInfo = bootInfo->MemoryInfo->Regions[i];
 		Kernel::KPrintf("Region: {Base= 0x%x, ", regionInfo.BaseAddress);
 		Kernel::KPrintf("Length= 0x%x, ", regionInfo.Length);
 		Kernel::KPrintf("Type= 0x%x, ", regionInfo.Type);

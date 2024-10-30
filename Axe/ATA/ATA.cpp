@@ -1,7 +1,7 @@
-#include <Bootloader/ATA/ATA.h>
-#include <Bootloader/Memory/Malloc.h>
+#include <Axe/ATA/ATA.h>
+#include <Axe/Memory/Malloc.h>
 
-namespace Bootloader
+namespace Axe
 {
 	namespace ATA
 	{

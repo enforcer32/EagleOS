@@ -20,7 +20,7 @@ Eagle - Operating System.
 
 ## Core Files
 
-- /Bootloader - Multi-Stage Bootloader
+- /Axe - Multi-Stage Bootloader
 - /Kernel - Kernel
 - /Kernel/Arch - Architecture Specific
 - /Kernel/NXN - Kernel Standard Library

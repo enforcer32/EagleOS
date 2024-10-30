@@ -2,7 +2,7 @@ section .text
 
 global E820QuerySystemAddressMap
 
-%include "Bootloader/x86/Boot86Top.asm"
+%include "Axe/x86/Boot86Top.asm"
 
 ; Int 15/AX=E820h
 ; EAX = 0000E820h
@@ -72,4 +72,4 @@ E820QuerySystemAddressMap:
 	pop ebp
 	ret
 
-%include "Bootloader/x86/Boot86Bot.asm"
+%include "Axe/x86/Boot86Bot.asm"
