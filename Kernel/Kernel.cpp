@@ -4,9 +4,27 @@
 #include <Kernel/NXN/KPanic.h>
 #include <Kernel/Arch/x86/Processor.h>
 #include <Kernel/Memory/PhysicalMemoryManager.h>
+#include <Kernel/NXN/CString.h>
+
+extern uint64_t __kernel_start;
+extern uint64_t __kernel_end;
 
 namespace Kernel
 {
+	void DumpSystemMeoryMap(const Axe::SystemMemoryInfo* memoryInfo)
+	{
+		KPrintf("\n----------System Memory Map----------\n");
+		for (uint32_t i = 0; i < memoryInfo->RegionCount; i++)
+		{
+			const auto& regionInfo = memoryInfo->Regions[i];
+			Kernel::KPrintf("Region: {Base= 0x%x, ", regionInfo.BaseAddress);
+			Kernel::KPrintf("Length= 0x%x, ", regionInfo.Length);
+			Kernel::KPrintf("Type= 0x%x, ", regionInfo.Type);
+			Kernel::KPrintf("ExtendedAttributes= 0x%x}\n", regionInfo.ExtendedAttributes);
+		}
+		KPrintf("----------System Memory Map----------\n\n");
+	}
+
 	void InitKernel(const Axe::BootInfo* bootInfo)
 	{
 		Graphics::VGA::Init();
@@ -15,39 +33,15 @@ namespace Kernel
 		if(x86::Processor::Init() != 0)
 			KPanic("Failed to Initialize x86 Processor!\n");
 
-		KPrintf("----------System Memory Map----------\n");
-		for (uint32_t i = 0; i < bootInfo->MemoryInfo->RegionCount; i++)
-		{
-			const auto& regionInfo = bootInfo->MemoryInfo->Regions[i];
-			Kernel::KPrintf("Region: {Base= 0x%x, ", regionInfo.BaseAddress);
-			Kernel::KPrintf("Length= 0x%x, ", regionInfo.Length);
-			Kernel::KPrintf("Type= 0x%x, ", regionInfo.Type);
-			Kernel::KPrintf("ExtendedAttributes= 0x%x}\n", regionInfo.ExtendedAttributes);
-		}
-		KPrintf("----------System Memory Map----------\n");
-
 		Memory::PhysicalMemoryManager pmm;
 		pmm.Init(bootInfo->MemoryInfo, 4096);
 
-		void* data = pmm.AllocatePages(1);
-		KPrintf("Data: 0x%x\n", data);
+		// Reserve Kernel Pages
+		uint64_t kernelSize = (uint64_t)&__kernel_end - (uint64_t)&__kernel_start;
+		uint64_t kernelPageCount = kernelSize / 4096 + 1;
+		pmm.ReservePages(&__kernel_start, kernelPageCount);
 
-		data = pmm.AllocatePages(1);
-		KPrintf("Data: 0x%x\n", data);
-
-		data = pmm.AllocatePages(2);
-		KPrintf("Data: 0x%x\n", data);
-
-		data = pmm.AllocatePages(1);
-		KPrintf("Data: 0x%x\n", data);
-
-		data = pmm.AllocatePages(1);
-		KPrintf("Data: 0x%x\n", data);
-
-		pmm.FreePages(data, 1);
-
-		data = pmm.AllocatePages(1);
-		KPrintf("Data: 0x%x\n", data);
+		DumpSystemMeoryMap(bootInfo->MemoryInfo);
 
 		KPrintf("\nEagle Operating System\n");
 	}

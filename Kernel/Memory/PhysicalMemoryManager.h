@@ -19,6 +19,7 @@ namespace Kernel
 			int32_t Init(const Axe::SystemMemoryInfo* memoryInfo, size_t pageSize);
 			void* AllocatePages(size_t pageCount);
 			void FreePages(void* address, size_t pageCount);
+			void ReservePages(void* address, size_t pageCount);
 
 		private:
 			bool InitMemory(const Axe::SystemMemoryInfo* memoryInfo);

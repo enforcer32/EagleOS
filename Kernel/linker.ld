@@ -5,6 +5,7 @@ SECTIONS
 {
 	. = 1M; /* ORIGIN STARTS AT 1MB; Load Kernel at 1MB Memory (Address 1024 * 1024 = 0x00100000 ) */
 
+	__kernel_start = .;
 	.text : ALIGN(4096)
 	{
 		*(.text)
@@ -31,4 +32,5 @@ SECTIONS
 		*(.bss.*)
 		__bss_end = .;
 	}
+	__kernel_end = .;
 }

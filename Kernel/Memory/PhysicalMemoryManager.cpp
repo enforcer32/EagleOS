@@ -52,6 +52,11 @@ namespace Kernel
 			SetPages(AddressToPage(address), pageCount, PageState::Free);
 		}
 
+		void PhysicalMemoryManager::ReservePages(void* address, size_t pageCount)
+		{
+			SetPages(AddressToPage(address), pageCount, PageState::Reserved);
+		}
+
 		bool PhysicalMemoryManager::InitMemory(const Axe::SystemMemoryInfo* memoryInfo)
 		{
 			uint64_t memoryStart = -1;
@@ -79,7 +84,7 @@ namespace Kernel
 				if (memoryInfo->Regions[i].Type == Axe::SystemMemoryRegionType::Usable && memoryInfo->Regions[i].BaseAddress > 0 && memoryInfo->Regions[i].Length > 0)
 					break;
 
-			m_Bitmap = (uint8_t*)memoryInfo->Regions[i].BaseAddress + (50 * m_PageSize);
+			m_Bitmap = (uint8_t*)memoryInfo->Regions[i].BaseAddress + (100 * m_PageSize);
 			NXN::Memset(m_Bitmap, static_cast<uint8_t>(PageState::Reserved), m_PageCount);
 			return true;
 		}
