@@ -33,9 +33,6 @@ namespace Kernel
 
 			size_t AddressToPage(void* address);
 			void* PageToAddress(size_t page);
-			void* AlignAddressUp(void* address, size_t alignment);
-			void* AlignAddressDown(void* address, size_t alignment);
-			bool IsAddressAligned(void* address, size_t alignment);
 
 		private:
 			size_t m_PageSize;

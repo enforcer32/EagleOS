@@ -65,8 +65,8 @@ namespace Kernel
 					memoryEnd = memoryInfo->Regions[i].BaseAddress + memoryInfo->Regions[i].Length;					
 			}
 
-			m_StartAddress = AlignAddressUp((void*)memoryStart, m_PageSize);
-			m_EndAddress = AlignAddressDown((void*)memoryEnd, m_PageSize);
+			m_StartAddress = (void*)memoryStart;
+			m_EndAddress = (void*)memoryEnd;
 			m_MemorySizeBytes = (uint8_t*)m_EndAddress - (uint8_t*)m_StartAddress;
 			m_PageCount = m_MemorySizeBytes / m_PageSize;
 			return true;
@@ -79,7 +79,7 @@ namespace Kernel
 				if (memoryInfo->Regions[i].Type == Axe::SystemMemoryRegionType::Usable && memoryInfo->Regions[i].BaseAddress > 0 && memoryInfo->Regions[i].Length > 0)
 					break;
 
-			m_Bitmap = (uint8_t*)((uint8_t*)AlignAddressUp((void*)memoryInfo->Regions[i].BaseAddress, m_PageSize) + (50 * m_PageSize));
+			m_Bitmap = (uint8_t*)memoryInfo->Regions[i].BaseAddress + (50 * m_PageSize);
 			NXN::Memset(m_Bitmap, static_cast<uint8_t>(PageState::Reserved), m_PageCount);
 			return true;
 		}
@@ -91,7 +91,7 @@ namespace Kernel
 				const auto& region = memoryInfo->Regions[i];
 				if(region.Type == Axe::SystemMemoryRegionType::Usable && region.Length > 0)
 				{
-					SetRegionState(AlignAddressUp((void*)region.BaseAddress, m_PageSize), region.Length, PageState::Free);
+					SetRegionState((void*)region.BaseAddress, region.Length, PageState::Free);
 				}
 			}
 			SetRegionState(m_Bitmap, m_PageCount, PageState::Reserved);
@@ -169,21 +169,6 @@ namespace Kernel
 		void* PhysicalMemoryManager::PageToAddress(size_t page)
 		{
 			return ((uint8_t*)m_StartAddress + (page * m_PageSize));
-		}
-
-		void* PhysicalMemoryManager::AlignAddressUp(void* address, size_t alignment)
-		{
-			return (((uintptr_t)address % alignment) ? (void*)(((uintptr_t)address + alignment - 1) & ~(alignment - 1)) : address);
-		}
-
-		void* PhysicalMemoryManager::AlignAddressDown(void* address, size_t alignment)
-		{
-			return (((uintptr_t)address % alignment) ? (void*)((uintptr_t)address & ~(alignment - 1)) : address);
-		}
-
-		bool PhysicalMemoryManager::IsAddressAligned(void* address, size_t alignment)
-		{
-			return ((uintptr_t)address % alignment == 0);
 		}
 	}
 }
