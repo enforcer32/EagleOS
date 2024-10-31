@@ -17,12 +17,14 @@ KERNEL_DIR 		= Kernel
 ARCH_DIR 		= Kernel/Arch
 NXN_DIR 		= Kernel/NXN
 DRIVERS_DIR 	= Kernel/Drivers
+MEMORY_DIR		= Kernel/Memory
 
 include $(BOOTLOADER_DIR)/make.config
 include $(KERNEL_DIR)/make.config
 include $(ARCH_DIR)/make.config
 include $(NXN_DIR)/make.config
 include $(DRIVERS_DIR)/make.config
+include $(MEMORY_DIR)/make.config
 
 CFLAGS 	:= $(CPPFLAGS) $(LIBDIR)
 
@@ -34,6 +36,7 @@ $(KERNEL_OBJS) \
 $(ARCH_OBJS) \
 $(NXN_OBJS) \
 $(DRIVERS_OBJS) \
+$(MEMORY_OBJS) \
 
 BL_OBJS_OUT := $(foreach item,$(BL_OBJS),$(BUILD_DIR)/$(item))
 KRNL_OBJS_OUT := $(foreach item,$(KRNL_OBJS),$(BUILD_DIR)/$(item))
@@ -83,7 +86,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 runqemu:
-	qemu-system-i386 -d int,cpu_reset -no-reboot -no-shutdown -hda $(BUILD_DIR)/$(BOOTLOADER_BIN) -hdb $(BUILD_DIR)/$(KERNEL_BIN)
+	qemu-system-i386 -m 128M -d int,cpu_reset -no-reboot -no-shutdown -hda $(BUILD_DIR)/$(BOOTLOADER_BIN) -hdb $(BUILD_DIR)/$(KERNEL_BIN)
 
 runbochs:
 	bochs -f .bochsrc
