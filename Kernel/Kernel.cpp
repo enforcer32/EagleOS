@@ -39,7 +39,7 @@ namespace Kernel
 		// Reserve Kernel Pages
 		uint64_t kernelSize = (uint64_t)&__kernel_end - (uint64_t)&__kernel_start;
 		uint64_t kernelPageCount = kernelSize / 4096 + 1;
-		pmm.ReservePages(&__kernel_start, kernelPageCount);
+		pmm.ReservePages((PhysicalAddress)&__kernel_start, kernelPageCount);
 
 		DumpSystemMeoryMap(bootInfo->MemoryInfo);
 

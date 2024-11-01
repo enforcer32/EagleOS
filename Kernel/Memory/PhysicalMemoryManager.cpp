@@ -33,26 +33,41 @@ namespace Kernel
 			KPrintf("PhysicalMemoryManager{PageSize = %d, PageCount = %d, MemorySize = %dMB, StartAddress = 0x%x, EndAddress = 0x%x, BitmapAddress = 0x%x}\n", m_PageSize, m_PageCount, (m_MemorySizeBytes / 1048576), m_StartAddress, m_EndAddress, m_Bitmap);
 			return 0;
 		}
+
+		PhysicalAddress PhysicalMemoryManager::AllocatePage()
+		{
+			return AllocatePages(1);
+		}
 		
-		void* PhysicalMemoryManager::AllocatePages(size_t pageCount)
+		PhysicalAddress PhysicalMemoryManager::AllocatePages(size_t pageCount)
 		{
 			if (!pageCount)
-				return nullptr;
+				return -1;
 
 			int64_t firstPage = FindFreePages(pageCount);
 			if(firstPage < 0)
-				return nullptr;
+				return -1;
 			
 			SetPages(firstPage, pageCount, PageState::Reserved);
 			return PageToAddress(firstPage);
 		}
 
-		void PhysicalMemoryManager::FreePages(void* address, size_t pageCount)
+		void PhysicalMemoryManager::FreePage(PhysicalAddress address)
+		{
+			FreePages(address, 1);
+		}
+
+		void PhysicalMemoryManager::FreePages(PhysicalAddress address, size_t pageCount)
 		{
 			SetPages(AddressToPage(address), pageCount, PageState::Free);
 		}
 
-		void PhysicalMemoryManager::ReservePages(void* address, size_t pageCount)
+		void PhysicalMemoryManager::ReservePage(PhysicalAddress address)
+		{
+			ReservePages(address, 1);
+		}
+
+		void PhysicalMemoryManager::ReservePages(PhysicalAddress address, size_t pageCount)
 		{
 			SetPages(AddressToPage(address), pageCount, PageState::Reserved);
 		}
@@ -70,9 +85,9 @@ namespace Kernel
 					memoryEnd = memoryInfo->Regions[i].BaseAddress + memoryInfo->Regions[i].Length;					
 			}
 
-			m_StartAddress = (void*)memoryStart;
-			m_EndAddress = (void*)memoryEnd;
-			m_MemorySizeBytes = (uint8_t*)m_EndAddress - (uint8_t*)m_StartAddress;
+			m_StartAddress = memoryStart;
+			m_EndAddress = memoryEnd;
+			m_MemorySizeBytes = m_EndAddress - m_StartAddress;
 			m_PageCount = m_MemorySizeBytes / m_PageSize;
 			return true;
 		}
@@ -96,14 +111,14 @@ namespace Kernel
 				const auto& region = memoryInfo->Regions[i];
 				if(region.Type == Axe::SystemMemoryRegionType::Usable && region.Length > 0)
 				{
-					SetRegionState((void*)region.BaseAddress, region.Length, PageState::Free);
+					SetRegionState(region.BaseAddress, region.Length, PageState::Free);
 				}
 			}
-			SetRegionState(m_Bitmap, m_PageCount, PageState::Reserved);
+			SetRegionState((PhysicalAddress)m_Bitmap, m_PageCount, PageState::Reserved);
 			return true;
 		}
 
-		void PhysicalMemoryManager::SetRegionState(void* address, size_t sizeBytes, PageState state)
+		void PhysicalMemoryManager::SetRegionState(PhysicalAddress address, size_t sizeBytes, PageState state)
 		{
 			size_t page = AddressToPage(address);
 			size_t pageCount = sizeBytes / m_PageSize;
@@ -166,14 +181,14 @@ namespace Kernel
 			return firstPage;
 		}
 
-		size_t PhysicalMemoryManager::AddressToPage(void* address)
+		size_t PhysicalMemoryManager::AddressToPage(PhysicalAddress address) const
 		{
-			return ((uint8_t*)address - (uint8_t*)m_StartAddress) / m_PageSize;
+			return (address - m_StartAddress) / m_PageSize;
 		}
 
-		void* PhysicalMemoryManager::PageToAddress(size_t page)
+		PhysicalAddress PhysicalMemoryManager::PageToAddress(size_t page) const
 		{
-			return ((uint8_t*)m_StartAddress + (page * m_PageSize));
+			return (m_StartAddress + (page * m_PageSize));
 		}
 	}
 }
