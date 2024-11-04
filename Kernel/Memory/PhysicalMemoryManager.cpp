@@ -5,6 +5,8 @@
 
 namespace Kernel
 {
+	Memory::PhysicalMemoryManager* g_KernelPMM = nullptr;
+
 	namespace Memory
 	{
 		int32_t PhysicalMemoryManager::Init(const Axe::SystemMemoryInfo* memoryInfo, size_t pageSize)
@@ -70,6 +72,11 @@ namespace Kernel
 		void PhysicalMemoryManager::ReservePages(PhysicalAddress address, size_t pageCount)
 		{
 			SetPages(AddressToPage(address), pageCount, PageState::Reserved);
+		}
+
+		size_t PhysicalMemoryManager::GetPageSize() const
+		{
+			return m_PageSize;
 		}
 
 		bool PhysicalMemoryManager::InitMemory(const Axe::SystemMemoryInfo* memoryInfo)

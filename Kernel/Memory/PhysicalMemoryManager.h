@@ -26,6 +26,8 @@ namespace Kernel
 			void ReservePage(PhysicalAddress address);
 			void ReservePages(PhysicalAddress address, size_t pageCount);
 
+			size_t GetPageSize() const;
+
 		private:
 			bool InitMemory(const Axe::SystemMemoryInfo* memoryInfo);
 			bool InitBitmap(const Axe::SystemMemoryInfo* memoryInfo);
@@ -49,4 +51,6 @@ namespace Kernel
 			uint8_t* m_Bitmap;
 		};
 	}
+
+	extern Memory::PhysicalMemoryManager* g_KernelPMM;
 }

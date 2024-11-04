@@ -11,6 +11,8 @@ extern uint64_t __kernel_end;
 
 namespace Kernel
 {
+	Memory::PhysicalMemoryManager _KernelPMM;
+
 	void DumpSystemMeoryMap(const Axe::SystemMemoryInfo* memoryInfo)
 	{
 		KPrintf("\n----------System Memory Map----------\n");
@@ -25,23 +27,42 @@ namespace Kernel
 		KPrintf("----------System Memory Map----------\n\n");
 	}
 
+	bool InitMemoryManager(const Axe::BootInfo* bootInfo)
+	{
+		g_KernelPMM = &_KernelPMM;
+		if (g_KernelPMM->Init(bootInfo->MemoryInfo, 4096) != 0)
+		{
+			KPrintf("Failed to Initialize g_KernelPMM\n");
+			return false;
+		}
+
+		// Reserve Kernel Pages
+		uint64_t kernelSize = (uint64_t)&__kernel_end - (uint64_t)&__kernel_start;
+		uint64_t kernelPageCount = kernelSize / 4096 + 1;
+		g_KernelPMM->ReservePages((PhysicalAddress)&__kernel_start, kernelPageCount);
+
+		// Reserve Address 0x0
+		g_KernelPMM->AllocatePage();
+
+		DumpSystemMeoryMap(bootInfo->MemoryInfo);
+		return true;
+	}
+
 	void InitKernel(const Axe::BootInfo* bootInfo)
 	{
 		Graphics::VGA::Init();
 		Graphics::VGA::ClearScreen();
 
-		if(x86::Processor::Init() != 0)
+		if (x86::Processor::Init() != 0)
 			KPanic("Failed to Initialize x86 Processor!\n");
 
-		Memory::PhysicalMemoryManager pmm;
-		pmm.Init(bootInfo->MemoryInfo, 4096);
+		if (!InitMemoryManager(bootInfo))
+			KPanic("Failed to Initialize Memory Manager\n");
 
-		// Reserve Kernel Pages
-		uint64_t kernelSize = (uint64_t)&__kernel_end - (uint64_t)&__kernel_start;
-		uint64_t kernelPageCount = kernelSize / 4096 + 1;
-		pmm.ReservePages((PhysicalAddress)&__kernel_start, kernelPageCount);
-
-		DumpSystemMeoryMap(bootInfo->MemoryInfo);
+		PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
+		KPrintf("Addr1: 0x%x\n", addr1);
+		PhysicalAddress addr2 = g_KernelPMM->AllocatePage();
+		KPrintf("Addr2: 0x%x\n", addr2);
 
 		KPrintf("\nEagle Operating System\n");
 	}
