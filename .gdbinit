@@ -9,7 +9,8 @@ add-symbol-file ./Build/Kernel/KernelObject.o 0x00100000
 #break Kernel/Kernel.cpp:KMain
 #break Axe/ELF/ELF.cpp:25
 #break Kernel/Kernel.cpp:KMain:32
-break Kernel/Memory/PhysicalMemoryManager.cpp:65
+#break Kernel/Memory/VirtualMemoryManager.cpp:59
+break Kernel/Memory/PageDirectory.cpp:82
 target remote | qemu-system-i386 -hda ./Build/Bootloader.bin -hdb ./Build/Kernel.elf -S -gdb stdio
 c
 

@@ -53,7 +53,7 @@ $(BOOTLOADER_BIN): $(BL_OBJS) $(BOOTLOADER_DIR)/linker.ld
 
 	rm -rf $(BUILD_DIR)/$(BOOTLOADER_BIN)
 	dd if=$(BUILD_DIR)/$(BOOTLOADER_DIR)/Bootsector.bin >> $(BUILD_DIR)/$(BOOTLOADER_BIN)
-	dd if=/dev/zero bs=512 count=100 >> $(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinkedAligned.bin
+	dd if=/dev/zero bs=512 count=1000 >> $(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinkedAligned.bin
 	dd if=$(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinked.bin of=$(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinkedAligned.bin conv=notrunc
 	dd if=$(BUILD_DIR)/$(BOOTLOADER_DIR)/BootloaderLinkedAligned.bin >> $(BUILD_DIR)/$(BOOTLOADER_BIN)
 
@@ -62,7 +62,7 @@ $(KERNEL_BIN): $(KRNL_OBJS) $(KERNEL_DIR)/linker.ld
 	$(CC) -T $(KERNEL_DIR)/linker.ld -o $(BUILD_DIR)/$(KERNEL_DIR)/KernelLinked.elf $(CPPFLAGS) $(BUILD_DIR)/$(KERNEL_DIR)/KernelObject.o $(LIBS)
 
 	rm -rf $(BUILD_DIR)/$(KERNEL_BIN)
-	dd if=/dev/zero bs=512 count=100 >> $(BUILD_DIR)/$(KERNEL_DIR)/KernelLinkedAligned.elf
+	dd if=/dev/zero bs=512 count=1000 >> $(BUILD_DIR)/$(KERNEL_DIR)/KernelLinkedAligned.elf
 	dd if=$(BUILD_DIR)/$(KERNEL_DIR)/KernelLinked.elf of=$(BUILD_DIR)/$(KERNEL_DIR)/KernelLinkedAligned.elf conv=notrunc
 	dd if=$(BUILD_DIR)/$(KERNEL_DIR)/KernelLinkedAligned.elf >> $(BUILD_DIR)/$(KERNEL_BIN)
 

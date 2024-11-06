@@ -4,6 +4,7 @@
 #include <Kernel/NXN/KPanic.h>
 #include <Kernel/Arch/x86/Processor.h>
 #include <Kernel/Memory/PhysicalMemoryManager.h>
+#include <Kernel/Memory/VirtualMemoryManager.h>
 #include <Kernel/NXN/CString.h>
 
 extern uint64_t __kernel_start;
@@ -12,6 +13,7 @@ extern uint64_t __kernel_end;
 namespace Kernel
 {
 	Memory::PhysicalMemoryManager _KernelPMM;
+	Memory::VirtualMemoryManager _KernelVMM;
 
 	void DumpSystemMeoryMap(const Axe::SystemMemoryInfo* memoryInfo)
 	{
@@ -44,7 +46,13 @@ namespace Kernel
 		// Reserve Address 0x0
 		g_KernelPMM->AllocatePage();
 
-		DumpSystemMeoryMap(bootInfo->MemoryInfo);
+		g_KernelVMM = &_KernelVMM;
+		if (g_KernelVMM->Init() != 0)
+		{
+			KPrintf("Failed to Initialize g_KernelVMM\n");
+			return false;
+		}
+
 		return true;
 	}
 
@@ -59,10 +67,29 @@ namespace Kernel
 		if (!InitMemoryManager(bootInfo))
 			KPanic("Failed to Initialize Memory Manager\n");
 
+		DumpSystemMeoryMap(bootInfo->MemoryInfo);
+
+		//int* data = (int*)0x40000000;
+		//data[0] = 1; // PF
+
+		/*
 		PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
 		KPrintf("Addr1: 0x%x\n", addr1);
 		PhysicalAddress addr2 = g_KernelPMM->AllocatePage();
 		KPrintf("Addr2: 0x%x\n", addr2);
+
+		PhysicalAddress block = g_KernelPMM->AllocatePage();
+		char* data = (char*)block;
+		data[0] = 'P';
+		data[1] = 0;
+		KPrintf("Block Address: 0x%x, Data Address: 0x%x, Data: %c\n", block, data, *data);
+		PhysicalAddress block2 = 0x41E000;
+		//g_KernelVMM->Map(block, block2, ((uint8_t)x86::PageTableFlags::Present | (uint8_t)x86::PageTableFlags::ReadWrite));
+		char* data2 = (char*)block2;
+		data2[0] = 'L';
+		data2[1] = 0;
+		KPrintf("Block2 Address: 0x%x, Data2 Address: 0x%x, Data: %c\n", block2, data2, *data);
+		*/
 
 		KPrintf("\nEagle Operating System\n");
 	}
