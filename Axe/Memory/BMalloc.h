@@ -4,5 +4,5 @@
 
 namespace Axe
 {
-	void* Malloc(uint32_t size);
+	void* BMalloc(uint32_t size);
 }

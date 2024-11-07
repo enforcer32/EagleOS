@@ -4,7 +4,7 @@
 #include <Axe/x86/Video.h>
 #include <Axe/System/SystemMemory.h>
 #include <Axe/x86/Paging/PageManager.h>
-#include <Axe/Memory/Malloc.h>
+#include <Axe/Memory/BMalloc.h>
 
 typedef void (*KernelEntry)(const Axe::BootInfo* bootInfo);
 
@@ -57,7 +57,7 @@ namespace Axe
 		if (!SetupKernelVirtualAddress(kernelELF))
 			return;
 
-		BootInfo* info = (BootInfo*)Malloc(sizeof(BootInfo));
+		BootInfo* info = (BootInfo*)BMalloc(sizeof(BootInfo));
 		info->Signature = AXE_BOOT_SIGNATURE;
 		info->KernelPhysicalStartAddress = 0;
 		info->KernelPhysicalEndAddress = 0;

@@ -1,13 +1,13 @@
 #include <Axe/System/SystemMemory.h>
-#include <Axe/Memory/Malloc.h>
+#include <Axe/Memory/BMalloc.h>
 #include <Axe/x86/Memory.h>
 
 namespace Axe
 {
 	SystemMemoryInfo* DetectSystemMemory()
 	{
-		SystemMemoryInfo* memoryInfo = (SystemMemoryInfo*)Malloc(sizeof(SystemMemoryInfo));
-		SystemMemoryRegion* regions = (SystemMemoryRegion*)Malloc(256 * sizeof(SystemMemoryRegion));
+		SystemMemoryInfo* memoryInfo = (SystemMemoryInfo*)BMalloc(sizeof(SystemMemoryInfo));
+		SystemMemoryRegion* regions = (SystemMemoryRegion*)BMalloc(256 * sizeof(SystemMemoryRegion));
 		uint32_t regionIdx = 0;
 
 		x86::BIOS::E820MemoryMap memoryMap;

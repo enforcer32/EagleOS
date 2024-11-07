@@ -1,5 +1,5 @@
 #include <Axe/x86/Paging/PageManager.h>
-#include <Axe/Memory/Malloc.h>
+#include <Axe/Memory/BMalloc.h>
 #include <Axe/NXN/CString.h>
 
 namespace Axe
@@ -12,7 +12,7 @@ namespace Axe
 
 		int32_t PageManager::Init()
 		{
-			m_KernelDirectory = (uint32_t*)Malloc(sizeof(uint32_t) * x86_PAGE_DIRECTORY_TABLE_COUNT);
+			m_KernelDirectory = (uint32_t*)BMalloc(sizeof(uint32_t) * x86_PAGE_DIRECTORY_TABLE_COUNT);
 			if (!m_KernelDirectory)
 				return -1;
 			NXN::Memset(m_KernelDirectory, 0, sizeof(uint32_t) * x86_PAGE_DIRECTORY_TABLE_COUNT);
@@ -27,7 +27,7 @@ namespace Axe
 			auto& directoryEntry = ((uint32_t*)m_KernelDirectory)[x86_PAGE_DIRECTORY_TABLE_INDEX(virtualAddress)];
 			if(!(directoryEntry & 0x1))
 			{
-				uint32_t* table = (uint32_t*)Malloc(sizeof(uint32_t) * x86_PAGE_TABLE_ENTRY_COUNT);
+				uint32_t* table = (uint32_t*)BMalloc(sizeof(uint32_t) * x86_PAGE_TABLE_ENTRY_COUNT);
 				if (!table)
 					return -1;
 
