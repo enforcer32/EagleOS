@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <Axe/NXN/Types.h>
 
 #define ATA_SECTOR_SIZE 512
 

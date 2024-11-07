@@ -12,7 +12,7 @@ add-symbol-file ./Build/Kernel/KernelObject.o 0x00100000
 #break Kernel/Memory/VirtualMemoryManager.cpp:59
 #break Kernel/Memory/PageDirectory.cpp:82
 #break Axe/x86/Paging/PageManager.cpp:62
-break Axe/Boot/BLMain.cpp:77
+break Axe/ELF/ELF.cpp:ParseSectionHeaders
 target remote | qemu-system-i386 -hda ./Build/Bootloader.bin -hdb ./Build/Kernel.elf -S -gdb stdio
 c
 

@@ -1,5 +1,6 @@
 #include <Axe/x86/Paging/PageManager.h>
 #include <Axe/Memory/Malloc.h>
+#include <Axe/NXN/CString.h>
 
 namespace Axe
 {
@@ -14,7 +15,7 @@ namespace Axe
 			m_KernelDirectory = (uint32_t*)Malloc(sizeof(uint32_t) * x86_PAGE_DIRECTORY_TABLE_COUNT);
 			if (!m_KernelDirectory)
 				return -1;
-			Memset(m_KernelDirectory, 0, sizeof(uint32_t) * x86_PAGE_DIRECTORY_TABLE_COUNT);
+			NXN::Memset(m_KernelDirectory, 0, sizeof(uint32_t) * x86_PAGE_DIRECTORY_TABLE_COUNT);
 			return 0;
 		}
 
