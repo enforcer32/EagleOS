@@ -25,20 +25,30 @@ namespace Axe
 			return true;
 		}
 
-		bool ELF::LoadProgramHeaders()
+		bool ELF::LoadProgramHeadersToPhysicalMemory() const
 		{
 			for(uint32_t i = 0; i < m_Header->ProgramHeaderCount; i++)
 			{
 				const auto& programHeader = m_ProgramHeaders[i];
 				void* segment = ATA::ATAReadLBAOffset(m_Drive, programHeader->Offset, programHeader->MemorySize);
-				Memcpy((void*)programHeader->VirtualAddress, segment, programHeader->MemorySize);
+				Memcpy((void*)programHeader->PhysicalAddress, segment, programHeader->MemorySize);
 			}
 			return true;
 		}
 
-		uint32_t ELF::GetEntryPointAddress()
+		uint32_t ELF::GetEntryPointAddress() const
 		{
 			return m_Header->EntryPointAddress;
+		}
+
+		ELF32ProgramHeader** ELF::GetProgramHeaders() const
+		{
+			return m_ProgramHeaders;
+		}
+
+		uint32_t ELF::GetProgramHeaderCount() const
+		{
+			return m_Header->ProgramHeaderCount;
 		}
 
 		bool ELF::IsValidELF()

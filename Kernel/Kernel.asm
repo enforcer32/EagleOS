@@ -4,8 +4,9 @@ section .text
 
 global _kernelstart
 
-extern __bss_start
-extern __bss_end
+extern __kernel_bss_start
+extern __kernel_bss_end
+extern __kernel_stack_end
 extern KMain
 
 CODE_SEG equ 0x08 ; Selector 0x08 will be our code segment offset
@@ -17,9 +18,9 @@ _kernelstart:
 	mov ebx, [esp+4]
 
 	; zero .bss section
-	;mov edi, __bss_start
-	;mov ecx, __bss_end
-	;sub ecx, __bss_start
+	;mov edi, __kernel_bss_start
+	;mov ecx, __kernel_bss_end
+	;sub ecx, __kernel_bss_start
 	;mov al, 0
 	;rep stosb
 
@@ -30,7 +31,7 @@ _kernelstart:
 	mov fs, eax
 	mov gs, eax
 	mov ss, eax
-	mov ebp, 0x00200000
+	mov ebp, __kernel_stack_end
 	mov esp, ebp
 
 	; Kernel

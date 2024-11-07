@@ -7,9 +7,6 @@
 #include <Kernel/Memory/VirtualMemoryManager.h>
 #include <Kernel/NXN/CString.h>
 
-extern uint64_t __kernel_start;
-extern uint64_t __kernel_end;
-
 namespace Kernel
 {
 	Memory::PhysicalMemoryManager _KernelPMM;
@@ -39,9 +36,9 @@ namespace Kernel
 		}
 
 		// Reserve Kernel Pages
-		uint64_t kernelSize = (uint64_t)&__kernel_end - (uint64_t)&__kernel_start;
+		uint64_t kernelSize = bootInfo->KernelPhysicalEndAddress - bootInfo->KernelPhysicalStartAddress;
 		uint64_t kernelPageCount = kernelSize / 4096 + 1;
-		g_KernelPMM->ReservePages((PhysicalAddress)&__kernel_start, kernelPageCount);
+		g_KernelPMM->ReservePages(bootInfo->KernelPhysicalStartAddress, kernelPageCount);
 
 		// Reserve Address 0x0
 		g_KernelPMM->AllocatePage();
@@ -64,9 +61,14 @@ namespace Kernel
 		if (x86::Processor::Init() != 0)
 			KPanic("Failed to Initialize x86 Processor!\n");
 
-		if (!InitMemoryManager(bootInfo))
-			KPanic("Failed to Initialize Memory Manager\n");
+		//if (!InitMemoryManager(bootInfo))
+		//	KPanic("Failed to Initialize Memory Manager\n");
 
+		KPrintf("\n----------Kernel Memory Map----------\n");
+		KPrintf("KernelPhysicalStartAddress: 0x%x\n", bootInfo->KernelPhysicalStartAddress);
+		KPrintf("KernelPhysicalEndAddress: 0x%x\n", bootInfo->KernelPhysicalEndAddress);
+		KPrintf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
+		KPrintf("KernelVirtualEndAddress: 0x%x\n", bootInfo->KernelVirtualEndAddress);
 		DumpSystemMeoryMap(bootInfo->MemoryInfo);
 
 		//int* data = (int*)0x40000000;
@@ -95,8 +97,21 @@ namespace Kernel
 	}
 }
 
+extern "C" uintptr_t __kernel_physical_start;
+extern "C" uintptr_t __kernel_physical_end;
+extern "C" uintptr_t __kernel_virtual_start;
+extern "C" uintptr_t __kernel_virtual_end;
+
 extern "C" void KMain(const Axe::BootInfo* bootInfo)
 {
+	if(bootInfo->Signature != AXE_BOOT_SIGNATURE)
+		return;
+
+	((Axe::BootInfo*)bootInfo)->KernelPhysicalStartAddress = (uintptr_t)&__kernel_physical_start;
+	((Axe::BootInfo*)bootInfo)->KernelPhysicalEndAddress = (uintptr_t)&__kernel_physical_end;
+	((Axe::BootInfo*)bootInfo)->KernelVirtualStartAddress = (uintptr_t)&__kernel_virtual_start;
+	((Axe::BootInfo*)bootInfo)->KernelVirtualEndAddress = (uintptr_t)&__kernel_virtual_end;
+
 	Kernel::InitKernel(bootInfo);
 	for(;;);
 }

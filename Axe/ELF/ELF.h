@@ -13,9 +13,11 @@ namespace Axe
 		{
 		public:
 			bool Parse(ATA::ATADrive drive);
-			bool LoadProgramHeaders();
-			uint32_t GetEntryPointAddress();
-
+			bool LoadProgramHeadersToPhysicalMemory() const;
+			uint32_t GetEntryPointAddress() const;
+			ELF32ProgramHeader** GetProgramHeaders() const;
+			uint32_t GetProgramHeaderCount() const;
+			
 		private:
 			bool IsValidELF();
 			bool ParseProgramHeaders();

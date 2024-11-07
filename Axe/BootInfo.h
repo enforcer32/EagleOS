@@ -2,12 +2,17 @@
 
 #include <Axe/System/SystemMemory.h>
 
+#define AXE_BOOT_SIGNATURE 0xDEADD432
+
 namespace Axe
 {
 	struct BootInfo
 	{
 		uint32_t Signature;
-		uint32_t* KernelAddress;
+		uintptr_t KernelPhysicalStartAddress;
+		uintptr_t KernelPhysicalEndAddress;
+		uintptr_t KernelVirtualStartAddress;
+		uintptr_t KernelVirtualEndAddress;
 		SystemMemoryInfo* MemoryInfo;
 	};
 }

@@ -7,8 +7,9 @@ namespace Axe
 
 	void* Malloc(uint32_t size)
 	{
+		uint32_t alignedSize = (size % 4096 ? (size - (size % 4096)) + 4096 : size);
 		void* ptr = s_AllocAddress;
-		s_AllocAddress += size;
+		s_AllocAddress += alignedSize;
 		return ptr;
 	}
 
