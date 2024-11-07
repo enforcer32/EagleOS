@@ -1,4 +1,6 @@
 #include <Axe/BootInfo.h>
+#include <Axe/Graphics/VGA.h>
+#include <Axe/NXN/BPrintf.h>
 #include <Axe/ATA/ATA.h>
 #include <Axe/ELF/ELF.h>
 #include <Axe/x86/Video.h>
@@ -50,6 +52,10 @@ namespace Axe
 
 	void Init()
 	{
+		Graphics::VGA::Init();
+		Graphics::VGA::ClearScreen();
+		BPrintf("Initializing Second Stage Bootloader...!\n");
+
 		ELF::ELF kernelELF;
 		kernelELF.Parse(ATA::ATADrive::Slave);
 		kernelELF.LoadProgramHeadersToPhysicalMemory();
