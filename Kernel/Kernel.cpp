@@ -29,7 +29,7 @@ namespace Kernel
 	bool InitMemoryManager(const Axe::BootInfo* bootInfo)
 	{
 		g_KernelPMM = &_KernelPMM;
-		if (g_KernelPMM->Init(bootInfo->MemoryInfo, 4096) != 0)
+		if (g_KernelPMM->Init(bootInfo, 4096) != 0)
 		{
 			KPrintf("Failed to Initialize g_KernelPMM\n");
 			return false;
@@ -43,12 +43,14 @@ namespace Kernel
 		// Reserve Address 0x0
 		g_KernelPMM->AllocatePage();
 
+		/*
 		g_KernelVMM = &_KernelVMM;
 		if (g_KernelVMM->Init() != 0)
 		{
 			KPrintf("Failed to Initialize g_KernelVMM\n");
 			return false;
 		}
+		*/
 
 		return true;
 	}
@@ -61,8 +63,8 @@ namespace Kernel
 		if (x86::Processor::Init() != 0)
 			KPanic("Failed to Initialize x86 Processor!\n");
 
-		//if (!InitMemoryManager(bootInfo))
-		//	KPanic("Failed to Initialize Memory Manager\n");
+		if (!InitMemoryManager(bootInfo))
+			KPanic("Failed to Initialize Memory Manager\n");
 
 		KPrintf("\n----------Kernel Memory Map----------\n");
 		KPrintf("KernelPhysicalStartAddress: 0x%x\n", bootInfo->KernelPhysicalStartAddress);
@@ -98,20 +100,10 @@ namespace Kernel
 	}
 }
 
-extern "C" uintptr_t __kernel_physical_start;
-extern "C" uintptr_t __kernel_physical_end;
-extern "C" uintptr_t __kernel_virtual_start;
-extern "C" uintptr_t __kernel_virtual_end;
-
 extern "C" void KMain(const Axe::BootInfo* bootInfo)
 {
 	if(bootInfo->Signature != AXE_BOOT_SIGNATURE)
 		return;
-
-	//((Axe::BootInfo*)bootInfo)->KernelPhysicalStartAddress = (uintptr_t)&__kernel_physical_start;
-	//((Axe::BootInfo*)bootInfo)->KernelPhysicalEndAddress = (uintptr_t)&__kernel_physical_end;
-	//((Axe::BootInfo*)bootInfo)->KernelVirtualStartAddress = (uintptr_t)&__kernel_virtual_start;
-	//((Axe::BootInfo*)bootInfo)->KernelVirtualEndAddress = (uintptr_t)&__kernel_virtual_end;
 
 	Kernel::InitKernel(bootInfo);
 	for(;;);

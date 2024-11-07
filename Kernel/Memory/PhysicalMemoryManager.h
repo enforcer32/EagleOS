@@ -1,7 +1,7 @@
 #pragma once
 
+#include <Axe/BootInfo.h>
 #include <Kernel/Memory/PhysicalAddress.h>
-#include <Kernel/Memory/MemoryRegion.h>
 #include <Kernel/NXN/Bitset.h>
 
 namespace Kernel
@@ -17,7 +17,7 @@ namespace Kernel
 		class PhysicalMemoryManager
 		{
 		public:
-			int32_t Init(const Axe::SystemMemoryInfo* memoryInfo, size_t pageSize);
+			int32_t Init(const Axe::BootInfo* bootInfo, size_t pageSize);
 
 			PhysicalAddress AllocatePage();
 			PhysicalAddress AllocatePages(size_t pageCount);
@@ -30,7 +30,7 @@ namespace Kernel
 
 		private:
 			bool InitMemory(const Axe::SystemMemoryInfo* memoryInfo);
-			bool InitBitmap(const Axe::SystemMemoryInfo* memoryInfo);
+			bool InitBitmap(const Axe::BootInfo* bootInfo);
 			bool InitFreeMemory(const Axe::SystemMemoryInfo* memoryInfo);
 
 			void SetRegionState(PhysicalAddress address, size_t sizeBytes, PageState state);
@@ -49,6 +49,7 @@ namespace Kernel
 			PhysicalAddress m_StartAddress;
 			PhysicalAddress m_EndAddress;
 			uint8_t* m_Bitmap;
+			PhysicalAddress m_BitmapPhysicalAddress;
 		};
 	}
 

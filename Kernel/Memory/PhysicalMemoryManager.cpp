@@ -9,24 +9,24 @@ namespace Kernel
 
 	namespace Memory
 	{
-		int32_t PhysicalMemoryManager::Init(const Axe::SystemMemoryInfo* memoryInfo, size_t pageSize)
+		int32_t PhysicalMemoryManager::Init(const Axe::BootInfo* bootInfo, size_t pageSize)
 		{
 			KPrintf("Initializing PhysicalMemoryManager...\n");
 			m_PageSize = pageSize;
 
-			if (!InitMemory(memoryInfo))
+			if (!InitMemory(bootInfo->MemoryInfo))
 			{
 				KPrintf("PhysicalMemoryManager Failed to InitMemory\n");
 				return -1;
 			}
 
-			if (!InitBitmap(memoryInfo))
+			if (!InitBitmap(bootInfo))
 			{
 				KPrintf("PhysicalMemoryManager Failed to InitBitmap\n");
 				return -1;
 			}
 
-			if (!InitFreeMemory(memoryInfo))
+			if (!InitFreeMemory(bootInfo->MemoryInfo))
 			{
 				KPrintf("PhysicalMemoryManager Failed to InitFreeMemory\n");
 				return -1;
@@ -99,14 +99,10 @@ namespace Kernel
 			return true;
 		}
 
-		bool PhysicalMemoryManager::InitBitmap(const Axe::SystemMemoryInfo* memoryInfo)
+		bool PhysicalMemoryManager::InitBitmap(const Axe::BootInfo* bootInfo)
 		{
-			size_t i;
-			for(i = 0; i < memoryInfo->RegionCount; i++)
-				if (memoryInfo->Regions[i].Type == Axe::SystemMemoryRegionType::Usable && memoryInfo->Regions[i].BaseAddress > 0 && memoryInfo->Regions[i].Length > 0)
-					break;
-
-			m_Bitmap = (uint8_t*)memoryInfo->Regions[i].BaseAddress + (100 * m_PageSize);
+			m_Bitmap = (uint8_t*)bootInfo->KernelVirtualStartAddress + (100 * m_PageSize);
+			m_BitmapPhysicalAddress = bootInfo->KernelPhysicalStartAddress + (100 * m_PageSize);
 			NXN::Memset(m_Bitmap, static_cast<uint8_t>(PageState::Reserved), m_PageCount);
 			return true;
 		}
@@ -121,7 +117,7 @@ namespace Kernel
 					SetRegionState(region.BaseAddress, region.Length, PageState::Free);
 				}
 			}
-			SetRegionState((PhysicalAddress)m_Bitmap, m_PageCount, PageState::Reserved);
+			SetRegionState(m_BitmapPhysicalAddress, m_PageCount, PageState::Reserved);
 			return true;
 		}
 
