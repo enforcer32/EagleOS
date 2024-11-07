@@ -17,7 +17,7 @@ _bootloader:
 	mov fs, eax
 	mov gs, eax
 	mov ss, eax
-	mov ebp, 0x00008200
+	mov ebp, 0x00009000
 	mov esp, ebp
 
 	; Enable A20 Line to access all memory

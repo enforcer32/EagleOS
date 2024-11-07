@@ -3,7 +3,7 @@
 
 CODE_SEG equ gdt_code - gdt_start ; Selector 0x08 will be our code segment offset
 DATA_SEG equ gdt_data - gdt_start ; Selector 0x10 will be our data segment offset
-BOOTLOADER_LOAD_ADDRESS equ 0x0000A000 ; 2nd Stage Bootloader Load Address
+BOOTLOADER_LOAD_ADDRESS equ 0x0000B000 ; 2nd Stage Bootloader Load Address
 
 ; BIOS PARAMETER BLOCK
 _bpb:

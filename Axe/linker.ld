@@ -3,7 +3,7 @@ OUTPUT_FORMAT(binary)
 
 SECTIONS 
 {
-	. = 0x0000A000; /* Load 2nd Stage Bootloader Address */
+	. = 0x0000B000; /* Load 2nd Stage Bootloader Address */
 
 	.text : ALIGN(4096)
 	{

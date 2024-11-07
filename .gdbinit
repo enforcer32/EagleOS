@@ -2,7 +2,7 @@ set architecture i386
 set auto-load safe-path .
 set disassembly-flavor intel
 
-add-symbol-file ./Build/Axe/BootloaderObject.o 0x0000A000
+add-symbol-file ./Build/Axe/BootloaderObject.o 0x0000B000
 add-symbol-file ./Build/Kernel/KernelObject.o 0x00100000
 #break Axe/BLMain.cpp:BLMain
 #break Kernel/Kernel.asm:_kernelstart
