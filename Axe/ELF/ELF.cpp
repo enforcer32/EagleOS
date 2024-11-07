@@ -32,7 +32,7 @@ namespace Axe
 			{
 				const auto& programHeader = m_ProgramHeaders[i];
 				void* segment = ATA::ATAReadLBAOffset(m_Drive, programHeader->Offset, programHeader->MemorySize);
-				NXN::Memcpy((void*)programHeader->PhysicalAddress, segment, programHeader->MemorySize);
+				NXN::Memcpy((void*)programHeader->VirtualAddress, segment, programHeader->MemorySize);
 			}
 			return true;
 		}

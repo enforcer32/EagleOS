@@ -69,6 +69,7 @@ namespace Kernel
 		KPrintf("KernelPhysicalEndAddress: 0x%x\n", bootInfo->KernelPhysicalEndAddress);
 		KPrintf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
 		KPrintf("KernelVirtualEndAddress: 0x%x\n", bootInfo->KernelVirtualEndAddress);
+		KPrintf("----------Kernel Memory Map----------\n");
 		DumpSystemMeoryMap(bootInfo->MemoryInfo);
 
 		//int* data = (int*)0x40000000;
@@ -107,10 +108,10 @@ extern "C" void KMain(const Axe::BootInfo* bootInfo)
 	if(bootInfo->Signature != AXE_BOOT_SIGNATURE)
 		return;
 
-	((Axe::BootInfo*)bootInfo)->KernelPhysicalStartAddress = (uintptr_t)&__kernel_physical_start;
-	((Axe::BootInfo*)bootInfo)->KernelPhysicalEndAddress = (uintptr_t)&__kernel_physical_end;
-	((Axe::BootInfo*)bootInfo)->KernelVirtualStartAddress = (uintptr_t)&__kernel_virtual_start;
-	((Axe::BootInfo*)bootInfo)->KernelVirtualEndAddress = (uintptr_t)&__kernel_virtual_end;
+	//((Axe::BootInfo*)bootInfo)->KernelPhysicalStartAddress = (uintptr_t)&__kernel_physical_start;
+	//((Axe::BootInfo*)bootInfo)->KernelPhysicalEndAddress = (uintptr_t)&__kernel_physical_end;
+	//((Axe::BootInfo*)bootInfo)->KernelVirtualStartAddress = (uintptr_t)&__kernel_virtual_start;
+	//((Axe::BootInfo*)bootInfo)->KernelVirtualEndAddress = (uintptr_t)&__kernel_virtual_end;
 
 	Kernel::InitKernel(bootInfo);
 	for(;;);
