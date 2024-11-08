@@ -35,9 +35,16 @@ namespace Kernel
 			return false;
 		}
 
+		// Reserve Bootloader Pages (1st 1MB)
+		uintptr_t bootloaderStartAddress = 0x0;
+		uintptr_t bootloaderEndAddress = 0x100000;
+		uint64_t bootloaderSize = bootloaderEndAddress - bootloaderStartAddress;
+		uint64_t bootloaderPageCount = bootloaderSize / 4096;
+		g_KernelPMM->ReservePages(bootloaderStartAddress, bootloaderPageCount);
+
 		// Reserve Kernel Pages
 		uint64_t kernelSize = bootInfo->KernelPhysicalEndAddress - bootInfo->KernelPhysicalStartAddress;
-		uint64_t kernelPageCount = kernelSize / 4096 + 1;
+		uint64_t kernelPageCount = kernelSize / 4096;
 		g_KernelPMM->ReservePages(bootInfo->KernelPhysicalStartAddress, kernelPageCount);
 
 		// Reserve Address 0x0

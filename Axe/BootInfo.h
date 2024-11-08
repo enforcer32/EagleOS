@@ -13,6 +13,7 @@ namespace Axe
 		uintptr_t KernelPhysicalEndAddress;
 		uintptr_t KernelVirtualStartAddress;
 		uintptr_t KernelVirtualEndAddress;
+		void* KernelPageDirectory;
 		SystemMemoryInfo* MemoryInfo;
 	};
 }
