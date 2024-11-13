@@ -1,6 +1,6 @@
 #include <Kernel/Memory/PageTable.h>
-#include <Kernel/NXN/Bitwise.h>
-#include <Kernel/NXN/KPrintf.h>
+#include <ESTD/Bitwise.h>
+#include <Kernel/Kern/KPrintf.h>
 
 namespace Kernel
 {
@@ -8,72 +8,72 @@ namespace Kernel
 	{
 		bool PageTableEntry::IsPresent() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::Present);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::Present);
 		}
 
 		void PageTableEntry::SetPresent(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::Present);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::Present);
 		}
 
 		bool PageTableEntry::IsWritable() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::ReadWrite);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::ReadWrite);
 		}
 
 		void PageTableEntry::SetWritable(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::ReadWrite);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::ReadWrite);
 		}
 
 		bool PageTableEntry::IsUser() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::User);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::User);
 		}
 
 		void PageTableEntry::SetUser(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::User);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::User);
 		}
 
 		bool PageTableEntry::IsWriteThrough() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::WriteThrough);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::WriteThrough);
 		}
 
 		void PageTableEntry::SetWriteThrough(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::WriteThrough);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::WriteThrough);
 		}
 
 		bool PageTableEntry::IsCacheDisable() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::CacheDisable);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::CacheDisable);
 		}
 
 		void PageTableEntry::SetCacheDisable(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::CacheDisable);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::CacheDisable);
 		}
 
 		bool PageTableEntry::IsAccessed() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::Accessed);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::Accessed);
 		}
 
 		bool PageTableEntry::IsDirty() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::Dirty);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::Dirty);
 		}
 
 		bool PageTableEntry::IsGlobal() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::Global);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::Global);
 		}
 
 		void PageTableEntry::SetGlobal(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::Global);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageTableFlags::Global);
 		}
 
 		PhysicalAddress PageTableEntry::GetAddress() const

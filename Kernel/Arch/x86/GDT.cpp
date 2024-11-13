@@ -1,5 +1,5 @@
 #include <Kernel/Arch/x86/GDT.h>
-#include <Kernel/NXN/KPrintf.h>
+#include <Kernel/Kern/KPrintf.h>
 
 namespace Kernel
 {

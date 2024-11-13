@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Kernel/NXN/Types.h>
+#include <ESTD/Types.h>
 #include <Axe/System/SystemMemory.h>
 
 namespace Kernel

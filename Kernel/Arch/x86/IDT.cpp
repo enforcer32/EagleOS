@@ -1,5 +1,5 @@
 #include <Kernel/Arch/x86/IDT.h>
-#include <Kernel/NXN/KPrintf.h>
+#include <Kernel/Kern/KPrintf.h>
 #include <Kernel/Arch/x86/ISR.h>
 
 namespace Kernel

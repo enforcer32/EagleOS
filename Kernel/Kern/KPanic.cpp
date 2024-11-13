@@ -1,5 +1,5 @@
-#include <Kernel/NXN/KPanic.h>
-#include <Kernel/NXN/KPrintf.h>
+#include <Kernel/Kern/KPanic.h>
+#include <Kernel/Kern/KPrintf.h>
 
 namespace Kernel
 {

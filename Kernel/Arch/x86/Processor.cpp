@@ -1,6 +1,6 @@
 #include <Kernel/Arch/x86/Processor.h>
-#include <Kernel/NXN/KPrintf.h>
-#include <Kernel/NXN/KPanic.h>
+#include <Kernel/Kern/KPrintf.h>
+#include <Kernel/Kern/KPanic.h>
 #include <Kernel/Arch/x86/GDT.h>
 #include <Kernel/Arch/x86/IDT.h>
 #include <Kernel/Arch/x86/PIC8259.h>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Kernel/NXN/Types.h>
+#include <ESTD/Types.h>
 
 namespace Kernel
 {

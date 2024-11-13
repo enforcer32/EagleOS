@@ -1,7 +1,7 @@
 #include <Kernel/Memory/PhysicalMemoryManager.h>
-#include <Kernel/NXN/KPrintf.h>
-#include <Kernel/NXN/CString.h>
-#include <Kernel/NXN/Errno.h>
+#include <Kernel/Kern/KPrintf.h>
+#include <ESTD/CString.h>
+#include <ESTD/Errno.h>
 
 namespace Kernel
 {
@@ -103,7 +103,7 @@ namespace Kernel
 		{
 			m_Bitmap = (uint8_t*)bootInfo->KernelVirtualStartAddress + (100 * m_PageSize);
 			m_BitmapPhysicalAddress = bootInfo->KernelPhysicalStartAddress + (100 * m_PageSize);
-			NXN::Memset(m_Bitmap, static_cast<uint8_t>(PageState::Reserved), m_PageCount);
+			ESTD::Memset(m_Bitmap, static_cast<uint8_t>(PageState::Reserved), m_PageCount);
 			return true;
 		}
 		

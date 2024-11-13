@@ -1,6 +1,6 @@
 #include <Axe/ELF/ELF.h>
 #include <Axe/Memory/BMalloc.h>
-#include <Axe/NXN/CString.h>
+#include <ESTD/CString.h>
 
 namespace Axe
 {
@@ -32,7 +32,7 @@ namespace Axe
 			{
 				const auto& programHeader = m_ProgramHeaders[i];
 				void* segment = ATA::ATAReadLBAOffset(m_Drive, programHeader->Offset, programHeader->MemorySize);
-				NXN::Memcpy((void*)programHeader->VirtualAddress, segment, programHeader->MemorySize);
+				ESTD::Memcpy((void*)programHeader->VirtualAddress, segment, programHeader->MemorySize);
 			}
 			return true;
 		}

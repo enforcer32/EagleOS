@@ -1,6 +1,6 @@
 #include <Kernel/Drivers/Graphics/VGA.h>
 #include <Kernel/Arch/x86/IO.h>
-#include <Kernel/NXN/CString.h>
+#include <ESTD/CString.h>
 
 #define VGA_VIDEO_ADDRESS 0xB8000
 #define VGA_WIDTH 80
@@ -102,7 +102,7 @@ namespace Kernel
 
 		void VGA::WriteStr(const char* str)
 		{
-			for (uint32_t i = 0; i < NXN::Strlen(str); i++)
+			for (uint32_t i = 0; i < ESTD::Strlen(str); i++)
 				WriteChar(str[i]);
 		}
 
@@ -171,9 +171,9 @@ namespace Kernel
 		{
 			uint8_t* start = (uint8_t*)s_VideoAddress + VGA_WIDTH * 2;
 			size_t size = s_Row * VGA_WIDTH * 2;
-			NXN::Memcpy(s_VideoAddress, start, size);
+			ESTD::Memcpy(s_VideoAddress, start, size);
 			start = (uint8_t*)s_VideoAddress + size;
-			NXN::Memsetw(start, VGA_TEXT_ENCODE(' ', (uint8_t)VGAColor::Black), size);
+			ESTD::Memsetw(start, VGA_TEXT_ENCODE(' ', (uint8_t)VGAColor::Black), size);
 			s_Row--;
 		}
 	}

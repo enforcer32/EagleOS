@@ -1,6 +1,6 @@
 #include <Kernel/Memory/PageDirectory.h>
-#include <Kernel/NXN/Bitwise.h>
-#include <Kernel/NXN/KPrintf.h>
+#include <ESTD/Bitwise.h>
+#include <Kernel/Kern/KPrintf.h>
 
 namespace Kernel
 {
@@ -8,62 +8,62 @@ namespace Kernel
 	{
 		bool PageDirectoryEntry::IsPresent() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::Present);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::Present);
 		}
 
 		void PageDirectoryEntry::SetPresent(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::Present);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::Present);
 		}
 
 		bool PageDirectoryEntry::IsWritable() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::ReadWrite);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::ReadWrite);
 		}
 
 		void PageDirectoryEntry::SetWritable(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::ReadWrite);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::ReadWrite);
 		}
 
 		bool PageDirectoryEntry::IsUser() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::User);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::User);
 		}
 
 		void PageDirectoryEntry::SetUser(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::User);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::User);
 		}
 
 		bool PageDirectoryEntry::IsWriteThrough() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::WriteThrough);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::WriteThrough);
 		}
 
 		void PageDirectoryEntry::SetWriteThrough(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::WriteThrough);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::WriteThrough);
 		}
 
 		bool PageDirectoryEntry::IsCacheDisable() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::CacheDisable);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::CacheDisable);
 		}
 
 		void PageDirectoryEntry::SetCacheDisable(bool value)
 		{
-			NXN::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::CacheDisable);
+			ESTD::Bitwise::BitmaskSet(m_Entry, (uint32_t)PageDirectoryFlags::CacheDisable);
 		}
 
 		bool PageDirectoryEntry::IsAccessed() const
 		{
-			return NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::Accessed);
+			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::Accessed);
 		}
 
 		size_t PageDirectoryEntry::GetPageSize() const
 		{
-			return (NXN::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::PageSize) ? 4194304 : 4096);	
+			return (ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::PageSize) ? 4194304 : 4096);	
 		}
 
 		PhysicalAddress PageDirectoryEntry::GetAddress() const

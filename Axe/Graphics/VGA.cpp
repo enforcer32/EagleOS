@@ -1,7 +1,7 @@
 #include <Axe/Graphics/VGA.h>
 #include <Axe/x86/IO.h>
-#include <Axe/NXN/CString.h>
-#include <Axe/NXN/Bitwise.h>
+#include <ESTD/CString.h>
+#include <ESTD/Bitwise.h>
 
 #define VGA_VIDEO_ADDRESS 0xB8000
 #define VGA_WIDTH 80
@@ -98,7 +98,7 @@ namespace Axe
 
 		void VGA::WriteStr(const char* str)
 		{
-			for (uint32_t i = 0; i < NXN::Strlen(str); i++)
+			for (uint32_t i = 0; i < ESTD::Strlen(str); i++)
 				WriteChar(str[i]);
 		}
 
@@ -117,7 +117,7 @@ namespace Axe
 			uint8_t addrRegBak = x86::IO::INSB(s_CtrlAddressRegister);
 			x86::IO::OUTB(s_CtrlAddressRegister, CTRL_CURSOR_START_REG);
 			uint8_t cursorStartRegData = x86::IO::INSB(s_CtrlDataRegister);
-			NXN::Bitwise::BitClear(cursorStartRegData, (uint8_t)5);
+			ESTD::Bitwise::BitClear(cursorStartRegData, (uint8_t)5);
 			x86::IO::OUTB(s_CtrlDataRegister, cursorStartRegData);
 			x86::IO::OUTB(s_CtrlAddressRegister, addrRegBak);
 		}
@@ -127,7 +127,7 @@ namespace Axe
 			uint8_t addrRegBak = x86::IO::INSB(s_CtrlAddressRegister);
 			x86::IO::OUTB(s_CtrlAddressRegister, CTRL_CURSOR_START_REG);
 			uint8_t cursorStartRegData = x86::IO::INSB(s_CtrlDataRegister);
-			NXN::Bitwise::BitSet(cursorStartRegData, (uint8_t)5);
+			ESTD::Bitwise::BitSet(cursorStartRegData, (uint8_t)5);
 			x86::IO::OUTB(s_CtrlDataRegister, cursorStartRegData);
 			x86::IO::OUTB(s_CtrlAddressRegister, addrRegBak);
 		}
@@ -167,9 +167,9 @@ namespace Axe
 		{
 			uint8_t* start = (uint8_t*)s_VideoAddress + VGA_WIDTH * 2;
 			size_t size = s_Row * VGA_WIDTH * 2;
-			NXN::Memcpy(s_VideoAddress, start, size);
+			ESTD::Memcpy(s_VideoAddress, start, size);
 			start = (uint8_t*)s_VideoAddress + size;
-			NXN::Memsetw(start, VGA_TEXT_ENCODE(' ', (uint8_t)VGAColor::Black), size);
+			ESTD::Memsetw(start, VGA_TEXT_ENCODE(' ', (uint8_t)VGAColor::Black), size);
 			s_Row--;
 		}
 	}

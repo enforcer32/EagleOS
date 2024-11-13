@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Axe/NXN/Types.h>
+#include <ESTD/Types.h>
 
 #define x86_PAGE_DIRECTORY_TABLE_COUNT 1024
 #define x86_PAGE_TABLE_ENTRY_COUNT 1024

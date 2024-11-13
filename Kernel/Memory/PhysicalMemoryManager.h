@@ -2,7 +2,7 @@
 
 #include <Axe/BootInfo.h>
 #include <Kernel/Memory/PhysicalAddress.h>
-#include <Kernel/NXN/Bitset.h>
+#include <ESTD/Bitset.h>
 
 namespace Kernel
 {

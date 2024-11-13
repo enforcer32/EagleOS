@@ -1,5 +1,5 @@
-#include <Axe/NXN/BPanic.h>
-#include <Axe/NXN/BPrintf.h>
+#include <Axe/Lib/BPanic.h>
+#include <Axe/Lib/BPrintf.h>
 
 namespace Axe
 {

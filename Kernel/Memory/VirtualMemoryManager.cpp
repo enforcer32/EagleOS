@@ -1,8 +1,8 @@
 #include <Kernel/Memory/VirtualMemoryManager.h>
 #include <Kernel/Memory/PhysicalMemoryManager.h>
 #include <Kernel/Arch/x86/Memory/Paging.h>
-#include <Kernel/NXN/KPrintf.h>
-#include <Kernel/NXN/CString.h>
+#include <Kernel/Kern/KPrintf.h>
+#include <ESTD/CString.h>
 
 namespace Kernel
 {

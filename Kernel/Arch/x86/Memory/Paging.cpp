@@ -1,5 +1,5 @@
 #include <Kernel/Arch/x86/Memory/Paging.h>
-#include <Kernel/NXN/Errno.h>
+#include <ESTD/Errno.h>
 
 namespace Kernel
 {

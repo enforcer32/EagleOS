@@ -1,6 +1,6 @@
-#include <Axe/NXN/BPrintf.h>
+#include <Axe/Lib/BPrintf.h>
 #include <Axe/Graphics/VGA.h>
-#include <Axe/NXN/TypeConverter.h>
+#include <ESTD/TypeConverter.h>
 
 namespace Axe
 {
@@ -38,7 +38,7 @@ namespace Axe
 			{
 				val = va_arg(ap, int);
 				char tmp[12];
-				NXN::TypeConverter::IntToStr(val, tmp, sizeof(tmp), 10);
+				ESTD::TypeConverter::IntToStr(val, tmp, sizeof(tmp), 10);
 				BPrint(tmp);
 				break;
 			}
@@ -46,7 +46,7 @@ namespace Axe
 			{
 				val = va_arg(ap, int);
 				char tmp[12];
-				NXN::TypeConverter::IntToStr(val, tmp, sizeof(tmp), 16);
+				ESTD::TypeConverter::IntToStr(val, tmp, sizeof(tmp), 16);
 				BPrint(tmp);
 				break;
 			}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Axe/NXN/Types.h>
+#include <ESTD/Types.h>
 #include <stdarg.h>
 
 namespace Axe

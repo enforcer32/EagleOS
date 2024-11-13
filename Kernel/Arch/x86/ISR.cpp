@@ -1,9 +1,9 @@
 #include <Kernel/Arch/x86/ISR.h>
 #include <Kernel/Arch/x86/IDT.h>
 #include <Kernel/Arch/x86/Processor.h>
-#include <Kernel/NXN/KPanic.h>
-#include <Kernel/NXN/KPrintf.h>
-#include <Kernel/NXN/Bitwise.h>
+#include <Kernel/Kern/KPanic.h>
+#include <Kernel/Kern/KPrintf.h>
+#include <ESTD/Bitwise.h>
 
 namespace Kernel
 {
@@ -121,7 +121,7 @@ namespace Kernel
 				asm volatile("movl %cr2, %edx");
 				register uintptr_t virtualAddress asm("edx");
 				KPrintf("Page Fault For Address: 0x%x\n", virtualAddress);
-				KPrintf("IsPresent: %d\n", NXN::Bitwise::BitTest(frame->ErrorCode, 0));
+				KPrintf("IsPresent: %d\n", ESTD::Bitwise::BitTest(frame->ErrorCode, 0));
 			}
 
 			if (frame->InterruptNumber < 32)

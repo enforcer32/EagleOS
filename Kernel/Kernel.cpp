@@ -1,11 +1,11 @@
 #include <Axe/BootInfo.h>
 #include <Kernel/Drivers/Graphics/VGA.h>
-#include <Kernel/NXN/KPrintf.h>
-#include <Kernel/NXN/KPanic.h>
+#include <Kernel/Kern/KPrintf.h>
+#include <Kernel/Kern/KPanic.h>
 #include <Kernel/Arch/x86/Processor.h>
 #include <Kernel/Memory/PhysicalMemoryManager.h>
 #include <Kernel/Memory/VirtualMemoryManager.h>
-#include <Kernel/NXN/CString.h>
+#include <ESTD/CString.h>
 
 namespace Kernel
 {

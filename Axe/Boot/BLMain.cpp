@@ -1,7 +1,7 @@
 #include <Axe/BootInfo.h>
 #include <Axe/Graphics/VGA.h>
-#include <Axe/NXN/BPrintf.h>
-#include <Axe/NXN/BPanic.h>
+#include <Axe/Lib/BPrintf.h>
+#include <Axe/Lib/BPanic.h>
 #include <Axe/ATA/ATA.h>
 #include <Axe/ELF/ELF.h>
 #include <Axe/x86/Video.h>

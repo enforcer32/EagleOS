@@ -1,6 +1,6 @@
 #include <Kernel/Arch/x86/PIC8259.h>
 #include <Kernel/Arch/x86/IO.h>
-#include <Kernel/NXN/KPrintf.h>
+#include <Kernel/Kern/KPrintf.h>
 
 #define PIC1 0x20 /* IO base address for master PIC */
 #define PIC1_COMMAND PIC1

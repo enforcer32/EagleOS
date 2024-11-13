@@ -1,6 +1,6 @@
-#include <Kernel/NXN/KPrintf.h>
+#include <Kernel/Kern/KPrintf.h>
 #include <Kernel/Drivers/Graphics/VGA.h>
-#include <Kernel/NXN/TypeConverter.h>
+#include <ESTD/TypeConverter.h>
 
 namespace Kernel
 {
@@ -38,7 +38,7 @@ namespace Kernel
 			{
 				val = va_arg(ap, int);
 				char tmp[12];
-				NXN::TypeConverter::IntToStr(val, tmp, sizeof(tmp), 10);
+				ESTD::TypeConverter::IntToStr(val, tmp, sizeof(tmp), 10);
 				KPrint(tmp);
 				break;
 			}
@@ -46,7 +46,7 @@ namespace Kernel
 			{
 				val = va_arg(ap, int);
 				char tmp[12];
-				NXN::TypeConverter::IntToStr(val, tmp, sizeof(tmp), 16);
+				ESTD::TypeConverter::IntToStr(val, tmp, sizeof(tmp), 16);
 				KPrint(tmp);
 				break;
 			}
