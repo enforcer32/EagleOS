@@ -128,6 +128,7 @@ namespace Axe
 		bootInfo->KernelPhysicalEndAddress = physicalEndAddress;
 		bootInfo->KernelVirtualStartAddress = virtualStartAddress;
 		bootInfo->KernelVirtualEndAddress = virtualEndAddress;
+		bootInfo->KernelPageDirectory = s_PageManager.GetKernelDirectory();
 		return true;
 	}
 

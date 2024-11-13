@@ -50,14 +50,12 @@ namespace Kernel
 		// Reserve Address 0x0
 		g_KernelPMM->AllocatePage();
 
-		/*
 		g_KernelVMM = &_KernelVMM;
-		if (g_KernelVMM->Init() != 0)
+		if (g_KernelVMM->Init(bootInfo) != 0)
 		{
 			KPrintf("Failed to Initialize g_KernelVMM\n");
 			return false;
 		}
-		*/
 
 		return true;
 	}
@@ -81,8 +79,14 @@ namespace Kernel
 		KPrintf("----------Kernel Memory Map----------\n");
 		DumpSystemMeoryMap(bootInfo->MemoryInfo);
 
-		//int* data = (int*)0x40000000;
-		//data[0] = 1; // PF
+		PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
+		int* data = (int*)0x810000;
+		if(g_KernelVMM->Map(0x810000, addr1) != 0)
+		{
+			KPrintf("MAPPING FAILED\n");
+			for(;;);
+		}
+		data[0] = 1; // PF
 
 		/*
 		PhysicalAddress addr1 = g_KernelPMM->AllocatePage();

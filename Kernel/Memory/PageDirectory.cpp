@@ -1,5 +1,6 @@
 #include <Kernel/Memory/PageDirectory.h>
 #include <Kernel/NXN/Bitwise.h>
+#include <Kernel/NXN/KPrintf.h>
 
 namespace Kernel
 {
@@ -91,6 +92,21 @@ namespace Kernel
 		{
 			const auto& entry = GetEntry(virtualAddress);
 			return reinterpret_cast<PageTable*>(entry->GetAddress());
+		}
+
+		void PageDirectory::DumpPageDirectoryEntry(VirtualAddress virtualAddress) const
+		{
+			const auto& entry = &m_Tables[PAGE_DIRECTORY_TABLE_INDEX(virtualAddress)];
+			KPrintf("\n-------------------------DumpPageDirectoryEntry---------------------\n");
+			KPrintf("VirtualAddress: 0x%x, PageDirectoryIndex: %d\n", virtualAddress, PAGE_DIRECTORY_TABLE_INDEX(virtualAddress));
+			KPrintf("IsPresent: %s\n", (entry->IsPresent() ? "true" : "false"));
+			KPrintf("IsWritable: %s\n", (entry->IsWritable() ? "true" : "false"));
+			KPrintf("IsUser: %s\n", (entry->IsUser() ? "true" : "false"));
+			KPrintf("IsWriteThrough: %s\n", (entry->IsWriteThrough() ? "true" : "false"));
+			KPrintf("IsCacheDisable: %s\n", (entry->IsCacheDisable() ? "true" : "false"));
+			KPrintf("IsAccessed: %s\n", (entry->IsAccessed() ? "true" : "false"));
+			KPrintf("PageTable PhysicalAddress: 0x%x\n", entry->GetAddress());
+			KPrintf("-------------------------DumpPageDirectoryEntry---------------------\n");
 		}
 	}
 }

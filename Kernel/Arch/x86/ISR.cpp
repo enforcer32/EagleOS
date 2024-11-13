@@ -2,6 +2,8 @@
 #include <Kernel/Arch/x86/IDT.h>
 #include <Kernel/Arch/x86/Processor.h>
 #include <Kernel/NXN/KPanic.h>
+#include <Kernel/NXN/KPrintf.h>
+#include <Kernel/NXN/Bitwise.h>
 
 namespace Kernel
 {
@@ -114,6 +116,14 @@ namespace Kernel
 
 		extern "C" void x86ISRFaultHandler(const InterruptFrame* frame)
 		{
+			if (frame->InterruptNumber == 14)
+			{
+				asm volatile("movl %cr2, %edx");
+				register uintptr_t virtualAddress asm("edx");
+				KPrintf("Page Fault For Address: 0x%x\n", virtualAddress);
+				KPrintf("IsPresent: %d\n", NXN::Bitwise::BitTest(frame->ErrorCode, 0));
+			}
+
 			if (frame->InterruptNumber < 32)
 				KPanic(ExceptionMessages[frame->InterruptNumber]);
 		}

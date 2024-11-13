@@ -9,25 +9,25 @@ namespace Kernel
 		namespace Bitwise
 		{	
 			template<typename T>
-			void BitSet(T& number, T pos)
+			void BitSet(T& number, int pos)
 			{
 				number |= (1 << pos);
 			}
 
 			template<typename T>
-			void BitClear(T& number, T pos)
+			void BitClear(T& number, int pos)
 			{
 				number &= ~(1 << pos);
 			}
 
 			template<typename T>
-			void BitToggle(T& number, T pos)
+			void BitToggle(T& number, int pos)
 			{
 				number ^= (1 << pos);
 			}
 
 			template<typename T>
-			bool BitTest(T number, T pos)
+			bool BitTest(T number, int pos)
 			{
 				return ((number >> pos) & 1);
 			}

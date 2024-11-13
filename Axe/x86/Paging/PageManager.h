@@ -22,6 +22,7 @@ namespace Axe
 			void LoadKernelDirectory() const;
 			void EnablePaging() const;
 			void DisablePaging() const;
+			void* GetKernelDirectory() const;
 
 		private:
 			bool IsAddressAligned(uintptr_t address, uint32_t alignment) const;

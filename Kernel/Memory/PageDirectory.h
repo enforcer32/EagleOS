@@ -50,6 +50,7 @@ namespace Kernel
 			PageDirectoryEntry* GetEntry(VirtualAddress virtualAddress);
 			void SetEntry(uint32_t index, PageDirectoryEntry entry);
 			PageTable* GetTable(VirtualAddress virtualAddress);
+			void DumpPageDirectoryEntry(VirtualAddress virtualAddress) const;
 
 		private:
 			PageDirectoryEntry m_Tables[PAGE_DIRECTORY_TABLE_COUNT]{};

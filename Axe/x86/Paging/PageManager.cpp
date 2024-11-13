@@ -66,6 +66,11 @@ namespace Axe
 			x86_DisablePaging();
 		}
 
+		void* PageManager::GetKernelDirectory() const
+		{
+			return m_KernelDirectory;
+		}
+
 		bool PageManager::IsAddressAligned(uintptr_t address, uint32_t alignment) const
 		{
 			return (address % alignment == 0);

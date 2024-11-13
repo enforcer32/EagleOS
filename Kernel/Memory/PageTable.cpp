@@ -1,5 +1,6 @@
 #include <Kernel/Memory/PageTable.h>
 #include <Kernel/NXN/Bitwise.h>
+#include <Kernel/NXN/KPrintf.h>
 
 namespace Kernel
 {
@@ -95,6 +96,23 @@ namespace Kernel
 		void PageTable::SetEntry(uint32_t index, PageTableEntry entry)
 		{
 			m_Entries[index] = entry;
+		}
+
+		void PageTable::DumpPageTableEntry(VirtualAddress virtualAddress) const
+		{
+			const auto& entry = &m_Entries[PAGE_TABLE_ENTRY_INDEX(virtualAddress)];
+			KPrintf("\n-------------------------DumpPageTableEntry---------------------\n");
+			KPrintf("VirtualAddress: 0x%x, PageTableIndex: %d\n", virtualAddress, PAGE_TABLE_ENTRY_INDEX(virtualAddress));
+			KPrintf("IsPresent: %s\n", (entry->IsPresent() ? "true" : "false"));
+			KPrintf("IsWritable: %s\n", (entry->IsWritable() ? "true" : "false"));
+			KPrintf("IsUser: %s\n", (entry->IsUser() ? "true" : "false"));
+			KPrintf("IsWriteThrough: %s\n", (entry->IsWriteThrough() ? "true" : "false"));
+			KPrintf("IsCacheDisable: %s\n", (entry->IsCacheDisable() ? "true" : "false"));
+			KPrintf("IsAccessed: %s\n", (entry->IsAccessed() ? "true" : "false"));
+			KPrintf("IsDirty: %s\n", (entry->IsDirty() ? "true" : "false"));
+			KPrintf("IsGlobal: %s\n", (entry->IsGlobal() ? "true" : "false"));
+			KPrintf("Mapped PhysicalAddress: 0x%x\n", entry->GetAddress());
+			KPrintf("-------------------------DumpPageTableEntry---------------------\n");
 		}
 	}
 }

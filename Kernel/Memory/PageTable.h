@@ -53,6 +53,7 @@ namespace Kernel
 		public:
 			PageTableEntry* GetEntry(VirtualAddress virtualAddress);
 			void SetEntry(uint32_t index, PageTableEntry entry);
+			void DumpPageTableEntry(VirtualAddress virtualAddress) const;
 
 		private:
 			PageTableEntry m_Entries[PAGE_TABLE_ENTRY_COUNT]{};
