@@ -1,15 +1,15 @@
-section .text
+section .bootloaderentrypoint
 
 [BITS 32]
 
-global _bootloader
+global _bootloaderstart
 
 extern BLMain
 
 CODE_SEG equ 0x08 ; Selector 0x08 will be our code segment offset
 DATA_SEG equ 0x10 ; Selector 0x10 will be our data segment offset
 
-_bootloader:
+_bootloaderstart:
 	; set data segment
 	mov eax, DATA_SEG
 	mov ds, eax

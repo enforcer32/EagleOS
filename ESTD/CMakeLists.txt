@@ -1,0 +1,13 @@
+file(GLOB_RECURSE ESTDSources
+	"${CMAKE_CURRENT_SOURCE_DIR}/Types.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Errno.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/TypeConverter.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/TypeConverter.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/CString.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/CString.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Bitwise.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Bitset.h"
+)
+
+add_library(${ESTD_TARGET_NAME} OBJECT ${ESTDSources})
+target_include_directories(${ESTD_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../")

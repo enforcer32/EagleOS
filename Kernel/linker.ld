@@ -11,6 +11,7 @@ SECTIONS
 	__kernel_virtual_start = .;
 	.text ALIGN(4096) : AT ((ADDR (.text) - (0xC0000000)) + __kernel_physical_start)
 	{
+		*(.kernelentrypoint)
 		*(.text)
 		*(.text.*)
 	}

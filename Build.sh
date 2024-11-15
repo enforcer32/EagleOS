@@ -1,7 +1,10 @@
-OUT_PATH=$HOME/EagleOS
+TOOLCHAIN_OUT_PATH=$HOME/EagleOS
+export TOOLCHAIN_PREFIX="$TOOLCHAIN_OUT_PATH/Opt/Cross"
+export TOOLCHAIN_TARGET=i686-elf
+export TOOLCHAIN_PATH="$TOOLCHAIN_PREFIX/bin"
+export PATH="$TOOLCHAIN_PATH:$PATH"
 
-export PREFIX="${OUT_PATH}/Opt/Cross"
-export TARGET=i686-elf
-export PATH="$PREFIX/bin:$PATH"
-
-make all
+mkdir Build
+cd Build
+cmake ..
+make -j12

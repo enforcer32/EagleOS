@@ -1,1 +1,1 @@
-make runqemu
+(cd ./Build && make runqemu)

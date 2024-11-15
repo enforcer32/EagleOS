@@ -1,4 +1,4 @@
-ENTRY(_bootloader)
+ENTRY(_bootloaderstart)
 OUTPUT_FORMAT(binary)
 
 SECTIONS 
@@ -7,6 +7,7 @@ SECTIONS
 
 	.text : ALIGN(4096)
 	{
+		*(.bootloaderentrypoint)
 		*(.text)
 		*(.text.*)
 	}

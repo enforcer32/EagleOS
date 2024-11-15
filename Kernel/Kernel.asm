@@ -1,4 +1,4 @@
-section .text
+section .kernelentrypoint
 
 [BITS 32]
 
