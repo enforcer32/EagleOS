@@ -1,0 +1,12 @@
+file(GLOB_RECURSE ELIBSources
+	# LibELF
+	"${CMAKE_CURRENT_SOURCE_DIR}/LibELF/ELF.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/LibELF/ELF.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/LibELF/Headers/ELFHeader.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/LibELF/Headers/ELFIdent.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/LibELF/Headers/ELFProgramHeader.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/LibELF/Headers/ELFSectionHeader.h"
+)
+
+add_library(${ELIB_TARGET_NAME} OBJECT ${ELIBSources})
+target_include_directories(${ELIB_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../")

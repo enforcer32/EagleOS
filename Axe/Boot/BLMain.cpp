@@ -3,7 +3,7 @@
 #include <Axe/Lib/BPrintf.h>
 #include <Axe/Lib/BPanic.h>
 #include <Axe/ATA/ATA.h>
-#include <Axe/ELF/ELF.h>
+#include <ELIB/LibELF/ELF.h>
 #include <Axe/x86/Video.h>
 #include <Axe/System/SystemMemory.h>
 #include <Axe/x86/Paging/PageManager.h>

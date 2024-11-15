@@ -21,6 +21,7 @@ Eagle - Operating System.
 ## Core Files
 
 - /ESTD - Eagle Standard Library
+- /ELIB - Eagle Libraries
 - /Axe - Multi-Stage Bootloader
 - /Kernel - Kernel
 - /Kernel/Arch - Architecture Specific
