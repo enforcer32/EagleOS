@@ -6,7 +6,7 @@
   <h3 align="center">EagleOS</h3>
 
   <p align="center">
-    Eagle Operating System
+    Eagle Operating System (x86)
     <br>
     <a href="https://github.com/enforcer32/EagleOS/issues/new?labels=bug">Report bug</a>
     ·
@@ -16,13 +16,13 @@
 
 ## About
 
-Eagle - Operating System.
+Eagle - 32-bit Operating System.
 
 ## Core Files
 
 - /ESTD - Eagle Standard Library
 - /ELIB - Eagle Libraries
-- /Axe - Multi-Stage Bootloader
+- /Handshake - Multi-Stage Bootloader
 - /Kernel - Kernel
 - /Kernel/Arch - Architecture Specific
 - /Kernel/Drivers - Device and Driver Specific

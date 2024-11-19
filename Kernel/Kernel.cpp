@@ -68,25 +68,25 @@ namespace Kernel
 		if (x86::Processor::Init() != 0)
 			KPanic("Failed to Initialize x86 Processor!\n");
 
-		if (!InitMemoryManager(bootInfo))
-			KPanic("Failed to Initialize Memory Manager\n");
+		//if (!InitMemoryManager(bootInfo))
+		//	KPanic("Failed to Initialize Memory Manager\n");
 
-		KPrintf("\n----------Kernel Memory Map----------\n");
-		KPrintf("KernelPhysicalStartAddress: 0x%x\n", bootInfo->KernelPhysicalStartAddress);
-		KPrintf("KernelPhysicalEndAddress: 0x%x\n", bootInfo->KernelPhysicalEndAddress);
-		KPrintf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
-		KPrintf("KernelVirtualEndAddress: 0x%x\n", bootInfo->KernelVirtualEndAddress);
-		KPrintf("----------Kernel Memory Map----------\n");
-		DumpSystemMeoryMap(bootInfo->MemoryInfo);
+		//KPrintf("\n----------Kernel Memory Map----------\n");
+		//KPrintf("KernelPhysicalStartAddress: 0x%x\n", bootInfo->KernelPhysicalStartAddress);
+		//KPrintf("KernelPhysicalEndAddress: 0x%x\n", bootInfo->KernelPhysicalEndAddress);
+		//KPrintf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
+		//KPrintf("KernelVirtualEndAddress: 0x%x\n", bootInfo->KernelVirtualEndAddress);
+		//KPrintf("----------Kernel Memory Map----------\n");
+		//DumpSystemMeoryMap(bootInfo->MemoryInfo);
 
-		PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
-		int* data = (int*)0x810000;
-		if(g_KernelVMM->Map(0x810000, addr1) != 0)
-		{
-			KPrintf("MAPPING FAILED\n");
-			for(;;);
-		}
-		data[0] = 1; // PF
+		//PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
+		//int* data = (int*)0x810000;
+		//if(g_KernelVMM->Map(0x810000, addr1) != 0)
+		//{
+		//	KPrintf("MAPPING FAILED\n");
+		//	for(;;);
+		//}
+		//data[0] = 1; // PF
 
 		/*
 		PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
@@ -113,9 +113,9 @@ namespace Kernel
 
 extern "C" void KMain(const Axe::BootInfo* bootInfo)
 {
-	if(bootInfo->Signature != AXE_BOOT_SIGNATURE)
-		return;
+	//if(bootInfo->Signature != AXE_BOOT_SIGNATURE)
+	//	return;
 
-	Kernel::InitKernel(bootInfo);
+	Kernel::InitKernel(nullptr);
 	for(;;);
 }
