@@ -2,7 +2,7 @@
 #include <Axe/Graphics/VGA.h>
 #include <Axe/Lib/BPrintf.h>
 #include <Axe/Lib/BPanic.h>
-#include <Axe/ATA/ATA.h>
+#include <ELIB/LibATA/ATA.h>
 #include <ELIB/LibELF/ELF.h>
 #include <Axe/x86/Video.h>
 #include <Axe/System/SystemMemory.h>

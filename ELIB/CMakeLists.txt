@@ -6,7 +6,11 @@ file(GLOB_RECURSE ELIBSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/LibELF/Headers/ELFIdent.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/LibELF/Headers/ELFProgramHeader.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/LibELF/Headers/ELFSectionHeader.h"
+
+	# LibATA
+	"${CMAKE_CURRENT_SOURCE_DIR}/LibATA/ATA.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/LibATA/ATA.asm"
+	"${CMAKE_CURRENT_SOURCE_DIR}/LibATA/ATA.cpp"
 )
 
-add_library(${ELIB_TARGET_NAME} OBJECT ${ELIBSources})
-target_include_directories(${ELIB_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../")
+set(ELIBSources ${ELIBSources} PARENT_SCOPE)

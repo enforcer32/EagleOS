@@ -3,14 +3,14 @@
 #include <ELIB/LibELF/Headers/ELFHeader.h>
 #include <ELIB/LibELF/Headers/ELFProgramHeader.h>
 #include <ELIB/LibELF/Headers/ELFSectionHeader.h>
-#include <Axe/ATA/ATA.h>
+#include <ELIB/LibATA/ATA.h>
 
 namespace ELF
 {
 	class ELF
 	{
 	public:
-		bool Parse(Axe::ATA::ATADrive drive);
+		bool Parse(ATA::ATADrive drive);
 		bool LoadProgramHeadersToPhysicalMemory() const;
 		uint32_t GetEntryPointAddress() const;
 		ELF32ProgramHeader** GetProgramHeaders() const;
@@ -23,7 +23,7 @@ namespace ELF
 		bool ParseSectionHeaderStringTable();
 
 	private:
-		Axe::ATA::ATADrive m_Drive;
+		ATA::ATADrive m_Drive;
 		ELF32Header* m_Header;
 		ELF32ProgramHeader** m_ProgramHeaders;
 		ELF32SectionHeader** m_SectionHeaders;

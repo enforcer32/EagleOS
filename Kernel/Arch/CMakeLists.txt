@@ -21,5 +21,4 @@ file(GLOB_RECURSE ArchSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/x86/Memory/Paging.cpp"
 )
 
-add_library(${ARCH_TARGET_NAME} OBJECT ${ArchSources})
-target_include_directories(${ARCH_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../")
+set(ArchSources ${ArchSources} PARENT_SCOPE)

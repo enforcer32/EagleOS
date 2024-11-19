@@ -12,5 +12,4 @@ file(GLOB_RECURSE MemorySources
 	"${CMAKE_CURRENT_SOURCE_DIR}/PageTable.cpp"
 )
 
-add_library(${MEMORY_TARGET_NAME} OBJECT ${MemorySources})
-target_include_directories(${MEMORY_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../../")
+set(MemorySources ${MemorySources} PARENT_SCOPE)

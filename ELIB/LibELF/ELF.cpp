@@ -4,10 +4,10 @@
 
 namespace ELF
 {
-	bool ELF::Parse(Axe::ATA::ATADrive drive)
+	bool ELF::Parse(ATA::ATADrive drive)
 	{
 		m_Drive = drive;
-		m_Header = (ELF32Header*)Axe::ATA::ATAReadLBAOffset(drive, 0, sizeof(ELF32Header));
+		m_Header = (ELF32Header*)ATA::ATAReadLBAOffset(drive, 0, sizeof(ELF32Header));
 
 		if (!IsValidELF())
 			return false;
@@ -29,7 +29,7 @@ namespace ELF
 		for(uint32_t i = 0; i < m_Header->ProgramHeaderCount; i++)
 		{
 			const auto& programHeader = m_ProgramHeaders[i];
-			void* segment = Axe::ATA::ATAReadLBAOffset(m_Drive, programHeader->Offset, programHeader->MemorySize);
+			void* segment = ATA::ATAReadLBAOffset(m_Drive, programHeader->Offset, programHeader->MemorySize);
 			ESTD::Memcpy((void*)programHeader->VirtualAddress, segment, programHeader->MemorySize);
 		}
 		return true;
@@ -60,7 +60,7 @@ namespace ELF
 		m_ProgramHeaders = (ELF32ProgramHeader**)EMalloc(m_Header->ProgramHeaderCount * sizeof(ELF32ProgramHeader*));
 		for (uint32_t i = 0; i < m_Header->ProgramHeaderCount; i++)
 		{
-			ELF32ProgramHeader* programHeader = (ELF32ProgramHeader*)Axe::ATA::ATAReadLBAOffset(m_Drive, ((m_Header->ProgramHeaderOffset) + (m_Header->ProgramHeaderEntrySize * i)), sizeof(ELF32ProgramHeader));
+			ELF32ProgramHeader* programHeader = (ELF32ProgramHeader*)ATA::ATAReadLBAOffset(m_Drive, ((m_Header->ProgramHeaderOffset) + (m_Header->ProgramHeaderEntrySize * i)), sizeof(ELF32ProgramHeader));
 			*(m_ProgramHeaders + i) = programHeader;
 		}
 		return true;
@@ -71,7 +71,7 @@ namespace ELF
 		m_SectionHeaders = (ELF32SectionHeader**)EMalloc(m_Header->SectionHeaderCount * sizeof(ELF32SectionHeader*));
 		for (uint32_t i = 0; i < m_Header->SectionHeaderCount; i++)
 		{
-			ELF32SectionHeader* sectionHeader = (ELF32SectionHeader*)Axe::ATA::ATAReadLBAOffset(m_Drive, ((m_Header->SectionHeaderOffset) + (m_Header->SectionHeaderEntrySize * i)), sizeof(ELF32SectionHeader));
+			ELF32SectionHeader* sectionHeader = (ELF32SectionHeader*)ATA::ATAReadLBAOffset(m_Drive, ((m_Header->SectionHeaderOffset) + (m_Header->SectionHeaderEntrySize * i)), sizeof(ELF32SectionHeader));
 			*(m_SectionHeaders + i) = sectionHeader;
 		}
 		return true;
@@ -80,7 +80,7 @@ namespace ELF
 	bool ELF::ParseSectionHeaderStringTable()
 	{
 		const auto& stringTableHeader = m_SectionHeaders[m_Header->SectionHeaderStringTableIndex];
-		m_SectionHeaderStringTableRaw = (char*)Axe::ATA::ATAReadLBAOffset(m_Drive, stringTableHeader->Offset, stringTableHeader->Size);
+		m_SectionHeaderStringTableRaw = (char*)ATA::ATAReadLBAOffset(m_Drive, stringTableHeader->Offset, stringTableHeader->Size);
 		return true;
 	}
 }

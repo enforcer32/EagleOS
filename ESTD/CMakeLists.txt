@@ -9,5 +9,4 @@ file(GLOB_RECURSE ESTDSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/Bitset.h"
 )
 
-add_library(${ESTD_TARGET_NAME} OBJECT ${ESTDSources})
-target_include_directories(${ESTD_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../")
+set(ESTDSources ${ESTDSources} PARENT_SCOPE)

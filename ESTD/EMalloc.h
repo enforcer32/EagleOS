@@ -4,7 +4,7 @@
 	#include <Axe/Memory/BMalloc.h>
 	#define EMalloc Axe::BMalloc
 #elif ESTD_KERNEL_BUILD
-	#error KERNELNOTDEFINEDYET
+	#define EMalloc
 #else
 	#error EMallocUndefined
 #endif
