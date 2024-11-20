@@ -1,11 +1,31 @@
 file(GLOB_RECURSE BootloaderSources
+	# HS
 	"${CMAKE_CURRENT_SOURCE_DIR}/HS/Bootloader.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/HS/Handshake.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/HS/Handshake.cpp"
 
+	# BIOS
 	"${CMAKE_CURRENT_SOURCE_DIR}/BIOS/Video/Print.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/BIOS/Video/Print.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/BIOS/Video/Print.cpp"
+
+	# CPU
+	"${CMAKE_CURRENT_SOURCE_DIR}/CPU/IO.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/CPU/IO.asm"
+
+	# Memory
+	"${CMAKE_CURRENT_SOURCE_DIR}/Memory/Malloc.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Memory/Malloc.cpp"
+
+	# VIDEO
+	"${CMAKE_CURRENT_SOURCE_DIR}/Video/VGA.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Video/VGA.cpp"
+
+	# STDIO
+	"${CMAKE_CURRENT_SOURCE_DIR}/Stdio/Print.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Stdio/Print.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Stdio/Panic.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Stdio/Panic.cpp"
 )
 
 add_library(${BOOTLOADER_TARGET_NAME} OBJECT ${ESTDSources} ${ELIBSources} ${BootloaderSources})

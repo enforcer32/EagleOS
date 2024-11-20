@@ -50,7 +50,7 @@ set(KERNEL_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Kernel)
 add_subdirectory(${ESTD_TARGET_DIR})
 add_subdirectory(${ELIB_TARGET_DIR})
 add_subdirectory(${BOOTLOADER_TARGET_DIR})
-add_subdirectory(${KERNEL_TARGET_DIR})
+#add_subdirectory(${KERNEL_TARGET_DIR})
 
 # RUN QEMU
 add_custom_target(runqemu

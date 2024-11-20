@@ -1,8 +1,8 @@
 #pragma once
 
 #ifdef ESTD_BOOTLOADER_BUILD
-	#include <Axe/Memory/BMalloc.h>
-	#define EMalloc Axe::BMalloc
+	#include <Handshake/Memory/Malloc.h>
+	#define EMalloc Handshake::Malloc
 #elif ESTD_KERNEL_BUILD
 	#define EMalloc
 #elif ESTD_NONE_BUILD
