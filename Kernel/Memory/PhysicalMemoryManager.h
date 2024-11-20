@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Axe/BootInfo.h>
+//#include <Axe/BootInfo.h>
 #include <Kernel/Memory/PhysicalAddress.h>
 #include <ESTD/Bitset.h>
 
@@ -17,7 +17,7 @@ namespace Kernel
 		class PhysicalMemoryManager
 		{
 		public:
-			int32_t Init(const Axe::BootInfo* bootInfo, size_t pageSize);
+			//int32_t Init(const Axe::BootInfo* bootInfo, size_t pageSize);
 
 			PhysicalAddress AllocatePage();
 			PhysicalAddress AllocatePages(size_t pageCount);
@@ -29,9 +29,9 @@ namespace Kernel
 			size_t GetPageSize() const;
 
 		private:
-			bool InitMemory(const Axe::SystemMemoryInfo* memoryInfo);
-			bool InitBitmap(const Axe::BootInfo* bootInfo);
-			bool InitFreeMemory(const Axe::SystemMemoryInfo* memoryInfo);
+			//bool InitMemory(const Axe::SystemMemoryInfo* memoryInfo);
+			//bool InitBitmap(const Axe::BootInfo* bootInfo);
+			//bool InitFreeMemory(const Axe::SystemMemoryInfo* memoryInfo);
 
 			void SetRegionState(PhysicalAddress address, size_t sizeBytes, PageState state);
 			void SetPages(size_t page, size_t pageCount, PageState state);

@@ -1,17 +1,17 @@
-#include <Axe/BootInfo.h>
 #include <Kernel/Drivers/Graphics/VGA.h>
 #include <Kernel/Kern/KPrintf.h>
 #include <Kernel/Kern/KPanic.h>
 #include <Kernel/Arch/x86/Processor.h>
-#include <Kernel/Memory/PhysicalMemoryManager.h>
-#include <Kernel/Memory/VirtualMemoryManager.h>
+//#include <Kernel/Memory/PhysicalMemoryManager.h>
+//#include <Kernel/Memory/VirtualMemoryManager.h>
 #include <ESTD/CString.h>
 
 namespace Kernel
 {
-	Memory::PhysicalMemoryManager _KernelPMM;
-	Memory::VirtualMemoryManager _KernelVMM;
+	//Memory::PhysicalMemoryManager _KernelPMM;
+	//Memory::VirtualMemoryManager _KernelVMM;
 
+	/*
 	void DumpSystemMeoryMap(const Axe::SystemMemoryInfo* memoryInfo)
 	{
 		KPrintf("\n----------System Memory Map----------\n");
@@ -58,64 +58,64 @@ namespace Kernel
 		}
 
 		return true;
-	}
+	}*/
 
-	void InitKernel(const Axe::BootInfo* bootInfo)
-	{
-		Graphics::VGA::Init();
-		Graphics::VGA::ClearScreen();
+	//void InitKernel(const Axe::BootInfo* bootInfo)
+	//{
+	//	Graphics::VGA::Init();
+	//	Graphics::VGA::ClearScreen();
 
-		if (x86::Processor::Init() != 0)
-			KPanic("Failed to Initialize x86 Processor!\n");
+	//	if (x86::Processor::Init() != 0)
+	//		KPanic("Failed to Initialize x86 Processor!\n");
 
-		//if (!InitMemoryManager(bootInfo))
-		//	KPanic("Failed to Initialize Memory Manager\n");
+	//	//if (!InitMemoryManager(bootInfo))
+	//	//	KPanic("Failed to Initialize Memory Manager\n");
 
-		//KPrintf("\n----------Kernel Memory Map----------\n");
-		//KPrintf("KernelPhysicalStartAddress: 0x%x\n", bootInfo->KernelPhysicalStartAddress);
-		//KPrintf("KernelPhysicalEndAddress: 0x%x\n", bootInfo->KernelPhysicalEndAddress);
-		//KPrintf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
-		//KPrintf("KernelVirtualEndAddress: 0x%x\n", bootInfo->KernelVirtualEndAddress);
-		//KPrintf("----------Kernel Memory Map----------\n");
-		//DumpSystemMeoryMap(bootInfo->MemoryInfo);
+	//	//KPrintf("\n----------Kernel Memory Map----------\n");
+	//	//KPrintf("KernelPhysicalStartAddress: 0x%x\n", bootInfo->KernelPhysicalStartAddress);
+	//	//KPrintf("KernelPhysicalEndAddress: 0x%x\n", bootInfo->KernelPhysicalEndAddress);
+	//	//KPrintf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
+	//	//KPrintf("KernelVirtualEndAddress: 0x%x\n", bootInfo->KernelVirtualEndAddress);
+	//	//KPrintf("----------Kernel Memory Map----------\n");
+	//	//DumpSystemMeoryMap(bootInfo->MemoryInfo);
 
-		//PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
-		//int* data = (int*)0x810000;
-		//if(g_KernelVMM->Map(0x810000, addr1) != 0)
-		//{
-		//	KPrintf("MAPPING FAILED\n");
-		//	for(;;);
-		//}
-		//data[0] = 1; // PF
+	//	//PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
+	//	//int* data = (int*)0x810000;
+	//	//if(g_KernelVMM->Map(0x810000, addr1) != 0)
+	//	//{
+	//	//	KPrintf("MAPPING FAILED\n");
+	//	//	for(;;);
+	//	//}
+	//	//data[0] = 1; // PF
 
-		/*
-		PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
-		KPrintf("Addr1: 0x%x\n", addr1);
-		PhysicalAddress addr2 = g_KernelPMM->AllocatePage();
-		KPrintf("Addr2: 0x%x\n", addr2);
+	//	/*
+	//	PhysicalAddress addr1 = g_KernelPMM->AllocatePage();
+	//	KPrintf("Addr1: 0x%x\n", addr1);
+	//	PhysicalAddress addr2 = g_KernelPMM->AllocatePage();
+	//	KPrintf("Addr2: 0x%x\n", addr2);
 
-		PhysicalAddress block = g_KernelPMM->AllocatePage();
-		char* data = (char*)block;
-		data[0] = 'P';
-		data[1] = 0;
-		KPrintf("Block Address: 0x%x, Data Address: 0x%x, Data: %c\n", block, data, *data);
-		PhysicalAddress block2 = 0x41E000;
-		//g_KernelVMM->Map(block, block2, ((uint8_t)x86::PageTableFlags::Present | (uint8_t)x86::PageTableFlags::ReadWrite));
-		char* data2 = (char*)block2;
-		data2[0] = 'L';
-		data2[1] = 0;
-		KPrintf("Block2 Address: 0x%x, Data2 Address: 0x%x, Data: %c\n", block2, data2, *data);
-		*/
+	//	PhysicalAddress block = g_KernelPMM->AllocatePage();
+	//	char* data = (char*)block;
+	//	data[0] = 'P';
+	//	data[1] = 0;
+	//	KPrintf("Block Address: 0x%x, Data Address: 0x%x, Data: %c\n", block, data, *data);
+	//	PhysicalAddress block2 = 0x41E000;
+	//	//g_KernelVMM->Map(block, block2, ((uint8_t)x86::PageTableFlags::Present | (uint8_t)x86::PageTableFlags::ReadWrite));
+	//	char* data2 = (char*)block2;
+	//	data2[0] = 'L';
+	//	data2[1] = 0;
+	//	KPrintf("Block2 Address: 0x%x, Data2 Address: 0x%x, Data: %c\n", block2, data2, *data);
+	//	*/
 
-		KPrintf("\nEagle Operating System\n");
-	}
+	//	//KPrintf("\nEagle Operating System\n");
+	//}
 }
 
-extern "C" void KMain(const Axe::BootInfo* bootInfo)
+extern "C" void KMain()
 {
 	//if(bootInfo->Signature != AXE_BOOT_SIGNATURE)
 	//	return;
 
-	Kernel::InitKernel(nullptr);
+	//Kernel::InitKernel(nullptr);
 	for(;;);
 }

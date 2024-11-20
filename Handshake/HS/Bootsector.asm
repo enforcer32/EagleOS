@@ -72,7 +72,7 @@ gdt_descriptor:
 [BITS 32]
 Bootloader:
 	mov eax, 1 ; Load from Sector 1. (Sector 0 = Bootsector. LBA0 = Sector 0) (Sector 1 = 2nd Stage Bootloader. LBA0 = Sector 0) LBA1 = Bootloader, LBA3 = Kernel
-	mov ecx, 50 ; Load 10 sector
+	mov ecx, 50 ; Load X sectors
 	mov edi, HANDSHAKE_MEMORY_LOAD_ADDRESS ; Load Bootloader Stage 2 At Address
 	call ATALBARead
 	jmp CODE_SEG:HANDSHAKE_MEMORY_LOAD_ADDRESS

@@ -6,6 +6,24 @@ namespace Handshake
 {
 	namespace System
 	{
+		uint32_t MemoryMap::GetUpperMemory() const
+		{
+			uint64_t memoryEnd = 0;
+			for(size_t i = 0; i < RegionCount; i++)
+				if(Regions[i].BaseAddress + Regions[i].Length > memoryEnd)
+					memoryEnd = Regions[i].BaseAddress + Regions[i].Length;					
+			return memoryEnd;
+		}
+
+		uint32_t MemoryMap::GetLowerMemory() const
+		{
+			uint64_t memoryStart = -1;
+			for(size_t i = 0; i < RegionCount; i++)
+				if(Regions[i].BaseAddress < memoryStart)
+					memoryStart = Regions[i].BaseAddress;
+			return memoryStart;
+		}
+
 		MemoryMap* DetectMemoryMap()
 		{
 			MemoryMap* systemMemoryMap = (MemoryMap*)Malloc(sizeof(MemoryMap));

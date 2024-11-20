@@ -27,6 +27,9 @@ namespace Handshake
 		{
 			uint32_t RegionCount;
 			MemoryRegion* Regions;
+
+			uint32_t GetUpperMemory() const;
+			uint32_t GetLowerMemory() const;
 		};
 
 		MemoryMap* DetectMemoryMap();

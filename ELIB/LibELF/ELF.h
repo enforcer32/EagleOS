@@ -16,11 +16,15 @@ namespace ELF
 		ELF32ProgramHeader** GetProgramHeaders() const;
 		uint32_t GetProgramHeaderCount() const;
 
+		uint32_t GetVirtualAddressLow() const;
+		uint32_t GetVirtualAddressHigh() const;
+
 	private:
 		bool IsValidELF();
 		bool ParseProgramHeaders();
 		bool ParseSectionHeaders();
 		bool ParseSectionHeaderStringTable();
+		bool ParseProgramHeaderVirtualAddress();
 
 	private:
 		ATA::ATADrive m_Drive;
@@ -28,5 +32,6 @@ namespace ELF
 		ELF32ProgramHeader** m_ProgramHeaders;
 		ELF32SectionHeader** m_SectionHeaders;
 		char* m_SectionHeaderStringTableRaw;
+		uint32_t m_VirtualAddressLow, m_VirtualAddressHigh;
 	};
 }

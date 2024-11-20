@@ -2,19 +2,11 @@ set architecture i386
 set auto-load safe-path .
 set disassembly-flavor intel
 
-add-symbol-file ./Build/EagleOS/RelocatableBootloader.o 0x0000B000
-add-symbol-file ./Build/EagleOS/RelocatableKernel.o 0x00100000
-break Axe/Boot/BLMain.cpp:BLMain
-#break Kernel/Kernel.asm:_kernelstart
+add-symbol-file ./Build/Handshake/EagleOS/RelocatableBootloader.o 0x0000B000
+add-symbol-file ./Build/Kernel/EagleOS/RelocatableKernel.o 0x00100000
 #break Kernel/Kernel.cpp:KMain
-#break Axe/ELF/ELF.cpp:25
-#break Kernel/Kernel.cpp:KMain:32
-#break Kernel/Memory/VirtualMemoryManager.cpp:59
-#break Kernel/Memory/PageDirectory.cpp:82
-#break Axe/x86/Paging/PageManager.cpp:62
-#break Axe/ELF/ELF.cpp:ParseSectionHeaders
-target remote | qemu-system-i386 -hda ./Build/EagleOS/EagleBootloader.bin -hdb ./Build/EagleOS/EagleKernel.elf -S -gdb stdio
-c
+break Handshake/HS/Handshake.cpp:HSMain
+target remote | qemu-system-i386 -hda ./Build/Handshake/EagleOS/Bootloader.bin -hdb ./Build/Kernel/EagleOS/Kernel.elf -S -gdb stdio
 
 define hook-stop
 print/x $eax

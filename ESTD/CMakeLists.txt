@@ -7,6 +7,7 @@ file(GLOB_RECURSE ESTDSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/CString.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Bitwise.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Bitset.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Algorithm.h"
 )
 
 set(ESTDSources ${ESTDSources} PARENT_SCOPE)

@@ -1,5 +1,6 @@
 file(GLOB_RECURSE BootloaderSources
 	# HS
+	"${CMAKE_CURRENT_SOURCE_DIR}/BootInfo.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/HS/Bootloader.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/HS/Handshake.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/HS/Handshake.cpp"
@@ -14,6 +15,9 @@ file(GLOB_RECURSE BootloaderSources
 	# CPU
 	"${CMAKE_CURRENT_SOURCE_DIR}/CPU/IO.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/CPU/IO.asm"
+	"${CMAKE_CURRENT_SOURCE_DIR}/CPU/PageManager.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/CPU/PageManager.asm"
+	"${CMAKE_CURRENT_SOURCE_DIR}/CPU/PageManager.cpp"
 
 	# Memory
 	"${CMAKE_CURRENT_SOURCE_DIR}/Memory/Malloc.h"
@@ -35,7 +39,7 @@ file(GLOB_RECURSE BootloaderSources
 )
 
 add_library(${BOOTLOADER_TARGET_NAME} OBJECT ${ESTDSources} ${ELIBSources} ${BootloaderSources})
-target_compile_definitions(${BOOTLOADER_TARGET_NAME} PRIVATE ESTD_NONE_BUILD)
+target_compile_definitions(${BOOTLOADER_TARGET_NAME} PRIVATE ESTD_BOOTLOADER_BUILD)
 target_include_directories(${BOOTLOADER_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../")
 
 # BOOTLOADER OBJECTS

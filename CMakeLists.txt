@@ -50,9 +50,9 @@ set(KERNEL_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Kernel)
 add_subdirectory(${ESTD_TARGET_DIR})
 add_subdirectory(${ELIB_TARGET_DIR})
 add_subdirectory(${BOOTLOADER_TARGET_DIR})
-#add_subdirectory(${KERNEL_TARGET_DIR})
+add_subdirectory(${KERNEL_TARGET_DIR})
 
 # RUN QEMU
 add_custom_target(runqemu
-    COMMAND ${QEMU_EXECUTABLE} -m 128M -d int,cpu_reset -no-reboot -no-shutdown -hda ${CMAKE_BINARY_DIR}/Handshake/EagleOS/${BOOTLOADER_OUTPUT_NAME} -hdb ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_OUTPUT_NAME}
+    COMMAND ${QEMU_EXECUTABLE} -m 1096M -d int,cpu_reset -no-reboot -no-shutdown -hda ${CMAKE_BINARY_DIR}/Handshake/EagleOS/${BOOTLOADER_OUTPUT_NAME} -hdb ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_OUTPUT_NAME}
 )

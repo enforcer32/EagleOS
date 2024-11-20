@@ -10,12 +10,12 @@ namespace Kernel
 
 	namespace Memory
 	{
-		int32_t VirtualMemoryManager::Init(const Axe::BootInfo* bootInfo)
-		{
-			KPrintf("Initializing VirtualMemoryManager...\n");
-			m_CurrentPageDirectory = (PageDirectory*)bootInfo->KernelPageDirectory;
-			return 0;
-		}
+		//int32_t VirtualMemoryManager::Init(const Axe::BootInfo* bootInfo)
+		//{
+		//	KPrintf("Initializing VirtualMemoryManager...\n");
+		//	m_CurrentPageDirectory = (PageDirectory*)bootInfo->KernelPageDirectory;
+		//	return 0;
+		//}
 
 		int32_t VirtualMemoryManager::Map(VirtualAddress virtualAddress, PhysicalAddress physicalAddress)
 		{
