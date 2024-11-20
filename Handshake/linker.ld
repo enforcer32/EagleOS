@@ -8,7 +8,6 @@ SECTIONS
 	__bootloader_physical_start = .;
 	.text : ALIGN(4096)
 	{
-		*(.hsentry)
 		*(.text)
 		*(.text.*)
 	}

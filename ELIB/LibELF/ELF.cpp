@@ -3,8 +3,6 @@
 #include <ESTD/EMalloc.h>
 #include <ESTD/Algorithm.h>
 
-#include <Handshake/Stdio/Print.h>
-
 namespace ELF
 {
 	bool ELF::Parse(ATA::ATADrive drive)
@@ -30,13 +28,23 @@ namespace ELF
 		return true;
 	}
 
-	bool ELF::LoadProgramHeadersToPhysicalMemory() const
+	bool ELF::LoadProgramHeadersToVirtualMemory() const
 	{
 		for(uint32_t i = 0; i < m_Header->ProgramHeaderCount; i++)
 		{
 			const auto& programHeader = m_ProgramHeaders[i];
-			void* segment = ATA::ATAReadLBAOffset(m_Drive, programHeader->Offset, programHeader->MemorySize);
-			ESTD::Memcpy((void*)programHeader->VirtualAddress, segment, programHeader->MemorySize);
+			if (programHeader->Type == ELFProgramHeaderType::Load)
+			{
+				uint32_t segmentSize = ESTD::Min(programHeader->FileSize, programHeader->MemorySize);
+				void* segment = ATA::ATAReadLBAOffset(m_Drive, programHeader->Offset, segmentSize);
+				ESTD::Memcpy((void*)programHeader->VirtualAddress, segment, segmentSize);
+
+				for (uint32_t j = segmentSize; j < programHeader->MemorySize; j++)
+				{
+					((uint8_t*)programHeader->VirtualAddress)[j] = 0;
+				}
+			}
+
 		}
 		return true;
 	}

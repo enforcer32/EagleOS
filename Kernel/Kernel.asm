@@ -1,4 +1,4 @@
-section .kernelentrypoint
+section .text
 
 [BITS 32]
 
@@ -6,7 +6,6 @@ global _kernelstart
 
 extern __kernel_bss_start
 extern __kernel_bss_end
-extern __kernel_stack_end
 extern KMain
 
 CODE_SEG equ 0x08 ; Selector 0x08 will be our code segment offset
@@ -31,7 +30,7 @@ _kernelstart:
 	mov fs, eax
 	mov gs, eax
 	mov ss, eax
-	mov ebp, __kernel_stack_end
+	mov ebp, [esp+8] ; Stack Address
 	mov esp, ebp
 
 	; Kernel

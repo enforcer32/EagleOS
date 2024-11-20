@@ -1,7 +1,6 @@
 file(GLOB_RECURSE BootloaderSources
 	# HS
 	"${CMAKE_CURRENT_SOURCE_DIR}/BootInfo.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/HS/Bootloader.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/HS/Handshake.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/HS/Handshake.cpp"
 
@@ -38,12 +37,15 @@ file(GLOB_RECURSE BootloaderSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/System/MemoryMap.cpp"
 )
 
-add_library(${BOOTLOADER_TARGET_NAME} OBJECT ${ESTDSources} ${ELIBSources} ${BootloaderSources})
+set(BootloaderEntrySourceFile ${CMAKE_CURRENT_SOURCE_DIR}/HS/Bootloader.asm)
+set(BootloaderEntryObjectFile ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${BOOTLOADER_TARGET_NAME}.dir/HS/Bootloader.asm.o)
+
+add_library(${BOOTLOADER_TARGET_NAME} OBJECT ${BootloaderEntrySourceFile} ${ESTDSources} ${ELIBSources} ${BootloaderSources})
 target_compile_definitions(${BOOTLOADER_TARGET_NAME} PRIVATE ESTD_BOOTLOADER_BUILD)
 target_include_directories(${BOOTLOADER_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../")
 
 # BOOTLOADER OBJECTS
-set(BootloaderObjects "")
+set(BootloaderObjects)
 
 # APPEND ESTD
 foreach(SOURCE_FILE ${ESTDSources})
@@ -89,7 +91,7 @@ add_custom_command(OUTPUT BootloaderBIN POST_BUILD COMMAND_EXPAND_LISTS
 )
 
 add_custom_command(OUTPUT BootloaderBuild POST_BUILD COMMAND_EXPAND_LISTS
-	COMMAND ${CMAKE_LINKER} ${CMAKE_LINKER_FLAGS} ${BootloaderObjects} -o ${CMAKE_CURRENT_BINARY_DIR}/EagleOS/RelocatableBootloader.o -Map=${CMAKE_CURRENT_BINARY_DIR}/EagleOS/RelocatableBootloader.o.map
+	COMMAND ${CMAKE_LINKER} ${CMAKE_LINKER_FLAGS} ${BootloaderEntryObjectFile} ${BootloaderObjects} -o ${CMAKE_CURRENT_BINARY_DIR}/EagleOS/RelocatableBootloader.o -Map=${CMAKE_CURRENT_BINARY_DIR}/EagleOS/RelocatableBootloader.o.map
 	COMMAND ${CMAKE_CXX_COMPILER} -T ${BOOTLOADER_LINKERSCRIPT} ${CMAKE_CXX_FLAGS_NQ} ${CMAKE_CURRENT_BINARY_DIR}/EagleOS/RelocatableBootloader.o -o ${CMAKE_CURRENT_BINARY_DIR}/EagleOS/BootloaderBuild.bin -Xlinker -Map=${CMAKE_CURRENT_BINARY_DIR}/EagleOS/BootloaderBuild.bin.map
 	DEPENDS BootSector
 )

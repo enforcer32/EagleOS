@@ -1,5 +1,4 @@
 file(GLOB_RECURSE KernelSources
-	"${CMAKE_CURRENT_SOURCE_DIR}/Kernel.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Kernel.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Kern/KPrintf.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Kern/KPrintf.cpp"
@@ -18,7 +17,10 @@ add_subdirectory(${ARCH_TARGET_DIR})
 add_subdirectory(${DRIVERS_TARGET_DIR})
 add_subdirectory(${MEMORY_TARGET_DIR})
 
-add_library(${KERNEL_TARGET_NAME} OBJECT ${ESTDSources} ${ELIBSources} ${KernelSources} ${ArchSources} ${DriversSources} ${MemorySources})
+set(KernelEntrySourceFile ${CMAKE_CURRENT_SOURCE_DIR}/Kernel.asm)
+set(KernelEntryObjectFile ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${KERNEL_TARGET_NAME}.dir/Kernel.asm.o)
+
+add_library(${KERNEL_TARGET_NAME} OBJECT ${KernelEntrySourceFile} ${ESTDSources} ${ELIBSources} ${KernelSources} ${ArchSources} ${DriversSources} ${MemorySources})
 target_compile_definitions(${KERNEL_TARGET_NAME} PRIVATE ESTD_KERNEL_BUILD)
 target_include_directories(${KERNEL_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../")
 
@@ -74,7 +76,7 @@ add_custom_command(OUTPUT KernelBuild POST_BUILD COMMAND_EXPAND_LISTS
 
 add_custom_command(OUTPUT RelocatableKernel POST_BUILD COMMAND_EXPAND_LISTS
 	COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/EagleOS
-	COMMAND ${CMAKE_LINKER} ${CMAKE_LINKER_FLAGS} ${KernelObjects} -o ${CMAKE_CURRENT_BINARY_DIR}/EagleOS/RelocatableKernel.o -Map=${CMAKE_CURRENT_BINARY_DIR}/EagleOS/RelocatableKernel.o.map
+	COMMAND ${CMAKE_LINKER} ${CMAKE_LINKER_FLAGS} ${KernelEntryObjectFile} ${KernelObjects} -o ${CMAKE_CURRENT_BINARY_DIR}/EagleOS/RelocatableKernel.o -Map=${CMAKE_CURRENT_BINARY_DIR}/EagleOS/RelocatableKernel.o.map
 	DEPENDS ${KERNEL_TARGET_NAME}
 )
 

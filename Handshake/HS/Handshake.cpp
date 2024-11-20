@@ -11,10 +11,10 @@
 #include <ELIB/LibELF/ELF.h>
 #include <ESTD/Algorithm.h>
 
-#define PAGING_PAGE_SIZE 4096
-
 extern "C" uint32_t __bootloader_physical_start;
 extern "C" uint32_t __bootloader_physical_end;
+
+typedef void (*KernelEntry)(const Handshake::BootInfo* bootInfo, uint32_t stack);
 
 namespace Handshake
 {
@@ -82,17 +82,16 @@ namespace Handshake
 		bootInfo->KernelSize = (bootInfo->KernelVirtualEndAddress - bootInfo->KernelVirtualStartAddress);
 
 		// Kernel Physical Address
-		//bootInfo->KernelPhysicalStartAddress = ESTD::AlignUp(bootInfo->BootloaderPhysicalEndAddress, PAGING_PAGE_SIZE);
 		bootInfo->KernelPhysicalStartAddress = HANDSHAKE_MEMORY_KERNEL_LOAD_ADDRESS;
 		bootInfo->KernelPhysicalEndAddress = (bootInfo->KernelPhysicalStartAddress + bootInfo->KernelSize);
 
 		// Low Memory Physical Address
-		bootInfo->LowMemoryPhysicalStartAddress = ESTD::AlignUp(bootInfo->KernelPhysicalEndAddress, PAGING_PAGE_SIZE);
+		bootInfo->LowMemoryPhysicalStartAddress = ESTD::AlignUp(bootInfo->KernelPhysicalEndAddress, PAGE_SIZE);
 		bootInfo->LowMemoryPhysicalEndAddress = (896 * 1048576);
 		bootInfo->LowMemorySize = (bootInfo->LowMemoryPhysicalEndAddress - bootInfo->LowMemoryPhysicalStartAddress);
 		
 		// Low Memory Virtual Address Address
-		bootInfo->LowMemoryVirtualStartAddress = ESTD::AlignUp(bootInfo->KernelVirtualEndAddress, PAGING_PAGE_SIZE);
+		bootInfo->LowMemoryVirtualStartAddress = ESTD::AlignUp(bootInfo->KernelVirtualEndAddress, PAGE_SIZE);
 		bootInfo->LowMemoryVirtualEndAddress = (bootInfo->LowMemoryVirtualStartAddress * bootInfo->LowMemorySize);
 
 		// High Memory
@@ -138,6 +137,11 @@ namespace Handshake
 		}
 
 		return true;
+	}
+	
+	bool LoadKernel(const BootInfo* bootInfo, const ELF::ELF* kernelELF)
+	{
+		return kernelELF->LoadProgramHeadersToVirtualMemory();
 	}
 
 	bool Init()
@@ -188,10 +192,18 @@ namespace Handshake
 		bootInfo->LowMemoryPhysicalEndAddress = (bootInfo->LowMemoryPhysicalEndAddress - bootInfo->StackSize);
 		bootInfo->LowMemoryVirtualEndAddress = (bootInfo->LowMemoryVirtualEndAddress - bootInfo->StackSize);
 
-		DumpSystemMemory(bootInfo->MemoryMap);
+		//DumpSystemMemory(bootInfo->MemoryMap);
 		DumpBootInfo(bootInfo);
 
-		for(;;);
+		if (!LoadKernel(bootInfo, &kernelELF))
+		{
+			Printf("Failed to Load Kernel into Memory!\n");
+			return false;
+		}
+
+		KernelEntry _kernelstart = (KernelEntry)bootInfo->KernelVirtualStartAddress;
+		_kernelstart(bootInfo, bootInfo->StackBaseVirtualAddress);
+		
 		return false;
 	}
 }

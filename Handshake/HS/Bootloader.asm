@@ -1,4 +1,4 @@
-section .hsentry
+section .text
 
 [BITS 32]
 

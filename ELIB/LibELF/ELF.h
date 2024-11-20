@@ -11,7 +11,7 @@ namespace ELF
 	{
 	public:
 		bool Parse(ATA::ATADrive drive);
-		bool LoadProgramHeadersToPhysicalMemory() const;
+		bool LoadProgramHeadersToVirtualMemory() const;
 		uint32_t GetEntryPointAddress() const;
 		ELF32ProgramHeader** GetProgramHeaders() const;
 		uint32_t GetProgramHeaderCount() const;
