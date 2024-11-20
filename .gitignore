@@ -4,6 +4,7 @@ config.json
 
 # Folders
 Build/
+Axe2/
 
 # VS
 .vscode/
