@@ -8,6 +8,8 @@ file(GLOB_RECURSE BootloaderSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/BIOS/Video/Print.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/BIOS/Video/Print.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/BIOS/Video/Print.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/BIOS/Memory/E820Memory.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/BIOS/Memory/E820Memory.asm"
 
 	# CPU
 	"${CMAKE_CURRENT_SOURCE_DIR}/CPU/IO.h"
@@ -26,6 +28,10 @@ file(GLOB_RECURSE BootloaderSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/Stdio/Print.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Stdio/Panic.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Stdio/Panic.cpp"
+
+	# SYSTEM
+	"${CMAKE_CURRENT_SOURCE_DIR}/System/MemoryMap.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/System/MemoryMap.cpp"
 )
 
 add_library(${BOOTLOADER_TARGET_NAME} OBJECT ${ESTDSources} ${ELIBSources} ${BootloaderSources})
