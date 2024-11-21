@@ -3,22 +3,21 @@
 #include <Kernel/Kern/KPrintf.h>
 #include <Kernel/Kern/KPanic.h>
 #include <Kernel/Arch/x86/Processor.h>
-//#include <Kernel/Memory/PhysicalMemoryManager.h>
+#include <Kernel/Memory/PhysicalMemoryManager.h>
 //#include <Kernel/Memory/VirtualMemoryManager.h>
 #include <ESTD/CString.h>
 
 namespace Kernel
 {
-	//Memory::PhysicalMemoryManager _KernelPMM;
+	Memory::PhysicalMemoryManager _KernelPMM;
 	//Memory::VirtualMemoryManager _KernelVMM;
 
-	/*
-	void DumpSystemMeoryMap(const Axe::SystemMemoryInfo* memoryInfo)
+	void DumpSystemMemoryMap(const Handshake::BootInfo* bootInfo)
 	{
 		KPrintf("\n----------System Memory Map----------\n");
-		for (uint32_t i = 0; i < memoryInfo->RegionCount; i++)
+		for (uint32_t i = 0; i < bootInfo->MemoryMap->RegionCount; i++)
 		{
-			const auto& regionInfo = memoryInfo->Regions[i];
+			const auto& regionInfo = bootInfo->MemoryMap->Regions[i];
 			Kernel::KPrintf("Region: {Base= 0x%x, ", regionInfo.BaseAddress);
 			Kernel::KPrintf("Length= 0x%x, ", regionInfo.Length);
 			Kernel::KPrintf("Type= 0x%x, ", regionInfo.Type);
@@ -27,6 +26,35 @@ namespace Kernel
 		KPrintf("----------System Memory Map----------\n\n");
 	}
 
+	void DumpBootInfo(const Handshake::BootInfo* bootInfo)
+	{
+		KPrintf("\n----------BootInfo----------\n");
+		KPrintf("Signature: 0x%x\n", bootInfo->Signature);
+		KPrintf("BootloaderPhysicalStartAddress: 0x%x\n", bootInfo->BootloaderPhysicalStartAddress);
+		KPrintf("BootloaderPhysicalEndAddress: 0x%x\n", bootInfo->BootloaderPhysicalEndAddress);
+		KPrintf("BootloaderSize: 0x%x\n", bootInfo->BootloaderSize);
+		
+		KPrintf("KernelPhysicalStartAddress: 0x%x\n", bootInfo->KernelPhysicalStartAddress);
+		KPrintf("KernelPhysicalEndAddress: 0x%x\n", bootInfo->KernelPhysicalEndAddress);
+		KPrintf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
+		KPrintf("KernelVirtualEndAddress: 0x%x\n", bootInfo->KernelVirtualEndAddress);
+		KPrintf("KernelSize: 0x%x\n", bootInfo->KernelSize);
+		
+		KPrintf("LowMemoryPhysicalStartAddress: 0x%x\n", bootInfo->LowMemoryPhysicalStartAddress);
+		KPrintf("LowMemoryPhysicalEndAddress: 0x%x\n", bootInfo->LowMemoryPhysicalEndAddress);
+		KPrintf("LowMemoryVirtualStartAddress: 0x%x\n", bootInfo->LowMemoryVirtualStartAddress);
+		KPrintf("LowMemoryVirtualEndAddress: 0x%x\n", bootInfo->LowMemoryVirtualEndAddress);
+		KPrintf("LowMemorySize: 0x%x\n", bootInfo->LowMemorySize);
+		
+		KPrintf("HighMemoryPhysicalStartAddress: 0x%x\n", bootInfo->HighMemoryPhysicalStartAddress);
+		KPrintf("HighMemoryPhysicalEndAddress: 0x%x\n", bootInfo->HighMemoryPhysicalEndAddress);
+		
+		KPrintf("StackBaseVirtualAddress: 0x%x\n", bootInfo->StackBaseVirtualAddress);
+		KPrintf("StackSize: 0x%x\n", bootInfo->StackSize);
+		KPrintf("----------BootInfo----------\n\n");
+	}
+
+	/*
 	bool InitMemoryManager(const Axe::BootInfo* bootInfo)
 	{
 		g_KernelPMM = &_KernelPMM;
@@ -61,18 +89,33 @@ namespace Kernel
 		return true;
 	}*/
 
+	bool InitMemoryManager(const Handshake::BootInfo* bootInfo)
+	{
+		DumpBootInfo(bootInfo);
+
+		g_KernelPMM = &_KernelPMM;
+		if (!g_KernelPMM->Init(bootInfo))
+		{
+			KPrintf("Failed to Initialize g_KernelPMM\n");
+			return false;
+		}
+
+		return true;
+	}
+
 	void InitKernel(const Handshake::BootInfo* bootInfo)
 	{
 		Graphics::VGA::Init();
 		Graphics::VGA::ClearScreen();
 
-		KPrintf("Boot Signature: 0x%x\n", bootInfo->Signature);
+		//DumpBootInfo(bootInfo);
+		//DumpSystemMemoryMap(bootInfo);
 
 		if (x86::Processor::Init() != 0)
 			KPanic("Failed to Initialize x86 Processor!\n");
 
-		//if (!InitMemoryManager(bootInfo))
-		//	KPanic("Failed to Initialize Memory Manager\n");
+		if (!InitMemoryManager(bootInfo))
+			KPanic("Failed to Initialize Memory Manager\n");
 
 		//KPrintf("\n----------Kernel Memory Map----------\n");
 		//KPrintf("KernelPhysicalStartAddress: 0x%x\n", bootInfo->KernelPhysicalStartAddress);

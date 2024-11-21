@@ -4,5 +4,5 @@
 
 namespace Kernel
 {
-	using PhysicalAddress = uintptr_t;
+	using PhysicalAddress = uint32_t;
 }

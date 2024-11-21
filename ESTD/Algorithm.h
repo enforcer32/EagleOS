@@ -27,4 +27,10 @@ namespace ESTD
 	{
 		return ((data % alignment) ? (data & ~(alignment - 1)) : data);
 	}
+
+	template<typename T>
+	bool IsAligned(const T& data, uint32_t alignment)
+	{
+		return (data % alignment == 0);
+	}
 }
