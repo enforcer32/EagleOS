@@ -3,13 +3,13 @@
 #include <Kernel/Kern/KPrintf.h>
 #include <Kernel/Kern/KPanic.h>
 #include <Kernel/Arch/x86/Processor.h>
-#include <Kernel/Memory/PhysicalMemoryManager.h>
+//#include <Kernel/Memory/PhysicalMemoryManager.h>
 //#include <Kernel/Memory/VirtualMemoryManager.h>
 #include <ESTD/CString.h>
 
 namespace Kernel
 {
-	Memory::PhysicalMemoryManager _KernelPMM;
+	//Memory::PhysicalMemoryManager _KernelPMM;
 	//Memory::VirtualMemoryManager _KernelVMM;
 
 	void DumpSystemMemoryMap(const Handshake::BootInfo* bootInfo)
@@ -93,12 +93,12 @@ namespace Kernel
 	{
 		DumpBootInfo(bootInfo);
 
-		g_KernelPMM = &_KernelPMM;
-		if (!g_KernelPMM->Init(bootInfo))
-		{
-			KPrintf("Failed to Initialize g_KernelPMM\n");
-			return false;
-		}
+		//g_KernelPMM = &_KernelPMM;
+		//if (!g_KernelPMM->Init(bootInfo))
+		//{
+		//	KPrintf("Failed to Initialize g_KernelPMM\n");
+		//	return false;
+		//}
 
 		return true;
 	}
