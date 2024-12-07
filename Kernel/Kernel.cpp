@@ -39,18 +39,6 @@ namespace Kernel
 		KPrintf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
 		KPrintf("KernelVirtualEndAddress: 0x%x\n", bootInfo->KernelVirtualEndAddress);
 		KPrintf("KernelSize: 0x%x\n", bootInfo->KernelSize);
-		
-		KPrintf("LowMemoryPhysicalStartAddress: 0x%x\n", bootInfo->LowMemoryPhysicalStartAddress);
-		KPrintf("LowMemoryPhysicalEndAddress: 0x%x\n", bootInfo->LowMemoryPhysicalEndAddress);
-		KPrintf("LowMemoryVirtualStartAddress: 0x%x\n", bootInfo->LowMemoryVirtualStartAddress);
-		KPrintf("LowMemoryVirtualEndAddress: 0x%x\n", bootInfo->LowMemoryVirtualEndAddress);
-		KPrintf("LowMemorySize: 0x%x\n", bootInfo->LowMemorySize);
-		
-		KPrintf("HighMemoryPhysicalStartAddress: 0x%x\n", bootInfo->HighMemoryPhysicalStartAddress);
-		KPrintf("HighMemoryPhysicalEndAddress: 0x%x\n", bootInfo->HighMemoryPhysicalEndAddress);
-		
-		KPrintf("StackBaseVirtualAddress: 0x%x\n", bootInfo->StackBaseVirtualAddress);
-		KPrintf("StackSize: 0x%x\n", bootInfo->StackSize);
 		KPrintf("----------BootInfo----------\n\n");
 	}
 

@@ -29,6 +29,9 @@ SECTIONS
 		*(COMMON)
 		*(.bss)
 		*(.bss.*)
+		__kernel_stack_start = .;
+		. += 4096;
+		__kernel_stack_end = .;
 		__kernel_bss_end = .;
 	}
 	__kernel_virtual_end = .;

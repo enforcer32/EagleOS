@@ -14,7 +14,7 @@
 extern "C" uint32_t __bootloader_physical_start;
 extern "C" uint32_t __bootloader_physical_end;
 
-typedef void (*KernelEntry)(const Handshake::BootInfo* bootInfo, uint32_t stack);
+typedef void (*KernelEntry)(const Handshake::BootInfo* bootInfo);
 
 namespace Handshake
 {
@@ -47,18 +47,6 @@ namespace Handshake
 		Printf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
 		Printf("KernelVirtualEndAddress: 0x%x\n", bootInfo->KernelVirtualEndAddress);
 		Printf("KernelSize: 0x%x\n", bootInfo->KernelSize);
-		
-		Printf("LowMemoryPhysicalStartAddress: 0x%x\n", bootInfo->LowMemoryPhysicalStartAddress);
-		Printf("LowMemoryPhysicalEndAddress: 0x%x\n", bootInfo->LowMemoryPhysicalEndAddress);
-		Printf("LowMemoryVirtualStartAddress: 0x%x\n", bootInfo->LowMemoryVirtualStartAddress);
-		Printf("LowMemoryVirtualEndAddress: 0x%x\n", bootInfo->LowMemoryVirtualEndAddress);
-		Printf("LowMemorySize: 0x%x\n", bootInfo->LowMemorySize);
-		
-		Printf("HighMemoryPhysicalStartAddress: 0x%x\n", bootInfo->HighMemoryPhysicalStartAddress);
-		Printf("HighMemoryPhysicalEndAddress: 0x%x\n", bootInfo->HighMemoryPhysicalEndAddress);
-		
-		Printf("StackBaseVirtualAddress: 0x%x\n", bootInfo->StackBaseVirtualAddress);
-		Printf("StackSize: 0x%x\n", bootInfo->StackSize);
 		Printf("----------BootInfo----------\n\n");
 	}
 
@@ -78,25 +66,12 @@ namespace Handshake
 
 		// Kernel Virtual Address
 		bootInfo->KernelVirtualStartAddress = kernelELF->GetVirtualAddressLow();
-		bootInfo->KernelVirtualEndAddress = kernelELF->GetVirtualAddressHigh();
+		bootInfo->KernelVirtualEndAddress = (ESTD::AlignUp(kernelELF->GetVirtualAddressHigh(), PAGE_SIZE));
 		bootInfo->KernelSize = (bootInfo->KernelVirtualEndAddress - bootInfo->KernelVirtualStartAddress);
 
 		// Kernel Physical Address
 		bootInfo->KernelPhysicalStartAddress = HANDSHAKE_MEMORY_KERNEL_LOAD_ADDRESS;
-		bootInfo->KernelPhysicalEndAddress = (bootInfo->KernelPhysicalStartAddress + bootInfo->KernelSize);
-
-		// Low Memory Physical Address
-		bootInfo->LowMemoryPhysicalStartAddress = ESTD::AlignUp(bootInfo->KernelPhysicalEndAddress, PAGE_SIZE);
-		bootInfo->LowMemoryPhysicalEndAddress = (896 * 1048576);
-		bootInfo->LowMemorySize = (bootInfo->LowMemoryPhysicalEndAddress - bootInfo->LowMemoryPhysicalStartAddress);
-		
-		// Low Memory Virtual Address Address
-		bootInfo->LowMemoryVirtualStartAddress = ESTD::AlignUp(bootInfo->KernelVirtualEndAddress, PAGE_SIZE);
-		bootInfo->LowMemoryVirtualEndAddress = (bootInfo->LowMemoryVirtualStartAddress * bootInfo->LowMemorySize);
-
-		// High Memory
-		bootInfo->HighMemoryPhysicalStartAddress = bootInfo->LowMemoryPhysicalEndAddress;
-		bootInfo->HighMemoryPhysicalEndAddress = bootInfo->MemoryMap->GetUpperMemory();
+		bootInfo->KernelPhysicalEndAddress = ESTD::AlignUp((bootInfo->KernelPhysicalStartAddress + bootInfo->KernelSize), PAGE_SIZE);
 
 		return true;
 	}
@@ -113,11 +88,10 @@ namespace Handshake
 			Identity Map Initially
 			Bootloader
 			Kernel
-			LowMemory
-			(0x0 -> LowMemoryPhysicalEndAddress)
+			(0x0 -> KernelPhysicalEndAddress)
 		*/
-		uint32_t LowMemoryPhysicalEndAddressPage = (bootInfo->LowMemoryPhysicalEndAddress - 1) / PAGE_SIZE;
-		if (s_PageManager.MapRange(0x0, 0x0, true, LowMemoryPhysicalEndAddressPage) != 0)
+		uint32_t kernelPhysicalEndAddressPageNumber = ((bootInfo->KernelPhysicalEndAddress) / PAGE_SIZE);
+		if (s_PageManager.MapRange(0x0, 0x0, true, kernelPhysicalEndAddressPageNumber) != 0)
 		{
 			Printf("SetupPaging->PageManager Failed to Identity Map!\n");
 			return false;
@@ -126,10 +100,9 @@ namespace Handshake
 		/*
 			Map Kernel Address Space
 			Kernel
-			LowMemory
 		*/
-		uint32_t kernelPhysicalStartAddressPage = (bootInfo->KernelPhysicalStartAddress / 4096);
-		uint32_t pageCount = LowMemoryPhysicalEndAddressPage - kernelPhysicalStartAddressPage;
+		uint32_t kernelPhysicalStartAddressPageNumber = (bootInfo->KernelPhysicalStartAddress / 4096);
+		uint32_t pageCount = (kernelPhysicalEndAddressPageNumber - kernelPhysicalStartAddressPageNumber);
 		if (s_PageManager.MapRange(bootInfo->KernelVirtualStartAddress, bootInfo->KernelPhysicalStartAddress, true, pageCount) != 0)
 		{
 			Printf("SetupPaging->PageManager Failed to Map Kernel Space!\n");
@@ -186,14 +159,8 @@ namespace Handshake
 		s_PageManager.LoadPageDirectory();
 		s_PageManager.EnablePaging();
 
-		// Setup Kernel Stack (Grows Downwards)
-		bootInfo->StackSize = 0x100000; // 1MB
-		bootInfo->StackBaseVirtualAddress = bootInfo->LowMemoryVirtualEndAddress;
-		bootInfo->LowMemoryPhysicalEndAddress = (bootInfo->LowMemoryPhysicalEndAddress - bootInfo->StackSize);
-		bootInfo->LowMemoryVirtualEndAddress = (bootInfo->LowMemoryVirtualEndAddress - bootInfo->StackSize);
-
 		//DumpSystemMemory(bootInfo->MemoryMap);
-		DumpBootInfo(bootInfo);
+		//DumpBootInfo(bootInfo);
 
 		if (!LoadKernel(bootInfo, &kernelELF))
 		{
@@ -202,7 +169,7 @@ namespace Handshake
 		}
 
 		KernelEntry _kernelstart = (KernelEntry)bootInfo->KernelVirtualStartAddress;
-		_kernelstart(bootInfo, bootInfo->StackBaseVirtualAddress);
+		_kernelstart(bootInfo);
 		
 		return false;
 	}

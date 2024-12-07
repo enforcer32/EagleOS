@@ -29,8 +29,9 @@ namespace Handshake
 			bool IsAddressAligned(uint32_t address, uint32_t alignment) const;
 
 		private:
-			uint32_t* m_PageDirectory;
-			uint32_t m_MallocAddress;
+			uint32_t m_PageDirectory[PAGE_DIRECTORY_TABLE_COUNT];
+			uint32_t m_PageTable0[PAGE_TABLE_ENTRY_COUNT];
+			uint32_t m_PageTable768[PAGE_TABLE_ENTRY_COUNT];
 		};
 	}
 }
