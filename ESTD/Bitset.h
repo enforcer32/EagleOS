@@ -17,7 +17,7 @@ namespace ESTD
 			m_Bits[byteIndex] |= (1 << bitIndex);
 		}
 
-		void Test(size_t pos) const
+		bool Test(size_t pos) const
 		{
 			if (pos > TSize)
 				return;

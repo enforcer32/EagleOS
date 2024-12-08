@@ -3,14 +3,12 @@
 #include <Kernel/Kern/KPrintf.h>
 #include <Kernel/Kern/KPanic.h>
 #include <Kernel/Arch/x86/Processor.h>
-//#include <Kernel/Memory/PhysicalMemoryManager.h>
-//#include <Kernel/Memory/VirtualMemoryManager.h>
+#include <Kernel/Memory/PhysicalMemoryManager.h>
 #include <ESTD/CString.h>
 
 namespace Kernel
 {
-	//Memory::PhysicalMemoryManager _KernelPMM;
-	//Memory::VirtualMemoryManager _KernelVMM;
+	Memory::PhysicalMemoryManager _KernelPMM;
 
 	void DumpSystemMemoryMap(const Handshake::BootInfo* bootInfo)
 	{
@@ -42,52 +40,32 @@ namespace Kernel
 		KPrintf("----------BootInfo----------\n\n");
 	}
 
-	/*
-	bool InitMemoryManager(const Axe::BootInfo* bootInfo)
-	{
-		g_KernelPMM = &_KernelPMM;
-		if (g_KernelPMM->Init(bootInfo, 4096) != 0)
-		{
-			KPrintf("Failed to Initialize g_KernelPMM\n");
-			return false;
-		}
-
-		// Reserve Bootloader Pages (1st 1MB)
-		uintptr_t bootloaderStartAddress = 0x0;
-		uintptr_t bootloaderEndAddress = 0x100000;
-		uint64_t bootloaderSize = bootloaderEndAddress - bootloaderStartAddress;
-		uint64_t bootloaderPageCount = bootloaderSize / 4096;
-		g_KernelPMM->ReservePages(bootloaderStartAddress, bootloaderPageCount);
-
-		// Reserve Kernel Pages
-		uint64_t kernelSize = bootInfo->KernelPhysicalEndAddress - bootInfo->KernelPhysicalStartAddress;
-		uint64_t kernelPageCount = kernelSize / 4096;
-		g_KernelPMM->ReservePages(bootInfo->KernelPhysicalStartAddress, kernelPageCount);
-
-		// Reserve Address 0x0
-		g_KernelPMM->AllocatePage();
-
-		g_KernelVMM = &_KernelVMM;
-		if (g_KernelVMM->Init(bootInfo) != 0)
-		{
-			KPrintf("Failed to Initialize g_KernelVMM\n");
-			return false;
-		}
-
-		return true;
-	}*/
-
+	
 	bool InitMemoryManager(const Handshake::BootInfo* bootInfo)
 	{
 		DumpBootInfo(bootInfo);
 
-		//g_KernelPMM = &_KernelPMM;
-		//if (!g_KernelPMM->Init(bootInfo))
-		//{
-		//	KPrintf("Failed to Initialize g_KernelPMM\n");
-		//	return false;
-		//}
+		g_KernelPMM = &_KernelPMM;
+		if (!g_KernelPMM->Init(bootInfo))
+		{
+			KPrintf("Failed to Initialize g_KernelPMM\n");
+			return false;
+		}
+		
+		// Reserve Bootloader Pages
+		uint32_t bootloaderPageCount = (bootInfo->BootloaderSize / 4096) + 1;
+		g_KernelPMM->ReservePages(bootInfo->BootloaderPhysicalStartAddress, bootloaderPageCount);
 
+		// Reserve Kernel Pages
+		uint32_t kernelPageCount = bootInfo->KernelSize / 4096;
+		g_KernelPMM->ReservePages(bootInfo->KernelPhysicalStartAddress, kernelPageCount);
+
+		// Reserve first 16MB for ISA16 DMA
+		uint32_t dma16PageCount = 0x1000000 / 4096;
+		g_KernelPMM->ReservePages(0x0, dma16PageCount);
+
+		// Reserve Address 0x0
+		g_KernelPMM->AllocatePage();
 		return true;
 	}
 
