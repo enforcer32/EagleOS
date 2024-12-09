@@ -15,10 +15,6 @@ file(GLOB_RECURSE ArchSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/x86/ISR.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/x86/ISR.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/x86/ISR.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/x86/Memory/PageInfo.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/x86/Memory/Paging.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/x86/Memory/Paging.asm"
-	"${CMAKE_CURRENT_SOURCE_DIR}/x86/Memory/Paging.cpp"
 )
 
 set(ArchSources ${ArchSources} PARENT_SCOPE)

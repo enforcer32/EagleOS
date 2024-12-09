@@ -101,7 +101,7 @@ namespace Handshake
 			Map Kernel Address Space
 			Kernel
 		*/
-		uint32_t kernelPhysicalStartAddressPageNumber = (bootInfo->KernelPhysicalStartAddress / 4096);
+		uint32_t kernelPhysicalStartAddressPageNumber = (bootInfo->KernelPhysicalStartAddress / PAGE_SIZE);
 		uint32_t pageCount = (kernelPhysicalEndAddressPageNumber - kernelPhysicalStartAddressPageNumber);
 		if (s_PageManager.MapRange(bootInfo->KernelVirtualStartAddress, bootInfo->KernelPhysicalStartAddress, true, pageCount) != 0)
 		{
