@@ -1,3 +1,3 @@
-rm ./Build/Bootloader.bin.lock
-rm ./Build/Kernel.elf.lock
-make runbochs
+rm ./Build/Handshake/EagleOS/Bootloader.bin.lock
+rm ./Build/Kernel/EagleOS/Kernel.elf.lock
+bochs -f .bochsrc
