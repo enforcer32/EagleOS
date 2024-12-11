@@ -18,14 +18,12 @@ namespace Kernel
 		{
 		public:
 			bool Init(const Handshake::BootInfo* bootInfo);
-
 			PhysicalAddress AllocatePage();
 			PhysicalAddress AllocatePages(uint32_t pageCount);
 			void FreePage(PhysicalAddress address);
 			void FreePages(PhysicalAddress address, uint32_t pageCount);
 			void ReservePage(PhysicalAddress address);
 			void ReservePages(PhysicalAddress address, uint32_t pageCount);
-
 			uint32_t GetPageSize() const;
 
 		private:
@@ -33,7 +31,6 @@ namespace Kernel
 			bool InitBitmap(const Handshake::BootInfo* bootInfo);
 			bool InitFreeMemory(const Handshake::BootInfo* bootInfo);
 			void SetRegionState(PhysicalAddress address, uint32_t sizeBytes, PageState state);
-
 			uint32_t AddressToPageNumber(PhysicalAddress address) const;
 			PhysicalAddress PageNumberToAddress(uint32_t pageNumber) const;
 

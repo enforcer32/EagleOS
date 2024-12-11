@@ -13,6 +13,8 @@ file(GLOB_RECURSE MemorySources
 	"${CMAKE_CURRENT_SOURCE_DIR}/VirtualMemoryManager.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/VirtualMemoryManager.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/VirtualMemoryManager.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/VirtualMemoryAllocator.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/VirtualMemoryAllocator.cpp"
 
 )
 

@@ -1,7 +1,5 @@
 #include <Kernel/Memory/PhysicalMemoryManager.h>
 #include <Kernel/Kern/KPrintf.h>
-#include <ESTD/CString.h>
-#include <ESTD/Errno.h>
 
 namespace Kernel
 {
@@ -44,11 +42,11 @@ namespace Kernel
 		PhysicalAddress PhysicalMemoryManager::AllocatePages(uint32_t pageCount)
 		{
 			if (!pageCount)
-				return -1;
+				return 0;
 
 			int64_t firstPage = m_Bitmap.FindUnsetBits(pageCount);
 			if(firstPage < 0)
-				return -1;
+				return 0;
 			
 			m_Bitmap.SetBits(firstPage, pageCount);
 			return PageNumberToAddress(firstPage);
@@ -61,6 +59,8 @@ namespace Kernel
 
 		void PhysicalMemoryManager::FreePages(PhysicalAddress address, uint32_t pageCount)
 		{
+			if (!address)
+				return;
 			m_Bitmap.ClearBits((AddressToPageNumber(address)), pageCount);
 		}
 

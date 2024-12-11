@@ -6,12 +6,14 @@
 #include <Kernel/Memory/MemoryUtil.h>
 #include <Kernel/Memory/PhysicalMemoryManager.h>
 #include <Kernel/Memory/VirtualMemoryManager.h>
+#include <Kernel/Memory/VirtualMemoryAllocator.h>
 #include <ESTD/CString.h>
 
 namespace Kernel
 {
 	Memory::PhysicalMemoryManager _KernelPMM;
 	Memory::VirtualMemoryManager _KernelVMM;
+	Memory::VirtualMemoryAllocator _KernelVMA;
 
 	void DumpSystemMemoryMap(const Handshake::BootInfo* bootInfo)
 	{
@@ -66,7 +68,7 @@ namespace Kernel
 		g_KernelPMM->ReservePages(0x0, dma16PageCount);
 
 		// Reserve Address 0x0
-		g_KernelPMM->AllocatePage();
+		g_KernelPMM->ReservePage(0x0);
 		return true;
 	}
 
@@ -111,6 +113,30 @@ namespace Kernel
 		g_KernelVMM->ReloadPageDirectory();
 		return true;
 	}
+
+	bool InitVirtualMemoryAllocator(const Handshake::BootInfo* bootInfo)
+	{	
+		uint32_t kernelVMAStartAddress = bootInfo->KernelVirtualStartAddress + (4096 * 1024 * 4); // 0xC1000000
+		uint32_t kernelVMASize = 0xFFFFFFFF - kernelVMAStartAddress;
+
+		g_KernelVMA = &_KernelVMA;
+		if (!g_KernelVMA->Init(kernelVMAStartAddress, kernelVMASize))
+		{
+			KPrintf("Failed to Initialize g_KernelVMA\n");
+			return false;
+		}
+
+
+		// Reserve Address 0x0
+		g_KernelVMA->ReservePage(0x0);
+		
+		VirtualAddress addr = g_KernelVMA->AllocatePage();
+		KPrintf("Addr: 0x%x\n", addr);
+
+		g_KernelVMA->FreePage(addr);
+
+		return true;
+	}
 	
 	bool InitMemoryManager(const Handshake::BootInfo* bootInfo)
 	{
@@ -128,7 +154,13 @@ namespace Kernel
 
 		if (!InitVirtualMemoryManager(bootInfo))
 		{
-			KPrintf("Failed to Initialize Paging\n");
+			KPrintf("Failed to Initialize VirtualMemoryManager\n");
+			return false;
+		}
+
+		if (!InitVirtualMemoryAllocator(bootInfo))
+		{
+			KPrintf("Failed to Initialize VirtualMemoryAllocator\n");
 			return false;
 		}
 
