@@ -5,13 +5,13 @@
 #include <Kernel/Arch/x86/Processor.h>
 #include <Kernel/Memory/MemoryUtil.h>
 #include <Kernel/Memory/PhysicalMemoryManager.h>
-#include <Kernel/Memory/PageManager.h>
+#include <Kernel/Memory/VirtualMemoryManager.h>
 #include <ESTD/CString.h>
 
 namespace Kernel
 {
 	Memory::PhysicalMemoryManager _KernelPMM;
-	Memory::PageManager _KernelPageManager;
+	Memory::VirtualMemoryManager _KernelVMM;
 
 	void DumpSystemMemoryMap(const Handshake::BootInfo* bootInfo)
 	{
@@ -70,20 +70,20 @@ namespace Kernel
 		return true;
 	}
 
-	bool InitPaging(const Handshake::BootInfo* bootInfo)
+	bool InitVirtualMemoryManager(const Handshake::BootInfo* bootInfo)
 	{
-		g_KernelPageManager = &_KernelPageManager;
-		if (!g_KernelPageManager->Init(bootInfo))
+		g_KernelVMM = &_KernelVMM;
+		if (!g_KernelVMM->Init(bootInfo))
 		{
-			KPrintf("Failed to Initialize g_KernelPageManager\n");
+			KPrintf("Failed to Initialize g_KernelVMM\n");
 			return false;
 		}
 
 		// Identity Map first 4MB (Bootloader/DMA)
 		uint32_t bootloaderPageCount = 0x400000 / PAGE_SIZE;
-		if (!g_KernelPageManager->MapRange(0x0, 0x0, true, bootloaderPageCount))
+		if (!g_KernelVMM->MapRange(0x0, 0x0, true, bootloaderPageCount))
 		{
-			KPrintf("InitPaging->PageManager Failed to Identity Map first 4mb!\n");
+			KPrintf("InitVirtualMemoryManager->PageManager Failed to Identity Map first 4mb!\n");
 			return false;
 		}
 
@@ -91,23 +91,24 @@ namespace Kernel
 		uint32_t kernelPhysicalStartAddressPageNumber = (bootInfo->KernelPhysicalStartAddress / PAGE_SIZE);
 		uint32_t kernelPhysicalEndAddressPageNumber = (bootInfo->KernelPhysicalEndAddress / PAGE_SIZE);
 		uint32_t kernelPageCount = (kernelPhysicalEndAddressPageNumber - kernelPhysicalStartAddressPageNumber); // 44 (0xC002C000)
-		if (!g_KernelPageManager->MapRange(bootInfo->KernelVirtualStartAddress, bootInfo->KernelPhysicalStartAddress, true, kernelPageCount))
+		if (!g_KernelVMM->MapRange(bootInfo->KernelVirtualStartAddress, bootInfo->KernelPhysicalStartAddress, true, kernelPageCount))
 		{
-			KPrintf("InitPaging->PageManager Failed to Map Kernel to Higher Half!\n");
+			KPrintf("InitVirtualMemoryManager->PageManager Failed to Map Kernel to Higher Half!\n");
 			return false;
 		}
 
-		// Map Rest of Higher Half
+		// Map Rest of Higher Half Table
 		uint32_t pageTablePageCount = 0x400000 / PAGE_SIZE;
-		if (!g_KernelPageManager->MapRange(bootInfo->KernelVirtualStartAddress + (kernelPageCount * PAGE_SIZE), bootInfo->KernelPhysicalStartAddress + (kernelPageCount * PAGE_SIZE), true, (pageTablePageCount - kernelPageCount)))
+		if(kernelPageCount < pageTablePageCount)
 		{
-			KPrintf("InitPaging->PageManager Failed to Map Kernel to Rest of the Higher Half!\n");
-			return false;
+			if (!g_KernelVMM->MapRange(bootInfo->KernelVirtualStartAddress + (kernelPageCount * PAGE_SIZE), bootInfo->KernelPhysicalStartAddress + (kernelPageCount * PAGE_SIZE), true, (pageTablePageCount - kernelPageCount)))
+			{
+				KPrintf("InitVirtualMemoryManager->PageManager Failed to Map Kernel to Rest of the Higher Half!\n");
+				return false;
+			}
 		}
 
-		// Setup Heap?
-		
-		g_KernelPageManager->ReloadPageDirectory();
+		g_KernelVMM->ReloadPageDirectory();
 		return true;
 	}
 	
@@ -125,7 +126,7 @@ namespace Kernel
 			return false;
 		}
 
-		if (!InitPaging(bootInfo))
+		if (!InitVirtualMemoryManager(bootInfo))
 		{
 			KPrintf("Failed to Initialize Paging\n");
 			return false;

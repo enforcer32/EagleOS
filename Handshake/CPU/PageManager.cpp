@@ -47,7 +47,7 @@ namespace Handshake
 				}
 				else
 				{
-					Printf("PageManager->Invalid Page Directory Entry: %d\n", directoryEntry);
+					Printf("PageManager->Invalid Page Directory Entry Index: %d\n", pageDirectoryIndex);
 					return -1;
 				}
 				directoryEntry |= 0x1;

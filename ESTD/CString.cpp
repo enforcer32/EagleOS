@@ -58,3 +58,11 @@ namespace ESTD
 		return 0;
 	}
 }
+
+extern "C" void* memset(void* dst, int32_t ch, size_t num)
+{
+	uint8_t* p1 = (uint8_t*)dst;
+	while (num--)
+		*p1++ = ch;
+	return dst;
+}

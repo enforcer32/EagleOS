@@ -7,7 +7,7 @@ namespace Kernel
 {
 	namespace Memory
 	{
-		class PageManager
+		class VirtualMemoryManager
 		{
 		public:
 			bool Init(const Handshake::BootInfo* bootInfo);
@@ -18,11 +18,12 @@ namespace Kernel
 			void ReloadPageDirectory();
 
 		private:
+			uint32_t m_VirtualStartAddress;
 			PageDirectory m_PageDirectory __attribute__((aligned(4096)));
-			PageTable m_PageTable0 __attribute__((aligned(4096))); // DMA 4mb
-			PageTable m_PageTable768 __attribute__((aligned(4096))); // Kernel 4mb
+			PageTable m_PageTable0 __attribute__((aligned(4096)));
+			PageTable m_PageTables768[256] __attribute__((aligned(4096))); // 1GB
 		};
 	}
 
-	extern Memory::PageManager* g_KernelPageManager;
+	extern Memory::VirtualMemoryManager* g_KernelVMM;
 }
