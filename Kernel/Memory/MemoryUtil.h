@@ -16,8 +16,8 @@ namespace Kernel
 			static VirtualAddress KernelPhysicalToVirtualAddress(PhysicalAddress physicalAddress);
 
 		private:
-			static uint32_t s_KernelVirtualStartAddress;
-			static uint32_t s_KernelPhysicalStartAddress;
+			static VirtualAddress s_KernelVirtualStartAddress;
+			static PhysicalAddress s_KernelPhysicalStartAddress;
 		};
 	}
 }

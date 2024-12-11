@@ -25,7 +25,8 @@ namespace Kernel
 		{
 		public:
 			inline operator uint32_t() const { return m_Entry; }
-
+			
+			void Clear();
 			bool IsPresent() const;
 			void SetPresent(bool value);
 			bool IsWritable() const;

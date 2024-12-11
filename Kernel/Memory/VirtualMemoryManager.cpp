@@ -23,7 +23,7 @@ namespace Kernel
 			return true;
 		}
 
-		bool VirtualMemoryManager::Map(uint32_t virtualAddress, uint32_t physicalAddress, bool writable)
+		bool VirtualMemoryManager::Map(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable)
 		{
 			if (!ESTD::IsAligned(physicalAddress, PAGE_SIZE) || !ESTD::IsAligned(virtualAddress, PAGE_SIZE))
 			{
@@ -31,11 +31,10 @@ namespace Kernel
 				return false;
 			}
 
-			//if ((virtualAddress > (1024 * 1024)) && ((virtualAddress < 0xC0000000) && (virtualAddress > (0xc0000000 + ((1024*4096) * 1)))))
 			uint32_t pageDirectoryIndex = PAGE_DIRECTORY_TABLE_INDEX(virtualAddress);
 			if(pageDirectoryIndex != 0 && (pageDirectoryIndex < 768 || pageDirectoryIndex > 1023))
 			{
-				KPrintf("VirtualMemoryManager->No Page Table Allocated for VirtualAddress: 0x%x\n", virtualAddress);
+				KPrintf("VirtualMemoryManager->Map(0x%x) No Page Table Allocated for VirtualAddress!\n", virtualAddress);
 				return false;
 			}
 			
@@ -53,7 +52,7 @@ namespace Kernel
 				}
 				else
 				{
-					KPrintf("VirtualMemoryManager->Invalid Page Directory Entry Index: %d\n", pageDirectoryIndex);
+					KPrintf("VirtualMemoryManager->Map(0x%x) Invalid Page Directory Entry Index: %d!\n", virtualAddress, pageDirectoryIndex);
 					return false;
 				}
 
@@ -64,7 +63,7 @@ namespace Kernel
 			PageTable* table = m_PageDirectory.GetTable(virtualAddress);
 			if (!table)
 			{
-				KPrintf("VirtualMemoryManager->Table Not Present For Page Directory of VirtualAddress: 0x%x!\n", virtualAddress);
+				KPrintf("VirtualMemoryManager->Map(0x%x) Table Not Present For Page Directory of VirtualAddress!\n", virtualAddress);
 				return false;
 			}
 
@@ -81,7 +80,7 @@ namespace Kernel
 			return true;
 		}
 
-		bool VirtualMemoryManager::MapRange(uint32_t virtualAddress, uint32_t physicalAddress, bool writable, uint32_t count)
+		bool VirtualMemoryManager::MapRange(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable, uint32_t count)
 		{
 			for(uint32_t i = 0; i < count; i++)
 			{
@@ -94,6 +93,72 @@ namespace Kernel
 				physicalAddress += PAGE_SIZE;
 			}
 			return true;
+		}
+
+		bool VirtualMemoryManager::Unmap(VirtualAddress virtualAddress)
+		{
+			if (!ESTD::IsAligned(virtualAddress, PAGE_SIZE))
+			{
+				KPrintf("VirtualMemoryManager->Unmap(0x%x) Failed, Address Not Aligned!\n", virtualAddress);
+				return false;
+			}
+
+			uint32_t pageDirectoryIndex = PAGE_DIRECTORY_TABLE_INDEX(virtualAddress);
+			if(pageDirectoryIndex != 0 && (pageDirectoryIndex < 768 || pageDirectoryIndex > 1023))
+			{
+				KPrintf("VirtualMemoryManager->Unmap(0x%x) No Page Table Allocated for VirtualAddress!\n", virtualAddress);
+				return false;
+			}
+			
+			const auto& directoryEntry = m_PageDirectory.GetEntry(virtualAddress);
+			if(!directoryEntry->IsPresent())
+			{
+				KPrintf("VirtualMemoryManager->Unmap(0x%x) No Page Directory Entry Present for VirtualAddress!\n", virtualAddress);
+				return false;
+			}
+
+			PageTable* table = m_PageDirectory.GetTable(virtualAddress);
+			if (!table)
+			{
+				KPrintf("VirtualMemoryManager->Unmap(0x%x) Table Not Present For Page Directory of VirtualAddress!\n", virtualAddress);
+				return false;
+			}
+
+			const auto& tableEntry = table->GetEntry(virtualAddress);
+			if (!tableEntry->IsPresent())
+			{
+				KPrintf("VirtualMemoryManager->Unmap(0x%x) Failed, No Page Table Entry Present for VirtualAddress!\n", virtualAddress);
+				return false;
+			}
+
+			tableEntry->Clear();
+			return true;
+		}
+
+		bool VirtualMemoryManager::UnmapRange(VirtualAddress virtualAddress, uint32_t count)
+		{
+			for(uint32_t i = 0; i < count; i++)
+			{
+				if (!Unmap(virtualAddress))
+				{
+					KPrintf("VirtualMemoryManager->Unmap(0x%x) Failed to MemoryUnmap!\n", virtualAddress);
+					return false;
+				}
+				FlushTLB(virtualAddress);
+				virtualAddress += PAGE_SIZE;
+			}
+			return true;
+		}
+
+		void VirtualMemoryManager::FlushTLB(VirtualAddress virtualAddress)
+		{
+			asm volatile("invlpg (%0)" :: "r" (virtualAddress) : "memory");
+		}
+
+		void VirtualMemoryManager::FlushTLBRange(VirtualAddress virtualAddress, uint32_t count)
+		{
+			for(uint32_t i = 0; i < count; i++)
+				FlushTLB(virtualAddress + (i * PAGE_SIZE));
 		}
 
 		void VirtualMemoryManager::EnablePaging()
@@ -109,6 +174,45 @@ namespace Kernel
 		void VirtualMemoryManager::ReloadPageDirectory()
 		{
 			x86_LoadPageDirectory((void*)MemoryUtil::KernelVirtualToPhysicalAddress((VirtualAddress)&m_PageDirectory));
+		}
+
+		PhysicalAddress VirtualMemoryManager::GetPhysicalAddress(VirtualAddress virtualAddress)
+		{
+			if (!ESTD::IsAligned(virtualAddress, PAGE_SIZE))
+			{
+				KPrintf("VirtualMemoryManager->GetPhysicalAddress(0x%x) Failed, Address Not Aligned!\n", virtualAddress);
+				return 0;
+			}
+
+			uint32_t pageDirectoryIndex = PAGE_DIRECTORY_TABLE_INDEX(virtualAddress);
+			if(pageDirectoryIndex != 0 && (pageDirectoryIndex < 768 || pageDirectoryIndex > 1023))
+			{
+				KPrintf("VirtualMemoryManager->GetPhysicalAddress(0x%x) No Page Table Allocated for VirtualAddress!\n", virtualAddress);
+				return 0;
+			}
+			
+			const auto& directoryEntry = m_PageDirectory.GetEntry(virtualAddress);
+			if(!directoryEntry->IsPresent())
+			{
+				KPrintf("VirtualMemoryManager->GetPhysicalAddress(0x%x) No Page Directory Entry Present for VirtualAddress!\n", virtualAddress);
+				return 0;
+			}
+
+			PageTable* table = m_PageDirectory.GetTable(virtualAddress);
+			if (!table)
+			{
+				KPrintf("VirtualMemoryManager->GetPhysicalAddress(0x%x) Table Not Present For Page Directory of VirtualAddress!\n", virtualAddress);
+				return 0;
+			}
+
+			const auto& tableEntry = table->GetEntry(virtualAddress);
+			if (!tableEntry->IsPresent())
+			{
+				KPrintf("VirtualMemoryManager->GetPhysicalAddress(0x%x) Failed, No Page Table Entry Present for VirtualAddress!\n", virtualAddress);
+				return 0;
+			}
+
+			return tableEntry->GetAddress();
 		}
 	}
 }

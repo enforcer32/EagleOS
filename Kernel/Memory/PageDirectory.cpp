@@ -7,6 +7,11 @@ namespace Kernel
 {
 	namespace Memory
 	{
+		void PageDirectoryEntry::Clear()
+		{
+			m_Entry = 0;
+		}
+
 		bool PageDirectoryEntry::IsPresent() const
 		{
 			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::Present);

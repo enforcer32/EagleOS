@@ -19,8 +19,8 @@ namespace Kernel
 			bool Init(VirtualAddress startAddress, uint32_t size);
 			VirtualAddress AllocatePage();
 			VirtualAddress AllocatePages(uint32_t pageCount);
-			void FreePage(VirtualAddress address);
-			void FreePages(VirtualAddress address, uint32_t pageCount);
+			bool FreePage(VirtualAddress address);
+			bool FreePages(VirtualAddress address, uint32_t pageCount);
 			void ReservePage(VirtualAddress address);
 			void ReservePages(VirtualAddress address, uint32_t pageCount);
 			uint32_t GetPageSize() const;

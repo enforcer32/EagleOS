@@ -57,17 +57,32 @@ namespace Kernel
 			return vaddr;
 		}
 
-		void VirtualMemoryAllocator::FreePage(VirtualAddress address)
+		bool VirtualMemoryAllocator::FreePage(VirtualAddress address)
 		{
-			FreePages(address, 1);
+			return FreePages(address, 1);
 		}
 
-		void VirtualMemoryAllocator::FreePages(VirtualAddress address, uint32_t pageCount)
+		bool VirtualMemoryAllocator::FreePages(VirtualAddress address, uint32_t pageCount)
 		{
 			if (!address)
-				return;
-			// Unmap Pages
+				return true;
+
+			PhysicalAddress physicalAddress = g_KernelVMM->GetPhysicalAddress(address);
+			if (!address)
+			{
+				KPrintf("VirtualMemoryAllocator->FreePages(%d) Failed to Get Physical Address for Virtual Address(0x%x)!\n", pageCount, address);
+				return false;
+			}
+
+			if (!g_KernelVMM->UnmapRange(address, pageCount))
+			{
+				KPrintf("VirtualMemoryAllocator->FreePages(%d) Failed to Unmap(0x%x)!\n", pageCount, address);
+				return false;
+			}
+
+			g_KernelPMM->FreePages(physicalAddress, pageCount);
 			m_Bitmap.ClearBits((AddressToPageNumber(address)), pageCount);
+			return true;
 		}
 
 		void VirtualMemoryAllocator::ReservePage(VirtualAddress address)

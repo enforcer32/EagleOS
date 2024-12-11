@@ -5,8 +5,8 @@ namespace Kernel
 {
 	namespace Memory
 	{
-		uint32_t MemoryUtil::s_KernelVirtualStartAddress = 0;
-		uint32_t MemoryUtil::s_KernelPhysicalStartAddress = 0;
+		VirtualAddress MemoryUtil::s_KernelVirtualStartAddress = 0;
+		PhysicalAddress MemoryUtil::s_KernelPhysicalStartAddress = 0;
 
 		bool MemoryUtil::Init(const Handshake::BootInfo* bootInfo)
 		{

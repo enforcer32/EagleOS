@@ -11,14 +11,19 @@ namespace Kernel
 		{
 		public:
 			bool Init(const Handshake::BootInfo* bootInfo);
-			bool Map(uint32_t virtualAddress, uint32_t physicalAddress, bool writable);
-			bool MapRange(uint32_t virtualAddress, uint32_t physicalAddress, bool writable, uint32_t count);
+			bool Map(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable);
+			bool MapRange(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable, uint32_t count);
+			bool Unmap(VirtualAddress virtualAddress);
+			bool UnmapRange(VirtualAddress virtualAddress, uint32_t count);
+			void FlushTLB(VirtualAddress virtualAddress);
+			void FlushTLBRange(VirtualAddress virtualAddress, uint32_t count);
 			void EnablePaging();
 			void DisablePaging();
 			void ReloadPageDirectory();
+			PhysicalAddress GetPhysicalAddress(VirtualAddress virtualAddress);
 
 		private:
-			uint32_t m_VirtualStartAddress;
+			VirtualAddress m_VirtualStartAddress;
 			PageDirectory m_PageDirectory __attribute__((aligned(4096)));
 			PageTable m_PageTable0 __attribute__((aligned(4096)));
 			PageTable m_PageTables768[256] __attribute__((aligned(4096))); // 1GB

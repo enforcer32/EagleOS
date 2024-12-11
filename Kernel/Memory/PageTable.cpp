@@ -6,6 +6,11 @@ namespace Kernel
 {
 	namespace Memory
 	{
+		void PageTableEntry::Clear()
+		{
+			m_Entry = 0;
+		}
+
 		bool PageTableEntry::IsPresent() const
 		{
 			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageTableFlags::Present);
