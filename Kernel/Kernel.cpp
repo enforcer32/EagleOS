@@ -7,13 +7,14 @@
 #include <Kernel/Memory/PhysicalMemoryManager.h>
 #include <Kernel/Memory/VirtualMemoryManager.h>
 #include <Kernel/Memory/VirtualMemoryAllocator.h>
-#include <ESTD/CString.h>
+#include <Kernel/Memory/Heap.h>
 
 namespace Kernel
 {
 	Memory::PhysicalMemoryManager _KernelPMM;
 	Memory::VirtualMemoryManager _KernelVMM;
 	Memory::VirtualMemoryAllocator _KernelVMA;
+	Memory::Heap _KernelHeap;
 
 	void DumpSystemMemoryMap(const Handshake::BootInfo* bootInfo)
 	{
@@ -128,6 +129,20 @@ namespace Kernel
 
 		return true;
 	}
+
+	bool InitKernelHeap(const Handshake::BootInfo* bootInfo)
+	{
+		uint32_t kernelHeapSize = (100 * 1048576); // 100mb
+
+		g_KernelHeap = &_KernelHeap;
+		if (!g_KernelHeap->Init(kernelHeapSize))
+		{
+			KPrintf("Failed to Initialize g_KernelHeap\n");
+			return false;
+		}
+		
+		return true;
+	}
 	
 	bool InitMemoryManager(const Handshake::BootInfo* bootInfo)
 	{
@@ -152,6 +167,12 @@ namespace Kernel
 		if (!InitVirtualMemoryAllocator(bootInfo))
 		{
 			KPrintf("Failed to Initialize VirtualMemoryAllocator\n");
+			return false;
+		}
+
+		if (!InitKernelHeap(bootInfo))
+		{
+			KPrintf("Failed to Initialize KernelHeap\n");
 			return false;
 		}
 
