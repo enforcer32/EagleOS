@@ -8,6 +8,7 @@
 #include <Kernel/Memory/VirtualMemoryManager.h>
 #include <Kernel/Memory/VirtualMemoryAllocator.h>
 #include <Kernel/Memory/Heap.h>
+#include <Kernel/Memory/KMalloc.h>
 
 namespace Kernel
 {
@@ -143,6 +144,17 @@ namespace Kernel
 		
 		return true;
 	}
+
+	bool InitKMalloc(const Handshake::BootInfo* bootInfo)
+	{
+		if (!Memory::KMallocInit())
+		{
+			KPrintf("Failed to Initialize KMallocInit\n");
+			return false;
+		}
+		
+		return true;
+	}
 	
 	bool InitMemoryManager(const Handshake::BootInfo* bootInfo)
 	{
@@ -173,6 +185,12 @@ namespace Kernel
 		if (!InitKernelHeap(bootInfo))
 		{
 			KPrintf("Failed to Initialize KernelHeap\n");
+			return false;
+		}
+
+		if (!InitKMalloc(bootInfo))
+		{
+			KPrintf("Failed to Initialize KMalloc\n");
 			return false;
 		}
 

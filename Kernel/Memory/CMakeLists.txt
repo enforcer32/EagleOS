@@ -17,6 +17,8 @@ file(GLOB_RECURSE MemorySources
 	"${CMAKE_CURRENT_SOURCE_DIR}/VirtualMemoryAllocator.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Heap.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Heap.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/KMalloc.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/KMalloc.cpp"
 )
 
 set(MemorySources ${MemorySources} PARENT_SCOPE)
