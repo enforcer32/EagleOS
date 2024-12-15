@@ -9,6 +9,7 @@
 #include <Kernel/Memory/VirtualMemoryAllocator.h>
 #include <Kernel/Memory/Heap.h>
 #include <Kernel/Memory/KMalloc.h>
+#include <Kernel/Drivers/Storage/ATA/ATA.h>
 
 namespace Kernel
 {
@@ -210,6 +211,9 @@ namespace Kernel
 
 		if (!InitMemoryManager(bootInfo))
 			KPanic("Failed to Initialize Memory Manager\n");
+
+		Storage::ATA ata;
+		ata.Init(Storage::ATABus::Primary, Storage::ATADrive::Master);
 
 		KPrintf("\nEagle Operating System\n");
 	}

@@ -1,6 +1,6 @@
 #include <ELIB/LibELF/ELF.h>
 #include <ESTD/CString.h>
-#include <ESTD/EMalloc.h>
+#include <ESTD/StdLib.h>
 #include <ESTD/Algorithm.h>
 
 namespace ELF
@@ -81,7 +81,7 @@ namespace ELF
 
 	bool ELF::ParseProgramHeaders()
 	{
-		m_ProgramHeaders = (ELF32ProgramHeader**)EMalloc(m_Header->ProgramHeaderCount * sizeof(ELF32ProgramHeader*));
+		m_ProgramHeaders = (ELF32ProgramHeader**)ESTD::Malloc(m_Header->ProgramHeaderCount * sizeof(ELF32ProgramHeader*));
 		for (uint32_t i = 0; i < m_Header->ProgramHeaderCount; i++)
 		{
 			ELF32ProgramHeader* programHeader = (ELF32ProgramHeader*)ATA::ATAReadLBAOffset(m_Drive, ((m_Header->ProgramHeaderOffset) + (m_Header->ProgramHeaderEntrySize * i)), sizeof(ELF32ProgramHeader));
@@ -92,7 +92,7 @@ namespace ELF
 
 	bool ELF::ParseSectionHeaders()
 	{
-		m_SectionHeaders = (ELF32SectionHeader**)EMalloc(m_Header->SectionHeaderCount * sizeof(ELF32SectionHeader*));
+		m_SectionHeaders = (ELF32SectionHeader**)ESTD::Malloc(m_Header->SectionHeaderCount * sizeof(ELF32SectionHeader*));
 		for (uint32_t i = 0; i < m_Header->SectionHeaderCount; i++)
 		{
 			ELF32SectionHeader* sectionHeader = (ELF32SectionHeader*)ATA::ATAReadLBAOffset(m_Drive, ((m_Header->SectionHeaderOffset) + (m_Header->SectionHeaderEntrySize * i)), sizeof(ELF32SectionHeader));

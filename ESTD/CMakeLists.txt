@@ -8,6 +8,8 @@ file(GLOB_RECURSE ESTDSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/Bitwise.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Bitset.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Algorithm.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/StdLib.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/StdLib.cpp"
 )
 
 set(ESTDSources ${ESTDSources} PARENT_SCOPE)
