@@ -1,4 +1,5 @@
 file(GLOB_RECURSE ArchSources
+	"${CMAKE_CURRENT_SOURCE_DIR}/x86/Boot.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/x86/Processor.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/x86/Processor.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/x86/Processor.cpp"

@@ -203,27 +203,27 @@ namespace Kernel
 		Graphics::VGA::Init();
 		Graphics::VGA::ClearScreen();
 
-		DumpBootInfo(bootInfo);
+		//DumpBootInfo(bootInfo);
 		//DumpSystemMemoryMap(bootInfo);
 
-		if (x86::Processor::Init() != 0)
-			KPanic("Failed to Initialize x86 Processor!\n");
+		//if (x86::Processor::Init() != 0)
+			//KPanic("Failed to Initialize x86 Processor!\n");
 
-		if (!InitMemoryManager(bootInfo))
-			KPanic("Failed to Initialize Memory Manager\n");
+		//if (!InitMemoryManager(bootInfo))
+			//KPanic("Failed to Initialize Memory Manager\n");
 
-		Storage::ATA ata;
-		ata.Init(Storage::ATABus::Primary, Storage::ATADrive::Master);
+		//Storage::ATA ata;
+		//ata.Init(Storage::ATABus::Primary, Storage::ATADrive::Master);
 
 		KPrintf("\nEagle Operating System\n");
 	}
 }
 
-extern "C" void KMain(const Handshake::BootInfo* bootInfo)
+extern "C" void KMain()
 {
-	if(bootInfo->Signature != HANDSHAKE_BOOT_SIGNATURE)
-		return;
+	//if(bootInfo->Signature != HANDSHAKE_BOOT_SIGNATURE)
+	//	return;
 
-	Kernel::InitKernel(bootInfo);
+	Kernel::InitKernel(nullptr);
 	for(;;);
 }

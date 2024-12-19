@@ -25,7 +25,6 @@ set(CMAKE_CXX_FLAGS_NQ -m32 -g -ffreestanding -nostdlib -nostartfiles -nodefault
 # LINKER CONFIGS
 set(CMAKE_LINKER ${CMAKE_TOOLCHAIN_PATH}/i686-elf-ld)
 set(CMAKE_LINKER_FLAGS -g -relocatable)
-set(BOOTLOADER_LINKERSCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Handshake/linker.ld)
 set(KERNEL_LINKERSCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/Kernel/linker.ld)
 
 # ASSEMBLER FLAGS
@@ -35,24 +34,27 @@ set(CMAKE_ASM_NASM_OBJECT_FORMAT elf32)
 enable_language(ASM_NASM)
 
 # OUTPUT
-set(BOOTLOADER_OUTPUT_NAME Bootloader.bin)
 set(KERNEL_OUTPUT_NAME Kernel.elf)
+set(KERNEL_ISO_OUTPUT_NAME Kernel.iso)
 
 set(ESTD_TARGET_NAME ESTD)
 set(ESTD_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ESTD)
 set(ELIB_TARGET_NAME ELIB)
 set(ELIB_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ELIB)
-set(BOOTLOADER_TARGET_NAME Handshake)
-set(BOOTLOADER_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Handshake)
 set(KERNEL_TARGET_NAME Kernel)
 set(KERNEL_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Kernel)
 
 add_subdirectory(${ESTD_TARGET_DIR})
 add_subdirectory(${ELIB_TARGET_DIR})
-add_subdirectory(${BOOTLOADER_TARGET_DIR})
 add_subdirectory(${KERNEL_TARGET_DIR})
 
 # RUN QEMU
 add_custom_target(runqemu
-    COMMAND ${QEMU_EXECUTABLE} -m 1096M -d int,cpu_reset -no-reboot -no-shutdown -hda ${CMAKE_BINARY_DIR}/Handshake/EagleOS/${BOOTLOADER_OUTPUT_NAME} -hdb ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_OUTPUT_NAME}
+    COMMAND ${QEMU_EXECUTABLE} -m 1096M -d int,cpu_reset -no-reboot -no-shutdown -kernel ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_OUTPUT_NAME}
+)
+
+# Generate ISO
+add_custom_target(geniso
+    COMMAND cp ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_OUTPUT_NAME} ${CMAKE_SOURCE_DIR}/iso/boot
+	COMMAND grub-mkrescue -o ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_ISO_OUTPUT_NAME} ${CMAKE_SOURCE_DIR}/iso
 )
