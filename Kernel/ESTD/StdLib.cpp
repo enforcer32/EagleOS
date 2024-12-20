@@ -1,23 +1,45 @@
 #include <Kernel/ESTD/StdLib.h>
+#include <Kernel/Memory/KMalloc.h>
 
-#ifdef ESTD_BOOTLOADER_BUILD
-	#include <Handshake/Memory/Malloc.h>
-#elif ESTD_KERNEL_BUILD
-	#include <Kernel/Memory/KMalloc.h>
-#else
-	#error ESTDMallocUndefined
-#endif
+void* operator new(size_t size)
+{
+	return Kernel::Memory::KMalloc(size);
+}
+
+void* operator new[](size_t size)
+{
+	return Kernel::Memory::KMalloc(size);
+}
+
+void operator delete(void* ptr)
+{
+	Kernel::Memory::KFree(ptr);
+}
+
+void operator delete[](void* ptr)
+{
+	Kernel::Memory::KFree(ptr);
+}
+
+void operator delete(void* ptr, size_t size)
+{
+	Kernel::Memory::KFree(ptr);
+}
+
+void operator delete[](void* ptr, size_t size)
+{
+	Kernel::Memory::KFree(ptr);
+}
 
 namespace ESTD
 {
-	void* Malloc(uint32_t size)
+	void* Malloc(size_t size)
 	{
-		#ifdef ESTD_BOOTLOADER_BUILD
-			return Handshake::Malloc(size);
-		#elif ESTD_KERNEL_BUILD
-			return Kernel::Memory::KMalloc(size);
-		#else
-			#error ESTDMallocUndefined
-		#endif
+		return Kernel::Memory::KMalloc(size);
+	}
+
+	void Free(void* ptr)
+	{
+		Kernel::Memory::KFree(ptr);
 	}
 }

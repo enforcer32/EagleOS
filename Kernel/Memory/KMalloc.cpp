@@ -4,36 +4,6 @@
 #include <Kernel/Kern/KPanic.h>
 #include <Kernel/ESTD/CString.h>
 
-void* operator new(size_t size)
-{
-	return Kernel::Memory::KMalloc(size);
-}
-
-void* operator new[](size_t size)
-{
-	return Kernel::Memory::KMalloc(size);
-}
-
-void operator delete(void* ptr)
-{
-	Kernel::Memory::KFree(ptr);
-}
-
-void operator delete[](void* ptr)
-{
-	Kernel::Memory::KFree(ptr);
-}
-
-void operator delete(void* ptr, size_t size)
-{
-	Kernel::Memory::KFree(ptr);
-}
-
-void operator delete[](void* ptr, size_t size)
-{
-	Kernel::Memory::KFree(ptr);
-}
-
 namespace Kernel
 {
 	namespace Memory

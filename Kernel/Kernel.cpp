@@ -254,6 +254,6 @@ extern "C" void KMain(uint32_t multibootMagic, Boot::MultibootInfo* multibootInf
 	bootInfo.SystemMemoryMap.Regions = (Boot::MemoryRegion*)multibootInfo->MemoryMapAddress;
 
 	Kernel::InitKernel(&bootInfo);
-		
+	
 	for(;;);
 }
