@@ -1,14 +1,14 @@
 #pragma once
 
-#include <ESTD/Types.h>
-#include <Handshake/System/MemoryMap.h>
+#include <Kernel/Boot/MemoryMap.h>
 
-#define HANDSHAKE_BOOT_SIGNATURE 0xDEADD432
+#define EAGLEOS_BOOT_SIGNATURE 0xDEADD432
 
-namespace Handshake
+namespace Boot
 {
 	struct BootInfo
 	{
+		// Boot Signature
 		uint32_t Signature;
 
 		// Bootloader
@@ -23,7 +23,7 @@ namespace Handshake
 		uint32_t KernelVirtualEndAddress;
 		uint32_t KernelSize;
 	
-		// System Memory Map
-		System::MemoryMap* MemoryMap;
+		// Memory Map
+		MemoryMap SystemMemoryMap;
 	};
 }

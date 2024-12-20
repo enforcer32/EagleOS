@@ -33,6 +33,15 @@ _kernelstart:
 	; Clear Interrupts
 	cli
 
+	; Setup boot stack
+	mov ebp, _boot_stack_top
+	mov esp, ebp
+
+	; Save Multiboot Magic
+	push eax
+	; Save Multiboot Info
+	push ebx
+
 	; Zero .bss section
 	;mov edi, _kernel_bss_start
 	;mov ecx, _kernel_bss_end
@@ -48,7 +57,7 @@ _identity_map:
 	; Page table entry: physical address | flags
 	mov eax, edx
 	or eax, 0x003 ; Set Present (P) and Read/Write (RW) flags (0x003 is 00000011)
-	mov [_kpage_table0 + ecx * 4], eax
+	mov [_boot_page_table0 + ecx * 4], eax
 
 	; Increment the addresses for the next page
 	add ebx, 0x1000 ; Increment the virtual address by 4 KB
@@ -65,7 +74,7 @@ _identity_map:
 _map_pages:
     mov eax, edx
     or eax, 0x003
-    mov [_kpage_table768 + ecx * 4], eax
+    mov [_boot_page_table768 + ecx * 4], eax
 
     add ebx, 0x1000
     add edx, 0x1000
@@ -75,16 +84,16 @@ _map_pages:
     jl _map_pages
 
 	; Set up the page directory entries for page tables
-	mov eax, _kpage_table0
+	mov eax, _boot_page_table0
 	or eax, 0x003 ; Set Present (P) and Read/Write (RW) flags
-	mov [_kpage_directory], eax ; Identity map is mapped at index 0 of the page directory
+	mov [_boot_page_directory], eax ; Identity map is mapped at index 0 of the page directory
 
-	mov eax, _kpage_table768
+	mov eax, _boot_page_table768
 	or eax, 0x003
-	mov [_kpage_directory + 768 * 4], eax
+	mov [_boot_page_directory + 768 * 4], eax
 
 	; Load Page Directory
-    mov eax, _kpage_directory
+    mov eax, _boot_page_directory
     mov cr3, eax
 
     ; Enable paging
@@ -101,6 +110,13 @@ _kernelstart_higherhalf:
 	mov ebp, _kernel_stack_top
 	mov esp, ebp
 
+	; Restore Multiboot Magic
+	mov ebx, [_boot_stack_top-4]
+	; Restore Multiboot Info
+	mov edx, [_boot_stack_top-8]
+	push edx
+	push ebx
+
 	; Call Higherhalf Kernel
 	call KMain
 
@@ -113,6 +129,11 @@ _kernelstart_higherhalf:
 section .boot.data
 ; Page Tables/Directory
 align 4096
-_kpage_directory: times 1024 dd 0
-_kpage_table0: times 1024 dd 0
-_kpage_table768: times 1024 dd 0
+_boot_page_directory: times 1024 dd 0
+_boot_page_table0: times 1024 dd 0
+_boot_page_table768: times 1024 dd 0
+
+section .boot.bss nobits
+align 16
+_boot_stack_bottom: resb 16384
+_boot_stack_top:

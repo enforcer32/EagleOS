@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Handshake/BootInfo.h>
+#include <Kernel/Boot/BootInfo.h>
 #include <Kernel/Memory/PhysicalAddress.h>
 #include <ESTD/Bitmap.h>
 
@@ -17,7 +17,7 @@ namespace Kernel
 		class PhysicalMemoryManager
 		{
 		public:
-			bool Init(const Handshake::BootInfo* bootInfo);
+			bool Init(const Boot::BootInfo* bootInfo);
 			PhysicalAddress AllocatePage();
 			PhysicalAddress AllocatePages(uint32_t pageCount);
 			void FreePage(PhysicalAddress address);
@@ -27,9 +27,9 @@ namespace Kernel
 			uint32_t GetPageSize() const;
 
 		private:
-			bool InitMemory(const Handshake::BootInfo* bootInfo);
-			bool InitBitmap(const Handshake::BootInfo* bootInfo);
-			bool InitFreeMemory(const Handshake::BootInfo* bootInfo);
+			bool InitMemory(const Boot::BootInfo* bootInfo);
+			bool InitBitmap(const Boot::BootInfo* bootInfo);
+			bool InitFreeMemory(const Boot::BootInfo* bootInfo);
 			void SetRegionState(PhysicalAddress address, uint32_t sizeBytes, PageState state);
 			uint32_t AddressToPageNumber(PhysicalAddress address) const;
 			PhysicalAddress PageNumberToAddress(uint32_t pageNumber) const;

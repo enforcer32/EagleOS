@@ -26,3 +26,4 @@ Axe2/
 *.dll
 *.exe
 *.map
+*.gdb_history

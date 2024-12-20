@@ -8,7 +8,7 @@ namespace Kernel
 		VirtualAddress MemoryUtil::s_KernelVirtualStartAddress = 0;
 		PhysicalAddress MemoryUtil::s_KernelPhysicalStartAddress = 0;
 
-		bool MemoryUtil::Init(const Handshake::BootInfo* bootInfo)
+		bool MemoryUtil::Init(const Boot::BootInfo* bootInfo)
 		{
 			s_KernelVirtualStartAddress = bootInfo->KernelVirtualStartAddress;
 			s_KernelPhysicalStartAddress = bootInfo->KernelPhysicalStartAddress;

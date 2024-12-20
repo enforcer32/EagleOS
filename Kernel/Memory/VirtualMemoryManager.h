@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Handshake/BootInfo.h>
+#include <Kernel/Boot/BootInfo.h>
 #include <Kernel/Memory/PageDirectory.h>
 
 namespace Kernel
@@ -10,7 +10,7 @@ namespace Kernel
 		class VirtualMemoryManager
 		{
 		public:
-			bool Init(const Handshake::BootInfo* bootInfo);
+			bool Init(const Boot::BootInfo* bootInfo);
 			bool Map(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable);
 			bool MapRange(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable, uint32_t count);
 			bool Unmap(VirtualAddress virtualAddress);

@@ -53,7 +53,7 @@ namespace Kernel
 				return false;
 			}
 
-			KPrintf("VirtualMemoryAllocator->Allocated(0x%x -> 0x%x)!\n", vaddr, paddr);
+			KPrintf("VirtualMemoryAllocator->Allocated(Virt(0x%x) -> Phys(0x%x))!\n", vaddr, paddr);
 			return vaddr;
 		}
 

@@ -14,8 +14,9 @@ namespace Kernel
 		extern "C" void x86_DisablePaging();
 		extern "C" void x86_LoadPageDirectory(void* dir);
 
-		bool VirtualMemoryManager::Init(const Handshake::BootInfo* bootInfo)
+		bool VirtualMemoryManager::Init(const Boot::BootInfo* bootInfo)
 		{
+			KPrintf("Initializing VirtualMemoryManager...\n");
 			m_VirtualStartAddress = bootInfo->KernelVirtualStartAddress;
 			ESTD::Memset(&m_PageDirectory, 0, sizeof(uint32_t) * PAGE_DIRECTORY_TABLE_COUNT);
 			ESTD::Memset(&m_PageTable0, 0, sizeof(m_PageTable0));

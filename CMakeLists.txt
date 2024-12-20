@@ -50,7 +50,7 @@ add_subdirectory(${KERNEL_TARGET_DIR})
 
 # RUN QEMU
 add_custom_target(runqemu
-    COMMAND ${QEMU_EXECUTABLE} -m 1096M -d int,cpu_reset -no-reboot -no-shutdown -kernel ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_OUTPUT_NAME}
+    COMMAND ${QEMU_EXECUTABLE} -m 1024M -d int,cpu_reset -no-reboot -no-shutdown -kernel ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_OUTPUT_NAME}
 )
 
 # Generate ISO

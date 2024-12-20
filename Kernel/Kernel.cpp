@@ -1,4 +1,3 @@
-#include <Handshake/BootInfo.h>
 #include <Kernel/Drivers/Graphics/VGA.h>
 #include <Kernel/Kern/KPrintf.h>
 #include <Kernel/Kern/KPanic.h>
@@ -10,6 +9,8 @@
 #include <Kernel/Memory/Heap.h>
 #include <Kernel/Memory/KMalloc.h>
 #include <Kernel/Drivers/Storage/ATA/ATA.h>
+#include <Kernel/Boot/Multiboot.h>
+#include <Kernel/Boot/BootInfo.h>
 
 namespace Kernel
 {
@@ -18,28 +19,27 @@ namespace Kernel
 	Memory::VirtualMemoryAllocator _KernelVMA;
 	Memory::Heap _KernelHeap;
 
-	void DumpSystemMemoryMap(const Handshake::BootInfo* bootInfo)
+	void DumpSystemMemoryMap(const Boot::BootInfo* bootInfo)
 	{
 		KPrintf("\n----------System Memory Map----------\n");
-		for (uint32_t i = 0; i < bootInfo->MemoryMap->RegionCount; i++)
+		Kernel::KPrintf("MemoryLower 0x%x, MemoryUpper 0x%x\n", bootInfo->SystemMemoryMap.MemoryLower, bootInfo->SystemMemoryMap.MemoryUpper);
+		for (uint32_t i = 0; i < bootInfo->SystemMemoryMap.RegionCount; i++)
 		{
-			const auto& regionInfo = bootInfo->MemoryMap->Regions[i];
+			const auto& regionInfo = bootInfo->SystemMemoryMap.Regions[i];
 			Kernel::KPrintf("Region: {Base= 0x%x, ", regionInfo.BaseAddress);
 			Kernel::KPrintf("Length= 0x%x, ", regionInfo.Length);
-			Kernel::KPrintf("Type= 0x%x, ", regionInfo.Type);
-			Kernel::KPrintf("ExtendedAttributes= 0x%x}\n", regionInfo.ExtendedAttributes);
+			Kernel::KPrintf("Type= 0x%x}\n", regionInfo.Type);
 		}
 		KPrintf("----------System Memory Map----------\n\n");
 	}
 
-	void DumpBootInfo(const Handshake::BootInfo* bootInfo)
+	void DumpBootInfo(const Boot::BootInfo* bootInfo)
 	{
 		KPrintf("\n----------BootInfo----------\n");
-		KPrintf("Signature: 0x%x\n", bootInfo->Signature);
+		KPrintf("Signature: 0x%x\n", bootInfo->Signature);		
 		KPrintf("BootloaderPhysicalStartAddress: 0x%x\n", bootInfo->BootloaderPhysicalStartAddress);
 		KPrintf("BootloaderPhysicalEndAddress: 0x%x\n", bootInfo->BootloaderPhysicalEndAddress);
 		KPrintf("BootloaderSize: 0x%x\n", bootInfo->BootloaderSize);
-		
 		KPrintf("KernelPhysicalStartAddress: 0x%x\n", bootInfo->KernelPhysicalStartAddress);
 		KPrintf("KernelPhysicalEndAddress: 0x%x\n", bootInfo->KernelPhysicalEndAddress);
 		KPrintf("KernelVirtualStartAddress: 0x%x\n", bootInfo->KernelVirtualStartAddress);
@@ -48,7 +48,7 @@ namespace Kernel
 		KPrintf("----------BootInfo----------\n\n");
 	}
 
-	bool InitPhysicalMemoryManager(const Handshake::BootInfo* bootInfo)
+	bool InitPhysicalMemoryManager(const Boot::BootInfo* bootInfo)
 	{
 		// Init Physical Memory Manager
 		g_KernelPMM = &_KernelPMM;
@@ -75,7 +75,7 @@ namespace Kernel
 		return true;
 	}
 
-	bool InitVirtualMemoryManager(const Handshake::BootInfo* bootInfo)
+	bool InitVirtualMemoryManager(const Boot::BootInfo* bootInfo)
 	{
 		g_KernelVMM = &_KernelVMM;
 		if (!g_KernelVMM->Init(bootInfo))
@@ -117,7 +117,7 @@ namespace Kernel
 		return true;
 	}
 
-	bool InitVirtualMemoryAllocator(const Handshake::BootInfo* bootInfo)
+	bool InitVirtualMemoryAllocator(const Boot::BootInfo* bootInfo)
 	{	
 		uint32_t kernelVMAStartAddress = bootInfo->KernelVirtualStartAddress + (4096 * 1024 * 4); // 0xC1000000
 		uint32_t kernelVMASize = 0xFFFFFFFF - kernelVMAStartAddress;
@@ -132,7 +132,7 @@ namespace Kernel
 		return true;
 	}
 
-	bool InitKernelHeap(const Handshake::BootInfo* bootInfo)
+	bool InitKernelHeap(const Boot::BootInfo* bootInfo)
 	{
 		uint32_t kernelHeapSize = (100 * 1048576); // 100mb
 
@@ -146,7 +146,7 @@ namespace Kernel
 		return true;
 	}
 
-	bool InitKMalloc(const Handshake::BootInfo* bootInfo)
+	bool InitKMalloc(const Boot::BootInfo* bootInfo)
 	{
 		if (!Memory::KMallocInit())
 		{
@@ -157,7 +157,7 @@ namespace Kernel
 		return true;
 	}
 	
-	bool InitMemoryManager(const Handshake::BootInfo* bootInfo)
+	bool InitMemoryManager(const Boot::BootInfo* bootInfo)
 	{
 		if(!Memory::MemoryUtil::Init(bootInfo))
 		{
@@ -198,7 +198,7 @@ namespace Kernel
 		return true;
 	}
 
-	void InitKernel(const Handshake::BootInfo* bootInfo)
+	void InitKernel(const Boot::BootInfo* bootInfo)
 	{
 		Graphics::VGA::Init();
 		Graphics::VGA::ClearScreen();
@@ -206,11 +206,11 @@ namespace Kernel
 		//DumpBootInfo(bootInfo);
 		//DumpSystemMemoryMap(bootInfo);
 
-		//if (x86::Processor::Init() != 0)
-			//KPanic("Failed to Initialize x86 Processor!\n");
+		if (x86::Processor::Init() != 0)
+			KPanic("Failed to Initialize x86 Processor!\n");
 
-		//if (!InitMemoryManager(bootInfo))
-			//KPanic("Failed to Initialize Memory Manager\n");
+		if (!InitMemoryManager(bootInfo))
+			KPanic("Failed to Initialize Memory Manager\n");
 
 		//Storage::ATA ata;
 		//ata.Init(Storage::ATABus::Primary, Storage::ATADrive::Master);
@@ -219,11 +219,41 @@ namespace Kernel
 	}
 }
 
-extern "C" void KMain()
-{
-	//if(bootInfo->Signature != HANDSHAKE_BOOT_SIGNATURE)
-	//	return;
+extern "C" uint32_t _bootloader_physical_start;
+extern "C" uint32_t _bootloader_physical_end;
+extern "C" uint32_t _kernel_physical_start;
+extern "C" uint32_t _kernel_physical_end;
+extern "C" uint32_t _kernel_virtual_start;
+extern "C" uint32_t _kernel_virtual_end;
 
-	Kernel::InitKernel(nullptr);
+extern "C" void KMain(uint32_t multibootMagic, Boot::MultibootInfo* multibootInfo)
+{
+	if(multibootMagic != MULTIBOOT_BOOTLOADER_MAGIC)
+		return;
+
+	// Setup Boot Info
+	Boot::BootInfo bootInfo;
+	bootInfo.Signature = EAGLEOS_BOOT_SIGNATURE;
+
+	// Bootloader
+	bootInfo.BootloaderPhysicalStartAddress = (uint32_t)&_bootloader_physical_start;
+	bootInfo.BootloaderPhysicalEndAddress = (uint32_t)&_bootloader_physical_end;
+	bootInfo.BootloaderSize = ((uint32_t)&_bootloader_physical_end - (uint32_t)&_bootloader_physical_start);
+
+	// Kernel
+	bootInfo.KernelPhysicalStartAddress = (uint32_t)&_kernel_physical_start;
+	bootInfo.KernelPhysicalEndAddress = (uint32_t)&_kernel_physical_end;
+	bootInfo.KernelVirtualStartAddress = (uint32_t)&_kernel_virtual_start;
+	bootInfo.KernelVirtualEndAddress = (uint32_t)&_kernel_virtual_end;
+	bootInfo.KernelSize = ((uint32_t)&_kernel_virtual_end - (uint32_t)&_kernel_virtual_start);
+
+	// Memory Map
+	bootInfo.SystemMemoryMap.MemoryLower = (multibootInfo->MemoryLower * 1024);
+	bootInfo.SystemMemoryMap.MemoryUpper = (multibootInfo->MemoryUpper * 1024);
+	bootInfo.SystemMemoryMap.RegionCount = (multibootInfo->MemoryMapLength / (sizeof(Boot::MultibootMemoryMap)));
+	bootInfo.SystemMemoryMap.Regions = (Boot::MemoryRegion*)multibootInfo->MemoryMapAddress;
+
+	Kernel::InitKernel(&bootInfo);
+		
 	for(;;);
 }

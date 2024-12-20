@@ -7,7 +7,7 @@ namespace Kernel
 
 	namespace Memory
 	{
-		bool PhysicalMemoryManager::Init(const Handshake::BootInfo* bootInfo)
+		bool PhysicalMemoryManager::Init(const Boot::BootInfo* bootInfo)
 		{
 			KPrintf("Initializing PhysicalMemoryManager...\n");
 			m_PageSize = 4096;
@@ -79,17 +79,18 @@ namespace Kernel
 			return m_PageSize;
 		}
 
-		bool PhysicalMemoryManager::InitMemory(const Handshake::BootInfo* bootInfo)
+		bool PhysicalMemoryManager::InitMemory(const Boot::BootInfo* bootInfo)
 		{
 			uint64_t memoryStart = -1;
 			uint64_t memoryEnd = 0;
 
-			for(uint32_t i = 0; i < bootInfo->MemoryMap->RegionCount; i++)
+			for (uint32_t i = 0; i < bootInfo->SystemMemoryMap.RegionCount; i++)
 			{
-				if(bootInfo->MemoryMap->Regions[i].BaseAddress < memoryStart)
-					memoryStart = bootInfo->MemoryMap->Regions[i].BaseAddress;
-				if(bootInfo->MemoryMap->Regions[i].BaseAddress + bootInfo->MemoryMap->Regions[i].Length > memoryEnd)
-					memoryEnd = bootInfo->MemoryMap->Regions[i].BaseAddress + bootInfo->MemoryMap->Regions[i].Length;					
+				if (bootInfo->SystemMemoryMap.Regions[i].BaseAddress < memoryStart)
+					memoryStart = bootInfo->SystemMemoryMap.Regions[i].BaseAddress;
+
+				if ((bootInfo->SystemMemoryMap.Regions[i].BaseAddress <= bootInfo->SystemMemoryMap.MemoryUpper) && (bootInfo->SystemMemoryMap.Regions[i].BaseAddress + bootInfo->SystemMemoryMap.Regions[i].Length > memoryEnd))
+					memoryEnd = bootInfo->SystemMemoryMap.Regions[i].BaseAddress + bootInfo->SystemMemoryMap.Regions[i].Length;
 			}
 
 			m_StartAddress = memoryStart;
@@ -99,18 +100,18 @@ namespace Kernel
 			return true;
 		}
 
-		bool PhysicalMemoryManager::InitBitmap(const Handshake::BootInfo* bootInfo)
+		bool PhysicalMemoryManager::InitBitmap(const Boot::BootInfo* bootInfo)
 		{
 			m_Bitmap.SetAll();
 			return true;
 		}
 		
-		bool PhysicalMemoryManager::InitFreeMemory(const Handshake::BootInfo* bootInfo)
+		bool PhysicalMemoryManager::InitFreeMemory(const Boot::BootInfo* bootInfo)
 		{
-			for(uint32_t i = 0; i < bootInfo->MemoryMap->RegionCount; i++)
+			for(uint32_t i = 0; i < bootInfo->SystemMemoryMap.RegionCount; i++)
 			{
-				const auto& region = bootInfo->MemoryMap->Regions[i];
-				if(region.Type == Handshake::System::MemoryRegionType::Usable && region.Length > 0)
+				const auto& region = bootInfo->SystemMemoryMap.Regions[i];
+				if(region.Type == Boot::MemoryRegionType::Available && region.Length > 0)
 				{
 					SetRegionState(region.BaseAddress, region.Length, PageState::Free);
 				}

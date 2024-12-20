@@ -6,6 +6,8 @@ file(GLOB_RECURSE KernelSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/Kern/KPanic.cpp"
 )
 
+set(BOOT_TARGET_NAME KernelBoot)
+set(BOOT_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Boot)
 set(ARCH_TARGET_NAME KernelArch)
 set(ARCH_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Arch)
 set(DRIVERS_TARGET_NAME KernelDrivers)
@@ -13,11 +15,12 @@ set(DRIVERS_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Drivers)
 set(MEMORY_TARGET_NAME KernelMemory)
 set(MEMORY_TARGET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Memory)
 
+add_subdirectory(${BOOT_TARGET_DIR})
 add_subdirectory(${ARCH_TARGET_DIR})
 add_subdirectory(${DRIVERS_TARGET_DIR})
 add_subdirectory(${MEMORY_TARGET_DIR})
 
-add_library(${KERNEL_TARGET_NAME} OBJECT ${ESTDSources} ${ELIBSources} ${KernelSources} ${ArchSources} ${DriversSources} ${MemorySources})
+add_library(${KERNEL_TARGET_NAME} OBJECT ${ESTDSources} ${ELIBSources} ${KernelSources} ${BootSources} ${ArchSources} ${DriversSources} ${MemorySources})
 target_compile_definitions(${KERNEL_TARGET_NAME} PRIVATE ESTD_KERNEL_BUILD)
 target_include_directories(${KERNEL_TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../")
 
@@ -47,7 +50,7 @@ foreach(SOURCE_FILE ${ELIBSources})
 endforeach()
 
 # APPEND INTERNAL SOURCES
-foreach(SOURCE_FILE ${KernelSources} ${ArchSources} ${DriversSources} ${MemorySources})
+foreach(SOURCE_FILE ${KernelSources} ${BootSources} ${ArchSources} ${DriversSources} ${MemorySources})
 	string(FIND ${SOURCE_FILE} ".h" index)
 	if(index EQUAL -1)
 			string(REPLACE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${KERNEL_TARGET_NAME}.dir ObjectFile ${SOURCE_FILE})
