@@ -19,25 +19,25 @@ namespace Kernel
 		public:
 			bool Init(const Boot::BootInfo* bootInfo);
 			PhysicalAddress AllocatePage();
-			PhysicalAddress AllocatePages(uint32_t pageCount);
+			PhysicalAddress AllocatePages(size_t pageCount);
 			void FreePage(PhysicalAddress address);
-			void FreePages(PhysicalAddress address, uint32_t pageCount);
+			void FreePages(PhysicalAddress address, size_t pageCount);
 			void ReservePage(PhysicalAddress address);
-			void ReservePages(PhysicalAddress address, uint32_t pageCount);
-			uint32_t GetPageSize() const;
+			void ReservePages(PhysicalAddress address, size_t pageCount);
+			size_t GetPageSize() const;
 
 		private:
 			bool InitMemory(const Boot::BootInfo* bootInfo);
 			bool InitBitmap(const Boot::BootInfo* bootInfo);
 			bool InitFreeMemory(const Boot::BootInfo* bootInfo);
-			void SetRegionState(PhysicalAddress address, uint32_t sizeBytes, PageState state);
-			uint32_t AddressToPageNumber(PhysicalAddress address) const;
-			PhysicalAddress PageNumberToAddress(uint32_t pageNumber) const;
+			void SetRegionState(PhysicalAddress address, size_t sizeBytes, PageState state);
+			size_t AddressToPageNumber(PhysicalAddress address) const;
+			PhysicalAddress PageNumberToAddress(size_t pageNumber) const;
 
 		private:
-			uint32_t m_PageSize;
-			uint32_t m_MemorySizeBytes;
-			uint32_t m_PageCount;
+			size_t m_PageSize;
+			size_t m_MemorySizeBytes;
+			size_t m_PageCount;
 			PhysicalAddress m_StartAddress;
 			PhysicalAddress m_EndAddress;
 			ESTD::Bitmap<131072> m_Bitmap;

@@ -39,7 +39,7 @@ namespace Kernel
 			return AllocatePages(1);
 		}
 		
-		PhysicalAddress PhysicalMemoryManager::AllocatePages(uint32_t pageCount)
+		PhysicalAddress PhysicalMemoryManager::AllocatePages(size_t pageCount)
 		{
 			if (!pageCount)
 				return 0;
@@ -57,7 +57,7 @@ namespace Kernel
 			FreePages(address, 1);
 		}
 
-		void PhysicalMemoryManager::FreePages(PhysicalAddress address, uint32_t pageCount)
+		void PhysicalMemoryManager::FreePages(PhysicalAddress address, size_t pageCount)
 		{
 			if (!address)
 				return;
@@ -69,12 +69,12 @@ namespace Kernel
 			ReservePages(address, 1);
 		}
 
-		void PhysicalMemoryManager::ReservePages(PhysicalAddress address, uint32_t pageCount)
+		void PhysicalMemoryManager::ReservePages(PhysicalAddress address, size_t pageCount)
 		{
 			m_Bitmap.SetBits(AddressToPageNumber(address), pageCount);
 		}
 
-		uint32_t PhysicalMemoryManager::GetPageSize() const
+		size_t PhysicalMemoryManager::GetPageSize() const
 		{
 			return m_PageSize;
 		}
@@ -84,12 +84,12 @@ namespace Kernel
 			uint64_t memoryStart = -1;
 			uint64_t memoryEnd = 0;
 
-			for (uint32_t i = 0; i < bootInfo->SystemMemoryMap.RegionCount; i++)
+			for (size_t i = 0; i < bootInfo->SystemMemoryMap.RegionCount; i++)
 			{
 				if (bootInfo->SystemMemoryMap.Regions[i].BaseAddress < memoryStart)
 					memoryStart = bootInfo->SystemMemoryMap.Regions[i].BaseAddress;
 
-				if ((bootInfo->SystemMemoryMap.Regions[i].BaseAddress <= bootInfo->SystemMemoryMap.MemoryUpper) && (bootInfo->SystemMemoryMap.Regions[i].BaseAddress + bootInfo->SystemMemoryMap.Regions[i].Length > memoryEnd))
+				if ((bootInfo->SystemMemoryMap.Regions[i].BaseAddress <= bootInfo->SystemMemoryMap.MemoryAddressHigh) && (bootInfo->SystemMemoryMap.Regions[i].BaseAddress + bootInfo->SystemMemoryMap.Regions[i].Length > memoryEnd))
 					memoryEnd = bootInfo->SystemMemoryMap.Regions[i].BaseAddress + bootInfo->SystemMemoryMap.Regions[i].Length;
 			}
 
@@ -108,7 +108,7 @@ namespace Kernel
 		
 		bool PhysicalMemoryManager::InitFreeMemory(const Boot::BootInfo* bootInfo)
 		{
-			for(uint32_t i = 0; i < bootInfo->SystemMemoryMap.RegionCount; i++)
+			for(size_t i = 0; i < bootInfo->SystemMemoryMap.RegionCount; i++)
 			{
 				const auto& region = bootInfo->SystemMemoryMap.Regions[i];
 				if(region.Type == Boot::MemoryRegionType::Available && region.Length > 0)
@@ -119,22 +119,22 @@ namespace Kernel
 			return true;
 		}
 
-		void PhysicalMemoryManager::SetRegionState(PhysicalAddress address, uint32_t sizeBytes, PageState state)
+		void PhysicalMemoryManager::SetRegionState(PhysicalAddress address, size_t sizeBytes, PageState state)
 		{
-			uint32_t pageNumber = AddressToPageNumber(address);
-			uint32_t pageCount = sizeBytes / m_PageSize;
+			size_t pageNumber = AddressToPageNumber(address);
+			size_t pageCount = sizeBytes / m_PageSize;
 			if (state == PageState::Free)
 				m_Bitmap.ClearBits(pageNumber, pageCount);
 			else if (state == PageState::Reserved)
 				m_Bitmap.SetBits(pageNumber, pageCount);
 		}
 
-		uint32_t PhysicalMemoryManager::AddressToPageNumber(PhysicalAddress address) const
+		size_t PhysicalMemoryManager::AddressToPageNumber(PhysicalAddress address) const
 		{
 			return (address - m_StartAddress) / m_PageSize;
 		}
 
-		PhysicalAddress PhysicalMemoryManager::PageNumberToAddress(uint32_t pageNumber) const
+		PhysicalAddress PhysicalMemoryManager::PageNumberToAddress(size_t pageNumber) const
 		{
 			return (m_StartAddress + (pageNumber * m_PageSize));
 		}

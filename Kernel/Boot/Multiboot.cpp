@@ -14,7 +14,7 @@ namespace Boot
 		}
 
 		Kernel::KPrintf("MemoryLower 0x%x, MemoryUpper 0x%x\n", (multibootInfo->MemoryLower * 1024) , (multibootInfo->MemoryUpper * 1024));
-		for (uint32_t i = 0; i < (multibootInfo->MemoryMapLength / sizeof(MultibootMemoryMap)); i++)
+		for (size_t i = 0; i < (multibootInfo->MemoryMapLength / sizeof(MultibootMemoryMap)); i++)
 		{
 			const auto& memoryMap = multibootInfo->MemoryMapAddress[i];
 			Kernel::KPrintf("MemoryMap: {Base= 0x%x, ", memoryMap.BaseAddress);

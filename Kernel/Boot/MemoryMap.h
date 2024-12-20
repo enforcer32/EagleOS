@@ -23,9 +23,9 @@ namespace Boot
 
 	struct MemoryMap
 	{
-		uint32_t MemoryLower;
-		uint32_t MemoryUpper;
-		uint32_t RegionCount;
+		uintptr_t MemoryAddressLow;
+		uintptr_t MemoryAddressHigh;
+		size_t RegionCount;
 		MemoryRegion* Regions;
 	};
 }

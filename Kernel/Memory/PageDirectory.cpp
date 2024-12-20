@@ -67,7 +67,7 @@ namespace Kernel
 			return ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::Accessed);
 		}
 
-		uint32_t PageDirectoryEntry::GetPageSize() const
+		size_t PageDirectoryEntry::GetPageSize() const
 		{
 			return (ESTD::Bitwise::BitmaskTestOne(m_Entry, (uint32_t)PageDirectoryFlags::PageSize) ? 4194304 : 4096);	
 		}
@@ -102,10 +102,10 @@ namespace Kernel
 		{
 			KPrintf("\n-------------------------PageDirectoryEntries---------------------\n");
 			KPrintf("[P][W][U][WT][CD][A][VIRT][PHYS][IDX]\n");
-			for(uint32_t i = 0; i < PAGE_DIRECTORY_TABLE_COUNT; i++)
+			for(size_t i = 0; i < PAGE_DIRECTORY_TABLE_COUNT; i++)
 			{
 				const auto& entry = &m_Entries[i];
-				uint32_t virtualAddress = (0x400000 * i);
+				uintptr_t virtualAddress = (0x400000 * i);
 				KPrintf("[%d][%d][%d][ %d][ %d][%d][0x%x][0x%x][%d]\n",
 							entry->IsPresent(), entry->IsWritable(), entry->IsUser(), entry->IsWriteThrough(),
 							entry->IsCacheDisable(), entry->IsAccessed(), virtualAddress, entry->GetAddress(), i);

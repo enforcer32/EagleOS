@@ -27,3 +27,5 @@ Axe2/
 *.exe
 *.map
 *.gdb_history
+*.elf
+*.iso

@@ -102,7 +102,7 @@ namespace Kernel
 
 		void VGA::WriteStr(const char* str)
 		{
-			for (uint32_t i = 0; i < ESTD::Strlen(str); i++)
+			for (size_t i = 0; i < ESTD::Strlen(str); i++)
 				WriteChar(str[i]);
 		}
 

@@ -14,7 +14,7 @@ namespace Kernel
 
 		struct HeapNode
 		{
-			uint32_t Size;
+			size_t Size;
 			HeapState State;
 			HeapNode* Next;
 			HeapNode* Prev;
@@ -23,13 +23,13 @@ namespace Kernel
 		class Heap
 		{
 		public:
-			bool Init(uint32_t sizeBytes);
-			void* Allocate(uint32_t sizeBytes);
+			bool Init(size_t sizeBytes);
+			void* Allocate(size_t sizeBytes);
 			void Free(void* address);
 			void Dump() const;
 			
 		private:
-			uint32_t m_MemorySizeBytes;
+			size_t m_MemorySizeBytes;
 			void* m_StartAddress;
 			void* m_EndAddress;
 			uint8_t* m_CurrentAddress;

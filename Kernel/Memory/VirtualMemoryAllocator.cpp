@@ -9,7 +9,7 @@ namespace Kernel
 
 	namespace Memory
 	{
-		bool VirtualMemoryAllocator::Init(VirtualAddress startAddress, uint32_t size)
+		bool VirtualMemoryAllocator::Init(VirtualAddress startAddress, size_t size)
 		{
 			KPrintf("Initializing VirtualMemoryAllocator...\n");
 			m_PageSize = 4096;
@@ -27,7 +27,7 @@ namespace Kernel
 			return AllocatePages(1);
 		}
 		
-		VirtualAddress VirtualMemoryAllocator::AllocatePages(uint32_t pageCount)
+		VirtualAddress VirtualMemoryAllocator::AllocatePages(size_t pageCount)
 		{
 			if (!pageCount)
 				return 0;
@@ -62,7 +62,7 @@ namespace Kernel
 			return FreePages(address, 1);
 		}
 
-		bool VirtualMemoryAllocator::FreePages(VirtualAddress address, uint32_t pageCount)
+		bool VirtualMemoryAllocator::FreePages(VirtualAddress address, size_t pageCount)
 		{
 			if (!address)
 				return true;
@@ -90,32 +90,32 @@ namespace Kernel
 			ReservePages(address, 1);
 		}
 
-		void VirtualMemoryAllocator::ReservePages(VirtualAddress address, uint32_t pageCount)
+		void VirtualMemoryAllocator::ReservePages(VirtualAddress address, size_t pageCount)
 		{
 			m_Bitmap.SetBits(AddressToPageNumber(address), pageCount);
 		}
 
-		uint32_t VirtualMemoryAllocator::GetPageSize() const
+		size_t VirtualMemoryAllocator::GetPageSize() const
 		{
 			return m_PageSize;
 		}
 
-		void VirtualMemoryAllocator::SetRegionState(VirtualAddress address, uint32_t sizeBytes, VirtualPageState state)
+		void VirtualMemoryAllocator::SetRegionState(VirtualAddress address, size_t sizeBytes, VirtualPageState state)
 		{
-			uint32_t pageNumber = AddressToPageNumber(address);
-			uint32_t pageCount = sizeBytes / m_PageSize;
+			size_t pageNumber = AddressToPageNumber(address);
+			size_t pageCount = sizeBytes / m_PageSize;
 			if (state == VirtualPageState::Free)
 				m_Bitmap.ClearBits(pageNumber, pageCount);
 			else if (state == VirtualPageState::Reserved)
 				m_Bitmap.SetBits(pageNumber, pageCount);
 		}
 
-		uint32_t VirtualMemoryAllocator::AddressToPageNumber(VirtualAddress address) const
+		size_t VirtualMemoryAllocator::AddressToPageNumber(VirtualAddress address) const
 		{
 			return (address - m_StartAddress) / m_PageSize;
 		}
 
-		VirtualAddress VirtualMemoryAllocator::PageNumberToAddress(uint32_t pageNumber) const
+		VirtualAddress VirtualMemoryAllocator::PageNumberToAddress(size_t pageNumber) const
 		{
 			return (m_StartAddress + (pageNumber * m_PageSize));
 		}

@@ -7,8 +7,8 @@ namespace Kernel
 	namespace Memory
 	{
 		bool KMallocInit();
-		void* KMalloc(uint32_t size);
-		void* KZAlloc(uint32_t size);
+		void* KMalloc(size_t size);
+		void* KZAlloc(size_t size);
 		void KFree(void* ptr);
 	}
 }

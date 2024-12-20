@@ -12,16 +12,16 @@ namespace Boot
 		uint32_t Signature;
 
 		// Bootloader
-		uint32_t BootloaderPhysicalStartAddress;
-		uint32_t BootloaderPhysicalEndAddress;
-		uint32_t BootloaderSize;
+		uintptr_t BootloaderPhysicalStartAddress;
+		uintptr_t BootloaderPhysicalEndAddress;
+		size_t BootloaderSize;
 
 		// Kernel
-		uint32_t KernelPhysicalStartAddress;
-		uint32_t KernelPhysicalEndAddress;
-		uint32_t KernelVirtualStartAddress;
-		uint32_t KernelVirtualEndAddress;
-		uint32_t KernelSize;
+		uintptr_t KernelPhysicalStartAddress;
+		uintptr_t KernelPhysicalEndAddress;
+		uintptr_t KernelVirtualStartAddress;
+		uintptr_t KernelVirtualEndAddress;
+		size_t KernelSize;
 	
 		// Memory Map
 		MemoryMap SystemMemoryMap;

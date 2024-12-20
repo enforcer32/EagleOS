@@ -18,7 +18,7 @@ namespace Kernel
 		{
 			KPrintf("Initializing VirtualMemoryManager...\n");
 			m_VirtualStartAddress = bootInfo->KernelVirtualStartAddress;
-			ESTD::Memset(&m_PageDirectory, 0, sizeof(uint32_t) * PAGE_DIRECTORY_TABLE_COUNT);
+			ESTD::Memset(&m_PageDirectory, 0, sizeof(m_PageDirectory));
 			ESTD::Memset(&m_PageTable0, 0, sizeof(m_PageTable0));
 			ESTD::Memset(&m_PageTables768, 0, sizeof(m_PageTables768));
 			return true;
@@ -81,9 +81,9 @@ namespace Kernel
 			return true;
 		}
 
-		bool VirtualMemoryManager::MapRange(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable, uint32_t count)
+		bool VirtualMemoryManager::MapRange(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable, size_t count)
 		{
-			for(uint32_t i = 0; i < count; i++)
+			for(size_t i = 0; i < count; i++)
 			{
 				if (!Map(virtualAddress, physicalAddress, writable))
 				{
@@ -136,9 +136,9 @@ namespace Kernel
 			return true;
 		}
 
-		bool VirtualMemoryManager::UnmapRange(VirtualAddress virtualAddress, uint32_t count)
+		bool VirtualMemoryManager::UnmapRange(VirtualAddress virtualAddress, size_t count)
 		{
-			for(uint32_t i = 0; i < count; i++)
+			for(size_t i = 0; i < count; i++)
 			{
 				if (!Unmap(virtualAddress))
 				{
@@ -156,9 +156,9 @@ namespace Kernel
 			asm volatile("invlpg (%0)" :: "r" (virtualAddress) : "memory");
 		}
 
-		void VirtualMemoryManager::FlushTLBRange(VirtualAddress virtualAddress, uint32_t count)
+		void VirtualMemoryManager::FlushTLBRange(VirtualAddress virtualAddress, size_t count)
 		{
-			for(uint32_t i = 0; i < count; i++)
+			for(size_t i = 0; i < count; i++)
 				FlushTLB(virtualAddress + (i * PAGE_SIZE));
 		}
 

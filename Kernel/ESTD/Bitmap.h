@@ -58,9 +58,9 @@ namespace ESTD
 		int32_t FindUnsetBits(size_t count)
 		{
 			int32_t firstBit = -1;
-			uint32_t currentBit = 0;
+			size_t currentBit = 0;
 
-			for (uint32_t i = 0; i < TSize; i++)
+			for (size_t i = 0; i < TSize; i++)
 			{
 				if (Test(i))
 				{

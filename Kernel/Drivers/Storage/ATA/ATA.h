@@ -28,7 +28,7 @@ namespace Kernel
 			bool BusHasDrives(ATABus bus);
 
 		private:
-			uint32_t m_SectorSize;
+			size_t m_SectorSize;
 			ATABus m_Bus;
 			ATADrive m_Drive;
 			uint16_t m_BusPort;

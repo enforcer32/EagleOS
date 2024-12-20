@@ -12,11 +12,11 @@ namespace Kernel
 		public:
 			bool Init(const Boot::BootInfo* bootInfo);
 			bool Map(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable);
-			bool MapRange(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable, uint32_t count);
+			bool MapRange(VirtualAddress virtualAddress, PhysicalAddress physicalAddress, bool writable, size_t count);
 			bool Unmap(VirtualAddress virtualAddress);
-			bool UnmapRange(VirtualAddress virtualAddress, uint32_t count);
+			bool UnmapRange(VirtualAddress virtualAddress, size_t count);
 			void FlushTLB(VirtualAddress virtualAddress);
-			void FlushTLBRange(VirtualAddress virtualAddress, uint32_t count);
+			void FlushTLBRange(VirtualAddress virtualAddress, size_t count);
 			void EnablePaging();
 			void DisablePaging();
 			void ReloadPageDirectory();

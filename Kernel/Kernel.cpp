@@ -22,8 +22,8 @@ namespace Kernel
 	void DumpSystemMemoryMap(const Boot::BootInfo* bootInfo)
 	{
 		KPrintf("\n----------System Memory Map----------\n");
-		Kernel::KPrintf("MemoryLower 0x%x, MemoryUpper 0x%x\n", bootInfo->SystemMemoryMap.MemoryLower, bootInfo->SystemMemoryMap.MemoryUpper);
-		for (uint32_t i = 0; i < bootInfo->SystemMemoryMap.RegionCount; i++)
+		Kernel::KPrintf("MemoryLower 0x%x, MemoryUpper 0x%x\n", bootInfo->SystemMemoryMap.MemoryAddressLow, bootInfo->SystemMemoryMap.MemoryAddressHigh);
+		for (size_t i = 0; i < bootInfo->SystemMemoryMap.RegionCount; i++)
 		{
 			const auto& regionInfo = bootInfo->SystemMemoryMap.Regions[i];
 			Kernel::KPrintf("Region: {Base= 0x%x, ", regionInfo.BaseAddress);
@@ -59,15 +59,15 @@ namespace Kernel
 		}
 		
 		// Reserve Bootloader Pages
-		uint32_t bootloaderPageCount = (bootInfo->BootloaderSize / 4096) + 1;
+		size_t bootloaderPageCount = (bootInfo->BootloaderSize / 4096) + 1;
 		g_KernelPMM->ReservePages(bootInfo->BootloaderPhysicalStartAddress, bootloaderPageCount);
 
 		// Reserve Kernel Pages
-		uint32_t kernelPageCount = bootInfo->KernelSize / 4096;
+		size_t kernelPageCount = bootInfo->KernelSize / 4096;
 		g_KernelPMM->ReservePages(bootInfo->KernelPhysicalStartAddress, kernelPageCount);
 
 		// Reserve first 16MB for ISA16 DMA
-		uint32_t dma16PageCount = 0x1000000 / 4096;
+		size_t dma16PageCount = 0x1000000 / 4096;
 		g_KernelPMM->ReservePages(0x0, dma16PageCount);
 
 		// Reserve Address 0x0
@@ -85,7 +85,7 @@ namespace Kernel
 		}
 
 		// Identity Map first 4MB (Bootloader/DMA)
-		uint32_t bootloaderPageCount = 0x400000 / PAGE_SIZE;
+		size_t bootloaderPageCount = 0x400000 / PAGE_SIZE;
 		if (!g_KernelVMM->MapRange(0x0, 0x0, true, bootloaderPageCount))
 		{
 			KPrintf("InitVirtualMemoryManager->PageManager Failed to Identity Map first 4mb!\n");
@@ -93,9 +93,9 @@ namespace Kernel
 		}
 
 		// ReSetup Higher Half Kernel
-		uint32_t kernelPhysicalStartAddressPageNumber = (bootInfo->KernelPhysicalStartAddress / PAGE_SIZE);
-		uint32_t kernelPhysicalEndAddressPageNumber = (bootInfo->KernelPhysicalEndAddress / PAGE_SIZE);
-		uint32_t kernelPageCount = (kernelPhysicalEndAddressPageNumber - kernelPhysicalStartAddressPageNumber); // 44 (0xC002C000)
+		size_t kernelPhysicalStartAddressPageNumber = (bootInfo->KernelPhysicalStartAddress / PAGE_SIZE);
+		size_t kernelPhysicalEndAddressPageNumber = (bootInfo->KernelPhysicalEndAddress / PAGE_SIZE);
+		size_t kernelPageCount = (kernelPhysicalEndAddressPageNumber - kernelPhysicalStartAddressPageNumber); // 44 (0xC002C000)
 		if (!g_KernelVMM->MapRange(bootInfo->KernelVirtualStartAddress, bootInfo->KernelPhysicalStartAddress, true, kernelPageCount))
 		{
 			KPrintf("InitVirtualMemoryManager->PageManager Failed to Map Kernel to Higher Half!\n");
@@ -103,7 +103,7 @@ namespace Kernel
 		}
 
 		// Map Rest of Higher Half Table
-		uint32_t pageTablePageCount = 0x400000 / PAGE_SIZE;
+		size_t pageTablePageCount = 0x400000 / PAGE_SIZE;
 		if(kernelPageCount < pageTablePageCount)
 		{
 			if (!g_KernelVMM->MapRange(bootInfo->KernelVirtualStartAddress + (kernelPageCount * PAGE_SIZE), bootInfo->KernelPhysicalStartAddress + (kernelPageCount * PAGE_SIZE), true, (pageTablePageCount - kernelPageCount)))
@@ -119,8 +119,8 @@ namespace Kernel
 
 	bool InitVirtualMemoryAllocator(const Boot::BootInfo* bootInfo)
 	{	
-		uint32_t kernelVMAStartAddress = bootInfo->KernelVirtualStartAddress + (4096 * 1024 * 4); // 0xC1000000
-		uint32_t kernelVMASize = 0xFFFFFFFF - kernelVMAStartAddress;
+		uintptr_t kernelVMAStartAddress = bootInfo->KernelVirtualStartAddress + (4096 * 1024 * 4); // 0xC1000000
+		size_t kernelVMASize = 0xFFFFFFFF - kernelVMAStartAddress;
 
 		g_KernelVMA = &_KernelVMA;
 		if (!g_KernelVMA->Init(kernelVMAStartAddress, kernelVMASize))
@@ -134,7 +134,7 @@ namespace Kernel
 
 	bool InitKernelHeap(const Boot::BootInfo* bootInfo)
 	{
-		uint32_t kernelHeapSize = (100 * 1048576); // 100mb
+		size_t kernelHeapSize = (100 * 1048576); // 100mb
 
 		g_KernelHeap = &_KernelHeap;
 		if (!g_KernelHeap->Init(kernelHeapSize))
@@ -219,12 +219,12 @@ namespace Kernel
 	}
 }
 
-extern "C" uint32_t _bootloader_physical_start;
-extern "C" uint32_t _bootloader_physical_end;
-extern "C" uint32_t _kernel_physical_start;
-extern "C" uint32_t _kernel_physical_end;
-extern "C" uint32_t _kernel_virtual_start;
-extern "C" uint32_t _kernel_virtual_end;
+extern "C" size_t _bootloader_physical_start;
+extern "C" size_t _bootloader_physical_end;
+extern "C" size_t _kernel_physical_start;
+extern "C" size_t _kernel_physical_end;
+extern "C" size_t _kernel_virtual_start;
+extern "C" size_t _kernel_virtual_end;
 
 extern "C" void KMain(uint32_t multibootMagic, Boot::MultibootInfo* multibootInfo)
 {
@@ -236,20 +236,20 @@ extern "C" void KMain(uint32_t multibootMagic, Boot::MultibootInfo* multibootInf
 	bootInfo.Signature = EAGLEOS_BOOT_SIGNATURE;
 
 	// Bootloader
-	bootInfo.BootloaderPhysicalStartAddress = (uint32_t)&_bootloader_physical_start;
-	bootInfo.BootloaderPhysicalEndAddress = (uint32_t)&_bootloader_physical_end;
-	bootInfo.BootloaderSize = ((uint32_t)&_bootloader_physical_end - (uint32_t)&_bootloader_physical_start);
+	bootInfo.BootloaderPhysicalStartAddress = (size_t)&_bootloader_physical_start;
+	bootInfo.BootloaderPhysicalEndAddress = (size_t)&_bootloader_physical_end;
+	bootInfo.BootloaderSize = ((size_t)&_bootloader_physical_end - (size_t)&_bootloader_physical_start);
 
 	// Kernel
-	bootInfo.KernelPhysicalStartAddress = (uint32_t)&_kernel_physical_start;
-	bootInfo.KernelPhysicalEndAddress = (uint32_t)&_kernel_physical_end;
-	bootInfo.KernelVirtualStartAddress = (uint32_t)&_kernel_virtual_start;
-	bootInfo.KernelVirtualEndAddress = (uint32_t)&_kernel_virtual_end;
-	bootInfo.KernelSize = ((uint32_t)&_kernel_virtual_end - (uint32_t)&_kernel_virtual_start);
+	bootInfo.KernelPhysicalStartAddress = (size_t)&_kernel_physical_start;
+	bootInfo.KernelPhysicalEndAddress = (size_t)&_kernel_physical_end;
+	bootInfo.KernelVirtualStartAddress = (size_t)&_kernel_virtual_start;
+	bootInfo.KernelVirtualEndAddress = (size_t)&_kernel_virtual_end;
+	bootInfo.KernelSize = ((size_t)&_kernel_virtual_end - (size_t)&_kernel_virtual_start);
 
 	// Memory Map
-	bootInfo.SystemMemoryMap.MemoryLower = (multibootInfo->MemoryLower * 1024);
-	bootInfo.SystemMemoryMap.MemoryUpper = (multibootInfo->MemoryUpper * 1024);
+	bootInfo.SystemMemoryMap.MemoryAddressLow = (multibootInfo->MemoryLower * 1024);
+	bootInfo.SystemMemoryMap.MemoryAddressHigh = (multibootInfo->MemoryUpper * 1024);
 	bootInfo.SystemMemoryMap.RegionCount = (multibootInfo->MemoryMapLength / (sizeof(Boot::MultibootMemoryMap)));
 	bootInfo.SystemMemoryMap.Regions = (Boot::MemoryRegion*)multibootInfo->MemoryMapAddress;
 

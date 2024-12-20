@@ -36,7 +36,7 @@ namespace Kernel
 			bool IsCacheDisable() const;
 			void SetCacheDisable(bool value);
 			bool IsAccessed() const;
-			uint32_t GetPageSize() const;
+			size_t GetPageSize() const;
 			PhysicalAddress GetAddress() const;
 			void SetAddress(PhysicalAddress address);
 

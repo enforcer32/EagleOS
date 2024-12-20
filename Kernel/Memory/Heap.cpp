@@ -9,7 +9,7 @@ namespace Kernel
 
 	namespace Memory
 	{
-		bool Heap::Init(uint32_t sizeBytes)
+		bool Heap::Init(size_t sizeBytes)
 		{
 			KPrintf("Initializing Heap...\n");
 			if (!sizeBytes)
@@ -34,7 +34,7 @@ namespace Kernel
 			return true;
 		}
 
-		void* Heap::Allocate(uint32_t sizeBytes)
+		void* Heap::Allocate(size_t sizeBytes)
 		{
 			if (!sizeBytes)
 				return nullptr;
@@ -95,7 +95,7 @@ namespace Kernel
 		void Heap::Dump() const
 		{
 			KPrintf("\n--------------------HeapNodes(Size=%d)---------------------\n", sizeof(HeapNode));
-			uint32_t i = 0;
+			size_t i = 0;
 			HeapNode* node = (HeapNode*)m_StartAddress;
 			while(node)
 			{

@@ -4,5 +4,5 @@
 
 namespace Kernel
 {
-	using VirtualAddress = uint32_t;
+	using VirtualAddress = uintptr_t;
 }

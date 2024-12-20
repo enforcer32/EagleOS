@@ -108,7 +108,7 @@ namespace Kernel
 			for(uint32_t i = 0; i < PAGE_TABLE_ENTRY_COUNT; i++)
 			{
 				const auto& entry = &m_Entries[i];
-				uint32_t virtualAddress = ((0x400000 * table) + (0x1000 * i));
+				uintptr_t virtualAddress = ((0x400000 * table) + (0x1000 * i));
 				KPrintf("[%d][%d][%d][ %d][ %d][%d][%d][%d][0x%x][0x%x][%d]\n",
 							entry->IsPresent(), entry->IsWritable(), entry->IsUser(), entry->IsWriteThrough(),
 							entry->IsCacheDisable(), entry->IsAccessed(), entry->IsDirty(), entry->IsGlobal(), 
