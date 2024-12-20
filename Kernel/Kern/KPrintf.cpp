@@ -1,6 +1,6 @@
 #include <Kernel/Kern/KPrintf.h>
 #include <Kernel/Drivers/Graphics/VGA.h>
-#include <ESTD/TypeConverter.h>
+#include <Kernel/ESTD/TypeConverter.h>
 
 namespace Kernel
 {

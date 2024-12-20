@@ -1,5 +1,5 @@
-#include <ESTD/TypeConverter.h>
-#include <ESTD/CString.h>
+#include <Kernel/ESTD/TypeConverter.h>
+#include <Kernel/ESTD/CString.h>
 
 namespace ESTD
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ESTD/Types.h>
+#include <Kernel/ESTD/Types.h>
 
 #define x86_GDT_TOTAL_SEGMENTS 5
 #define x86_IDT_TOTAL_INTERRUPTS 256

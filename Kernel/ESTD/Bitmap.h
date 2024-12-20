@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ESTD/Types.h>
-#include <ESTD/CString.h>
+#include <Kernel/ESTD/Types.h>
+#include <Kernel/ESTD/CString.h>
 
 namespace ESTD
 {

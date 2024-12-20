@@ -1,7 +1,7 @@
 #include <Kernel/Memory/Heap.h>
 #include <Kernel/Memory/VirtualMemoryAllocator.h>
 #include <Kernel/Kern/KPrintf.h>
-#include <ESTD/Algorithm.h>
+#include <Kernel/ESTD/Algorithm.h>
 
 namespace Kernel
 {

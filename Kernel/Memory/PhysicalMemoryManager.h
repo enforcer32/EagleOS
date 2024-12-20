@@ -2,7 +2,7 @@
 
 #include <Kernel/Boot/BootInfo.h>
 #include <Kernel/Memory/PhysicalAddress.h>
-#include <ESTD/Bitmap.h>
+#include <Kernel/ESTD/Bitmap.h>
 
 namespace Kernel
 {

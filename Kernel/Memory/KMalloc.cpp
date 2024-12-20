@@ -2,7 +2,7 @@
 #include <Kernel/Memory/Heap.h>
 #include <Kernel/Kern/KPrintf.h>
 #include <Kernel/Kern/KPanic.h>
-#include <ESTD/CString.h>
+#include <Kernel/ESTD/CString.h>
 
 void* operator new(size_t size)
 {

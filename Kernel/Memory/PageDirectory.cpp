@@ -1,7 +1,7 @@
 #include <Kernel/Memory/PageDirectory.h>
 #include <Kernel/Memory/MemoryUtil.h>
 #include <Kernel/Kern/KPrintf.h>
-#include <ESTD/Bitwise.h>
+#include <Kernel/ESTD/Bitwise.h>
 
 namespace Kernel
 {

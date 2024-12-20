@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Kernel/Memory/VirtualAddress.h>
-#include <ESTD/Bitmap.h>
+#include <Kernel/ESTD/Bitmap.h>
 
 namespace Kernel
 {

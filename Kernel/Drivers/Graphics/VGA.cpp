@@ -1,6 +1,6 @@
 #include <Kernel/Drivers/Graphics/VGA.h>
 #include <Kernel/Arch/x86/IO.h>
-#include <ESTD/CString.h>
+#include <Kernel/ESTD/CString.h>
 
 #define VGA_VIDEO_ADDRESS 0xB8000
 #define VGA_WIDTH 80

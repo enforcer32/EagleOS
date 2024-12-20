@@ -1,8 +1,8 @@
 #include <Kernel/Memory/VirtualMemoryManager.h>
 #include <Kernel/Memory/MemoryUtil.h>
 #include <Kernel/Kern/KPrintf.h>
-#include <ESTD/CString.h>
-#include <ESTD/Algorithm.h>
+#include <Kernel/ESTD/CString.h>
+#include <Kernel/ESTD/Algorithm.h>
 
 namespace Kernel
 {

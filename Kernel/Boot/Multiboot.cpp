@@ -1,6 +1,6 @@
 #include <Kernel/Boot/Multiboot.h>
 #include <Kernel/Kern/KPrintf.h>
-#include <ESTD/Bitwise.h>
+#include <Kernel/ESTD/Bitwise.h>
 
 namespace Boot
 {

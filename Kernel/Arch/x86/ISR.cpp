@@ -3,7 +3,7 @@
 #include <Kernel/Arch/x86/Processor.h>
 #include <Kernel/Kern/KPanic.h>
 #include <Kernel/Kern/KPrintf.h>
-#include <ESTD/Bitwise.h>
+#include <Kernel/ESTD/Bitwise.h>
 
 namespace Kernel
 {
