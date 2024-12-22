@@ -29,3 +29,5 @@ Axe2/
 *.gdb_history
 *.elf
 *.iso
+*.hdd
+*.img

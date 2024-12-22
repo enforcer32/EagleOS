@@ -212,19 +212,28 @@ namespace Kernel
 		if (!InitMemoryManager(bootInfo))
 			KPanic("Failed to Initialize Memory Manager\n");
 
-		//Storage::ATA ata;
-		//ata.Init(Storage::ATABus::Primary, Storage::ATADrive::Master);
+		Storage::ATA ata;
+		ata.Init(Storage::ATABus::Primary, Storage::ATADrive::Master);
+
+		char* buff = new char[512];
+		ESTD::Memset(buff, 0, 512);
+		if(ata.Read28(buff, 1, 0) == -1)
+		{
+			KPrintf("ATA->Read28 Failed\n");
+			return;
+		}
+		KPrintf("ATA-Read28: %s\n", buff);
 
 		KPrintf("\nEagle Operating System\n");
 	}
 }
 
-extern "C" size_t _bootloader_physical_start;
-extern "C" size_t _bootloader_physical_end;
-extern "C" size_t _kernel_physical_start;
-extern "C" size_t _kernel_physical_end;
-extern "C" size_t _kernel_virtual_start;
-extern "C" size_t _kernel_virtual_end;
+extern "C" uintptr_t _bootloader_physical_start;
+extern "C" uintptr_t _bootloader_physical_end;
+extern "C" uintptr_t _kernel_physical_start;
+extern "C" uintptr_t _kernel_physical_end;
+extern "C" uintptr_t _kernel_virtual_start;
+extern "C" uintptr_t _kernel_virtual_end;
 
 extern "C" void KMain(uint32_t multibootMagic, Boot::MultibootInfo* multibootInfo)
 {
@@ -236,16 +245,16 @@ extern "C" void KMain(uint32_t multibootMagic, Boot::MultibootInfo* multibootInf
 	bootInfo.Signature = EAGLEOS_BOOT_SIGNATURE;
 
 	// Bootloader
-	bootInfo.BootloaderPhysicalStartAddress = (size_t)&_bootloader_physical_start;
-	bootInfo.BootloaderPhysicalEndAddress = (size_t)&_bootloader_physical_end;
-	bootInfo.BootloaderSize = ((size_t)&_bootloader_physical_end - (size_t)&_bootloader_physical_start);
+	bootInfo.BootloaderPhysicalStartAddress = (uintptr_t)&_bootloader_physical_start;
+	bootInfo.BootloaderPhysicalEndAddress = (uintptr_t)&_bootloader_physical_end;
+	bootInfo.BootloaderSize = ((uintptr_t)&_bootloader_physical_end - (uintptr_t)&_bootloader_physical_start);
 
 	// Kernel
-	bootInfo.KernelPhysicalStartAddress = (size_t)&_kernel_physical_start;
-	bootInfo.KernelPhysicalEndAddress = (size_t)&_kernel_physical_end;
-	bootInfo.KernelVirtualStartAddress = (size_t)&_kernel_virtual_start;
-	bootInfo.KernelVirtualEndAddress = (size_t)&_kernel_virtual_end;
-	bootInfo.KernelSize = ((size_t)&_kernel_virtual_end - (size_t)&_kernel_virtual_start);
+	bootInfo.KernelPhysicalStartAddress = (uintptr_t)&_kernel_physical_start;
+	bootInfo.KernelPhysicalEndAddress = (uintptr_t)&_kernel_physical_end;
+	bootInfo.KernelVirtualStartAddress = (uintptr_t)&_kernel_virtual_start;
+	bootInfo.KernelVirtualEndAddress = (uintptr_t)&_kernel_virtual_end;
+	bootInfo.KernelSize = ((uintptr_t)&_kernel_virtual_end - (uintptr_t)&_kernel_virtual_start);
 
 	// Memory Map
 	bootInfo.SystemMemoryMap.MemoryAddressLow = (multibootInfo->MemoryLower * 1024);

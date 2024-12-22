@@ -44,7 +44,9 @@ add_subdirectory(${KERNEL_TARGET_DIR})
 
 # RUN QEMU
 add_custom_target(runqemu
-    COMMAND ${QEMU_EXECUTABLE} -m 1024M -d int,cpu_reset -no-reboot -no-shutdown -kernel ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_OUTPUT_NAME}
+	COMMAND dd if=/dev/zero bs=512 count=2000 >> ${CMAKE_BINARY_DIR}/Kernel/EagleOS/hdd.img
+	COMMAND echo "Hello EagleOS!" | dd of=${CMAKE_BINARY_DIR}/Kernel/EagleOS/hdd.img conv=notrunc
+    COMMAND ${QEMU_EXECUTABLE} -m 1024M -d int,cpu_reset -no-reboot -no-shutdown -kernel ${CMAKE_BINARY_DIR}/Kernel/EagleOS/${KERNEL_OUTPUT_NAME} -hda ${CMAKE_BINARY_DIR}/Kernel/EagleOS/hdd.img
 )
 
 # Generate ISO

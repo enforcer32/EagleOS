@@ -13,6 +13,8 @@ file(GLOB_RECURSE ESTDSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/Array.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/String.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/String.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/StringUtil.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/StringUtil.cpp"
 )
 
 set(ESTDSources ${ESTDSources} PARENT_SCOPE)

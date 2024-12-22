@@ -18,7 +18,7 @@ namespace ESTD
 			return m_Data[index];
 		}
 
-		constexpr size_t Size()
+		constexpr size_t Size() const
 		{
 			return TSize;
 		}

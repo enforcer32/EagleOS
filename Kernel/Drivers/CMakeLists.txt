@@ -7,6 +7,7 @@ file(GLOB_RECURSE DriversSources
 	"${CMAKE_CURRENT_SOURCE_DIR}/Storage/ATA.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Storage/ATA.asm"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Storage/ATA.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Storage/ATADevice.h"
 )
 
 set(DriversSources ${DriversSources} PARENT_SCOPE)

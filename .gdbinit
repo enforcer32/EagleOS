@@ -5,7 +5,7 @@ set disassembly-flavor intel
 add-symbol-file Build/Kernel/EagleOS/Kernel.elf 0x00100000
 #break Kernel/Arch/x86/Boot.asm:_kernelstart
 break *0x00104000
-target remote | qemu-system-i386 -m 1024M -d int,cpu_reset -no-reboot -no-shutdown -kernel Build/Kernel/EagleOS/Kernel.elf -S -gdb stdio
+target remote | qemu-system-i386 -m 1024M -d int,cpu_reset -no-reboot -no-shutdown -kernel Build/Kernel/EagleOS/Kernel.elf -hda Build/Kernel/EagleOS/hdd.img -S -gdb stdio
 c
 
 define hook-stop
